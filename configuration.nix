@@ -43,5 +43,8 @@
         colmena;
     }) ];
 
-    nix.package = pkgs.lixPackageSets.stable.lix;
+    nix = {
+        package = pkgs.lixPackageSets.stable.lix;
+        settings.experimental-features = [ "nix-command" "flakes" ];
+    };
 }
