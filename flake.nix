@@ -7,10 +7,11 @@
         localHostName = "cyberservermkii";
     in {
         hostName = localHostName;
-        buildSystem = { secrets, ... }: nixpkgs.lib.nixosSystem {
+        buildSystem = { config, pkgs, config, secrets, ... }: nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
             modules = [ 
                 (import ./configuration.nix  {
+                    inherit pkgs config lib;
                     hostName = localHostName;
                 })
             ];
