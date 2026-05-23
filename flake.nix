@@ -15,7 +15,7 @@
                     (import ./configuration.nix  {
                         config = self.config;
                         lib = nixpkgs.lib;
-                        pkgs = nixpkgs;
+                        pkgs = nixpkgs.pkgs;
                         hostName = hostName;
                         secrets = secrets;
                     })
