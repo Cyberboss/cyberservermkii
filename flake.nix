@@ -2,19 +2,18 @@
     inputs = {
         nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     };
-    outputs = inputs@{ self, nixpkgs, ... }:
+    outputs = inputs@{ config, lib, ... }:
     let
         hostName = "cyberservermkii";
     in {
         hostName = hostName;
         buildSystem = local-config: secrets: {
-            nixosConfigurations.${hostName} = nixpkgs.lib.nixosSystem {
+            nixosConfigurations.${hostName} = lib.nixosSystem {
                 system = "x86_64-linux";
                 modules = [
                     local-config
                     (import ./configuration.nix  {
-                        lib = nixpkgs.lib;
-                        self = self;
+                        inherit config lib;
                         hostName = hostName;
                         secrets = secrets;
                     })
