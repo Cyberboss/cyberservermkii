@@ -13,6 +13,7 @@
                 modules = [
                     local-config
                     (import ./configuration.nix  {
+                        lib = nixpkgs.lib;
                         self = self;
                         hostName = hostName;
                         secrets = secrets;
