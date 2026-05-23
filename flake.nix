@@ -7,20 +7,18 @@
         hostName = "cyberservermkii";
     in {
         hostName = hostName;
-        buildSystem = local-config: secrets: {
-            nixosConfigurations.${hostName} = nixpkgs.lib.nixosSystem {
-                system = "x86_64-linux";
-                modules = [
-                    local-config
-                    (import ./configuration.nix  {
-                        config = self.config;
-                        lib = nixpkgs.lib;
-                        pkgs = nixpkgs.pkgs;
-                        hostName = hostName;
-                        secrets = secrets;
-                    })
-                ];
-            };
+        buildSystem = local-config: secrets: nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            modules = [
+                local-config
+                (import ./configuration.nix  {
+                    config = self.config;
+                    lib = nixpkgs.lib;
+                    pkgs = nixpkgs.pkgs;
+                    hostName = hostName;
+                    secrets = secrets;
+                })
+            ];
         };
     };
 }
