@@ -5,7 +5,7 @@
   outputs = inputs@{ self, remote, ... }:
   let
     hardware-configuration = ./hardware-configuration.nix;
-    secrets = ./secrets.nix;
+    secrets = import ./secrets.nix;
   in
   {
     nixosConfigurations = (remote.build-system hardware-configuration secrets);
