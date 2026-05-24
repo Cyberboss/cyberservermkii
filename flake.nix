@@ -1,6 +1,7 @@
 {
     inputs = {
         nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+        resonite-headless.url = "github:Cyberboss/resonite-headless-nix";
     };
     outputs = inputs@{ self, nixpkgs, ... }:
     let
