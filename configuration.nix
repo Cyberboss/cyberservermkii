@@ -1,4 +1,10 @@
-{ config, lib, pkgs, hostName, ... }:
+{ config, lib, pkgs, hostName, secrets, ... }:
+let
+    update-script = pkgs.writeShellScriptBin "update-system" ''
+        nix flake update /etc/nixos
+        nixos-rebuild switch
+    '';
+in
 {
     boot.loader = {
         systemd-boot.enable = true;
@@ -22,6 +28,8 @@
         ];
     };
 
+    environment.systemPackages = [ update-script ];
+
     services.openssh.enable = true;
     
     nixpkgs.overlays = [ (final: prev: {
@@ -34,6 +42,11 @@
 
     nix = {
         package = pkgs.lixPackageSets.stable.lix;
-        settings.experimental-features = [ "nix-command" "flakes" ];
+        settings = {
+            experimental-features = [ "nix-command" "flakes" ];
+            accesstokens = [
+                "github.com=${secrets.github-token}"
+            ];
+        };
     };
 }
