@@ -4,8 +4,7 @@ let
         nix flake update --flake /etc/nixos
         nixos-rebuild switch
     '';
-    persist-directory = "/persist";
-    resonite-directory = "${persist-directory}/resonite-directory";
+    resonite-directory = "${config.services.resonite-headless.home-directory}/resonite";
 
     rml-stressless-headless = pkgs.fetchurl {
         url = "https://codeberg.org/Raidriar/StresslessHeadless/releases/download/2.2.1/StresslessHeadless.dll";
@@ -104,7 +103,7 @@ in
     };
     
     nixpkgs.overlays = [ (final: prev: {
-        inherit (prev.lixPackageSets.stable)~
+        inherit (prev.lixPackageSets.stable)
         nixpkgs-review
         nix-eval-jobs
         nix-fast-build
