@@ -1,7 +1,7 @@
 { config, lib, pkgs, hostName, secrets, ... }:
 let
     update-script = pkgs.writeShellScriptBin "update-system" ''
-        nix flake update /etc/nixos
+        nix flake update --flake /etc/nixos
         nixos-rebuild switch
     '';
 in
