@@ -6,7 +6,7 @@
     let
         hostName = "cyberservermkii";
     in {
-        build-system = local-config: secrets: {
+        build-system = hardware-configuration: secrets: {
             ${hostName} = nixpkgs.lib.nixosSystem {
                 system = "x86_64-linux";
 
@@ -15,8 +15,9 @@
                 };
 
                 modules = [
-                    local-config
+                    hardware-configuration
                     ./configuration.nix
+                    ./state-version.nix
                 ];
             };
         };

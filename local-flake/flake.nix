@@ -4,10 +4,10 @@
   };
   outputs = inputs@{ self, remote, ... }:
   let
-    local-config = ./configuration.nix;
+    hardware-configuration = ./hardware-configuration.nix;
     secrets = ./secrets.nix;
   in
   {
-    nixosConfigurations = (remote.build-system local-config secrets);
+    nixosConfigurations = (remote.build-system hardware-configuration secrets);
   };
 }
