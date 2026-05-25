@@ -1,4 +1,4 @@
-{ inputs, lib, pkgs, hostName, secrets, ... }:
+{ pkgs, hostName, secrets, ... }:
 let
     update-script = pkgs.writeShellScriptBin "update-system" ''
         if [ "$EUID" -ne 0 ]; then
@@ -19,10 +19,6 @@ let
     };
 in
 {
-    imports = [
-        inputs.resonite-headless.nixosModules.default
-    ];
-
     boot.loader = {
         systemd-boot.enable = true;
         efi.canTouchEfiVariables = true;

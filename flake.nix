@@ -3,7 +3,7 @@
         nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
         resonite-headless.url = "github:Cyberboss/resonite-headless-nix";
     };
-    outputs = inputs@{ self, nixpkgs, config ... }:
+    outputs = inputs@{ self, nixpkgs, ... }:
     let
         hostName = "cyberservermkii";
     in {
@@ -12,13 +12,14 @@
                 system = "x86_64-linux";
 
                 specialArgs = {
-                    inherit hostName secrets inputs config;
+                    inherit hostName secrets config;
                 };
 
                 modules = [
+                    ./state-version.nix
                     hardware-configuration
                     ./configuration.nix
-                    ./state-version.nix
+                    inputs.resonite-headless.nixosModules.default
                 ];
             };
         };
