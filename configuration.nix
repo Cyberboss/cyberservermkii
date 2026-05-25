@@ -10,7 +10,7 @@ let
 
     rml-stressless-headless = pkgs.fetchurl {
         url = "https://codeberg.org/Raidriar/StresslessHeadless/releases/download/2.2.1/StresslessHeadless.dll";
-        sha256 = "0000000000000000000000000000000000000000000000000000";
+        sha256 = "sha256-DipeSX1F604p/zMAyjggab6O2kOfnjibfdURAhSz4cU=";
     };
     rml-headless-tweaks = pkgs.fetchurl {
         url = "https://github.com/New-Project-Final-Final-WIP/HeadlessTweaks/releases/download/v2.2.0/HeadlessTweaks.dll";
