@@ -80,7 +80,7 @@ in
                             "memes" 
                             "workshop"
                         ];
-                        loadWorldUrl = "resrec:///U-1nPiX9NfQQ4/R-019e5c2f-eb38-71a2-9b80-021e121719c5";
+                        loadWorldUrl = "resrec:///U-1nPiX9NfQQ4/R-019e5c2f-d6a6-76c6-af08-5333624a2b0a";
                         defaultUserRoles = {
                             Dominion = "Admin";
                         };
