@@ -1,6 +1,10 @@
 { config, lib, pkgs, hostName, secrets, ... }:
 let
     update-script = pkgs.writeShellScriptBin "update-system" ''
+        if [ "$EUID" -ne 0 ]; then
+            echo "Please run as root or with sudo."
+            exit 1
+        fi
         nix flake update --flake /etc/nixos
         nixos-rebuild switch
     '';
