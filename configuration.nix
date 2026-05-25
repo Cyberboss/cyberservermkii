@@ -49,7 +49,7 @@ in
             enable = true;
             steam-username = secrets.steam-username;
             steam-password = secrets.steam-password;
-            headless-code = secrets.headless-code;
+            headless-code = secrets.resonite-headless-code;
             enable-rml = true;
             rml-mods = [
                 rml-stressless-headless
