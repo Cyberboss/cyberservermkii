@@ -5,8 +5,7 @@ let
             echo "Please run as root or with sudo."
             exit 1
         fi
-        nix flake update --flake /etc/nixos
-        nixos-rebuild switch
+        nix flake update --flake /etc/nixos && nixos-rebuild switch
     '';
 
     rml-stressless-headless = pkgs.fetchurl {
