@@ -65,6 +65,7 @@ in
                         accessLevel = "ContactsPlus";
                         description = "Dominion's personal hideaway. Come say hello!";
                         hideFromPublicListing = false;
+                        tickRate = 90;
                         tags = [
                             "after"
                             "glow"
