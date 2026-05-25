@@ -57,7 +57,6 @@ in
             config-json = {
                 loginCredential = secrets.resonite-username;
                 loginPassword = secrets.resonite-password;
-                tickRate = 90;
                 startWorlds = [
                     {
                         "$schema" = "https://raw.githubusercontent.com/Yellow-Dog-Man/JSONSchemas/main/schemas/HeadlessConfig.schema.json";
