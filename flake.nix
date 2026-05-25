@@ -12,7 +12,7 @@
                 system = "x86_64-linux";
 
                 specialArgs = {
-                    inherit hostName secrets config;
+                    inherit hostName secrets;
                 };
 
                 modules = [
