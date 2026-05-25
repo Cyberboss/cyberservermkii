@@ -4,7 +4,6 @@ let
         nix flake update --flake /etc/nixos
         nixos-rebuild switch
     '';
-    resonite-directory = "${config.services.resonite-headless.home-directory}/resonite";
 
     rml-stressless-headless = pkgs.fetchurl {
         url = "https://codeberg.org/Raidriar/StresslessHeadless/releases/download/2.2.1/StresslessHeadless.dll";
@@ -95,9 +94,6 @@ in
                         enableResoniteLink = false;
                     }
                 ];
-                dataFolder = "${resonite-directory}/data";
-                cacheFolder = "${resonite-directory}/cache";
-                logsFolder = "${resonite-directory}/logs";
             };
         };
     };
