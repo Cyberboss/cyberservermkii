@@ -57,6 +57,7 @@ in
             config-json = {
                 loginCredential = secrets.resonite-username;
                 loginPassword = secrets.resonite-password;
+                tickRate = 90;
                 startWorlds = [
                     {
                         "$schema" = "https://raw.githubusercontent.com/Yellow-Dog-Man/JSONSchemas/main/schemas/HeadlessConfig.schema.json";
@@ -65,7 +66,6 @@ in
                         accessLevel = "ContactsPlus";
                         description = "Dominion's personal hideaway. Come say hello!";
                         hideFromPublicListing = false;
-                        tickRate = 90;
                         tags = [
                             "after"
                             "glow"
