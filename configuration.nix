@@ -14,7 +14,7 @@ let
     };
     rml-headless-tweaks = pkgs.fetchurl {
         url = "https://github.com/New-Project-Final-Final-WIP/HeadlessTweaks/releases/download/v2.2.0/HeadlessTweaks.dll";
-        sha256 = "0000000000000000000000000000000000000000000000000000";
+        sha256 = "sha256-TDr1o+FDoxecv8btP6QYc9H7KXEC8ySma9JEfgwnplo=";
     };
 in
 {
