@@ -44,8 +44,10 @@ in
     };
 
     environment.systemPackages = [ update-script ];
-
+    
+    systemd.services."getty@tty1".enable = true;
     services = {
+        xserver.enable = false;
         openssh.enable = true;
         resonite-headless = {
             enable = true;
