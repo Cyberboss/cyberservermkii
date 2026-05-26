@@ -55,7 +55,7 @@ in
         package = pkgs.lixPackageSets.stable.lix;
         settings = {
             experimental-features = [ "nix-command" "flakes" ];
-            # allow-substitutes = false; TODO
+            allow-substitutes = false;
             access-tokens = [
                 "github.com=${secrets.github-token}"
             ];
