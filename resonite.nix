@@ -1,10 +1,10 @@
 { pkgs, secrets, ... }:
 let
-    rml-stressless-headless = pkgs.fetchurl {
+    rml-stressless-headless = builtins.fetchurl {
         url = "https://codeberg.org/Raidriar/StresslessHeadless/releases/download/2.2.1/StresslessHeadless.dll";
         sha256 = "sha256-DipeSX1F604p/zMAyjggab6O2kOfnjibfdURAhSz4cU=";
     };
-    rml-headless-tweaks = pkgs.fetchurl {
+    rml-headless-tweaks = builtins.fetchurl {
         url = "https://github.com/New-Project-Final-Final-WIP/HeadlessTweaks/releases/download/v2.2.0/HeadlessTweaks.dll";
         sha256 = "sha256-TDr1o+FDoxecv8btP6QYc9H7KXEC8ySma9JEfgwnplo=";
     };
