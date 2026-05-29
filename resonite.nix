@@ -1,19 +1,21 @@
 { pkgs, secrets, ... }:
 let
-    rml-stressless-headless = "${(pkgs.fetchurl rec {
+    rml-stressless-headless-source = pkgs.fetchurl {
         url = "https://codeberg.org/Raidriar/StresslessHeadless/releases/download/2.2.1/StresslessHeadless.dll";
         sha256 = "sha256-DipeSX1F604p/zMAyjggab6O2kOfnjibfdURAhSz4cU=";
-        
-        downloadToTemp = true;
-        postFetch = "install -D $downloadedFile $out/" + builtins.baseNameOf url;
-    })}/bin/StresslessHeadless.dll";
-    rml-headless-tweaks = "${(pkgs.fetchurl rec {
+    };
+    rml-headless-tweaks-source = pkgs.fetchurl {
         url = "https://github.com/New-Project-Final-Final-WIP/HeadlessTweaks/releases/download/v2.2.0/HeadlessTweaks.dll";
         sha256 = "sha256-TDr1o+FDoxecv8btP6QYc9H7KXEC8ySma9JEfgwnplo=";
+    };
 
-        downloadToTemp = true;
-        postFetch = "install -D $downloadedFile $out/" + builtins.baseNameOf url;
-    })}/bin/HeadlessTweaks.dll";
+    rml-stressless-headless = pkgs.runCommand "StresslessHeadless.dll" { } ''
+        cp ${rml-stressless-headless-source} $out
+    '';
+
+    rml-headless-tweaks = pkgs.runCommand "HeadlessTweaks.dll" { } ''
+        cp ${rml-headless-tweaks-source} $out
+    '';
 
     jsonFormat = pkgs.formats.json {};
     
