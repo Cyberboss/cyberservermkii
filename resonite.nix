@@ -8,6 +8,8 @@ let
         url = "https://github.com/New-Project-Final-Final-WIP/HeadlessTweaks/releases/download/v2.2.0/HeadlessTweaks.dll";
         sha256 = "sha256-TDr1o+FDoxecv8btP6QYc9H7KXEC8ySma9JEfgwnplo=";
     };
+
+    jsonFormat = pkgs.formats.json {};
     
     tweaks-config-json = jsonFormat.generate "HeadlessTweaks.json" {
         PermissionLevels = {
