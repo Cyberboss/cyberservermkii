@@ -11,11 +11,16 @@ let
 
     jsonFormat = pkgs.formats.json {};
     
-    tweaks-config-json = jsonFormat.generate "HeadlessTweaks.json" {
+    tweaks-config = jsonFormat.generate "HeadlessTweaks.json" {
         PermissionLevels = {
             U-1jLFy9ehNjs = "Owner";
         };
     };
+
+    tweaks-config-json = pkgs.runCommand "copy-tweaks" {} ''
+        mkdir -p $out/etc
+        cp ${tweaks-config-json} $out/etc/HeadlessTweaks.json
+    '';
 in
 {
     services.resonite-headless = {
@@ -29,7 +34,7 @@ in
             rml-headless-tweaks
         ];
         rml-configs = [
-            tweaks-config-json
+            "${tweaks-config-json}/etc/HeadlessTweaks.json"
         ];
         config-json = {
             loginCredential = secrets.resonite-username;
