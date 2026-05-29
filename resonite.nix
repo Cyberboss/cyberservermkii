@@ -8,6 +8,12 @@ let
         url = "https://github.com/New-Project-Final-Final-WIP/HeadlessTweaks/releases/download/v2.2.0/HeadlessTweaks.dll";
         sha256 = "sha256-TDr1o+FDoxecv8btP6QYc9H7KXEC8ySma9JEfgwnplo=";
     };
+    
+    tweaks-config-json = jsonFormat.generate "HeadlessTweaks.json" {
+        PermissionLevels = {
+            U-1jLFy9ehNjs = "Owner";
+        };
+    };
 in
 {
     services.resonite-headless = {
@@ -19,6 +25,9 @@ in
         rml-mods = [
             rml-stressless-headless
             rml-headless-tweaks
+        ];
+        rml-configs = [
+            tweaks-config-json
         ];
         config-json = {
             loginCredential = secrets.resonite-username;
