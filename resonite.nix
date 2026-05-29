@@ -10,12 +10,12 @@ let
     };
 
     rml-stressless-headless = "${pkgs.runCommand "StresslessHeadless.dll" { } ''
-        mkdir $out/bin
+        mkdir -p $out/bin
         cp ${rml-stressless-headless-source} $out/bin/StresslessHeadless.dll
     ''}/bin/StresslessHeadless.dll";
 
     rml-headless-tweaks = "${pkgs.runCommand "HeadlessTweaks.dll" { } ''
-        mkdir $out/bin
+        mkdir -p $out/bin
         cp ${rml-headless-tweaks-source} $out/bin/HeadlessTweaks.dll
     ''}/bin/HeadlessTweaks.dll";
 
