@@ -22,6 +22,7 @@ let
     jsonFormat = pkgs.formats.json {};
     
     tweaks-config = jsonFormat.generate "HeadlessTweaks.json" {
+        version = "1.0.0";
         PermissionLevels = {
             U-1jLFy9ehNjs = "Owner";
         };
