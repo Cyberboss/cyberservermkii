@@ -9,13 +9,15 @@ let
         sha256 = "sha256-TDr1o+FDoxecv8btP6QYc9H7KXEC8ySma9JEfgwnplo=";
     };
 
-    rml-stressless-headless = pkgs.runCommand "StresslessHeadless.dll" { } ''
-        cp ${rml-stressless-headless-source} $out
-    '';
+    rml-stressless-headless = "${pkgs.runCommand "StresslessHeadless.dll" { } ''
+        mkdir $out/bin
+        cp ${rml-stressless-headless-source} $out/bin/StresslessHeadless.dll
+    ''}/bin/StresslessHeadless.dll";
 
-    rml-headless-tweaks = pkgs.runCommand "HeadlessTweaks.dll" { } ''
-        cp ${rml-headless-tweaks-source} $out
-    '';
+    rml-headless-tweaks = "${pkgs.runCommand "HeadlessTweaks.dll" { } ''
+        mkdir $out/bin
+        cp ${rml-headless-tweaks-source} $out/bin/HeadlessTweaks.dll
+    ''}/bin/HeadlessTweaks.dll";
 
     jsonFormat = pkgs.formats.json {};
     
