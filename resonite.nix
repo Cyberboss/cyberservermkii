@@ -23,8 +23,25 @@ let
     
     tweaks-config = jsonFormat.generate "HeadlessTweaks.json" {
         version = "1.0.0";
-        PermissionLevels = {
-            U-1jLFy9ehNjs = "Owner";
+        values = {
+            UseDiscordWebhook = false;
+            DiscordWebhookID = null;
+            DiscordWebhookKey = null;
+            DiscordWebhookUsername = null;
+            DiscordWebhookAvatar = null;
+            DiscordWebhookThreadID = null;
+            DiscordWebhookEnabledEvents = {
+                EngineStart = false;
+            };
+            AutoInviteOptOut = [];
+            WorldRoster = {};
+            SessionIdToName = {};
+            DefaultSessionAccessLevel = {};
+            DiscordWebhookEventColors = {};
+            DiscordLinkToSession = true;
+            PermissionLevels = {
+                U-1jLFy9ehNjs = "Owner";
+            };
         };
     };
 
