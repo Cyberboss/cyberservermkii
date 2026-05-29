@@ -19,7 +19,7 @@ let
 
     tweaks-config-json = pkgs.runCommand "copy-tweaks" {} ''
         mkdir -p $out/etc
-        cp ${tweaks-config-json} $out/etc/HeadlessTweaks.json
+        cp ${tweaks-config} $out/etc/HeadlessTweaks.json
     '';
 in
 {
