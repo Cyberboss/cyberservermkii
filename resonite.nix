@@ -5,7 +5,6 @@ let
         sha256 = "sha256-DipeSX1F604p/zMAyjggab6O2kOfnjibfdURAhSz4cU=";
         
         downloadToTemp = true;
-        recursiveHash = true;
         postFetch = "install -D $downloadedFile $out/" + builtins.baseNameOf url;
     })}/bin/StresslessHeadless.dll";
     rml-headless-tweaks = "${(pkgs.fetchurl rec {
@@ -13,7 +12,6 @@ let
         sha256 = "sha256-TDr1o+FDoxecv8btP6QYc9H7KXEC8ySma9JEfgwnplo=";
 
         downloadToTemp = true;
-        recursiveHash = true;
         postFetch = "install -D $downloadedFile $out/" + builtins.baseNameOf url;
     })}/bin/HeadlessTweaks.dll";
 
