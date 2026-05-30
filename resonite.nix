@@ -70,7 +70,7 @@ in
             startWorlds = [
                 {
                     "$schema" = "https://raw.githubusercontent.com/Yellow-Dog-Man/JSONSchemas/main/schemas/HeadlessConfig.schema.json";
-                    sessionName = "<color=#>Dominion</color>'s Flat";
+                    sessionName = "<color=#0900BDFF>Dominion</color>'s Flat";
                     customSessionId = "U-1nPiX9NfQQ4:DominionsFlat";
                     accessLevel = "ContactsPlus";
                     description = "Dominion's personal hideaway. Come say hello!";
