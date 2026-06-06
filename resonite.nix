@@ -100,7 +100,7 @@ in
                         Shywizz = "Builder";
                         "The Honeybee" = "Builder";
                         Zandario = "Builder";
-                        "Grandpa Vape" = "Builder";
+                        GrandpaVape = "Builder";
                         hartofstone = "Builder";
                         "ItsAPuddin" = "Builder";
                         SvenTheRedPanda = "Builder";
