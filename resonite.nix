@@ -104,6 +104,8 @@ in
                         hartofstone = "Builder";
                         "ItsAPuddin" = "Builder";
                         SvenTheRedPanda = "Builder";
+                        VirisTheDragon = "Builder";
+                        Water = "Builder";
                     };
                     autoInviteUsernames = [ ];
                     inviteRequestHandlerUsernames = [
