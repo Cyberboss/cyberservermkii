@@ -18,7 +18,7 @@ in
         isSystemUser = true;
         createHome = true;
         group = service-name;
-        home = service-name;
+        home = home-directory;
       };
     };
 }
