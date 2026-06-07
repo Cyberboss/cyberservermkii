@@ -91,7 +91,7 @@ in
                         "memes" 
                         "workshop"
                     ];
-                    loadWorldUrl = "resrec:///U-1nPiX9NfQQ4/R-019e5c2f-d6a6-76c6-af08-5333624a2b0a";
+                    loadWorldUrl = "resrec:///G-1nmN4fjhq9g/R-019ea2c0-0b13-704d-8890-b28d22b80757";
                     defaultUserRoles = {
                         Dominion = "Admin";
                         Seyfert = "Builder";
