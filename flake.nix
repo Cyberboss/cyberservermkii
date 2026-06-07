@@ -19,6 +19,7 @@
                     ./state-version.nix
                     hardware-configuration
                     ./configuration.nix
+                    ./jellyfin.nix
                     ./resonite.nix
                     inputs.resonite-headless.nixosModules.default
                 ];
