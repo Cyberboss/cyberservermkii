@@ -8,6 +8,10 @@ let
         url = "https://github.com/Cyberboss/HeadlessTweaks/releases/download/2.3.0-preview1/HeadlessTweaks.dll";
         sha256 = "sha256-Ztcr2xGi5LN1iTyeFMW0/wl0w0qSjmmZLlzmtMgCslY=";
     };
+    rml-resonance-source = pkgs.fetchurl {
+        url = "https://github.com/SeyfertGames/Resonance/releases/download/v2.0.0/Resonance.dll";
+        sha256 = "sha256-RMe0XEoUu4wsjRmq6CV/WREU/kqs72qWbO/mvyXqjNo="
+    };
 
     rml-stressless-headless = "${pkgs.runCommand "StresslessHeadless.dll" { } ''
         mkdir -p $out/bin
@@ -18,6 +22,11 @@ let
         mkdir -p $out/bin
         cp ${rml-headless-tweaks-source} $out/bin/HeadlessTweaks.dll
     ''}/bin/HeadlessTweaks.dll";
+
+    rml-resonance = "${pkgs.runCommand "Resonance.dll" { } ''
+        mkdir -p $out/bin
+        cp ${rml-headless-tweaks-source} $out/bin/Resonance.dll
+    ''}/bin/Resonance.dll";
 
     jsonFormat = pkgs.formats.json {};
     
@@ -61,6 +70,7 @@ in
         rml-mods = [
             rml-stressless-headless
             rml-headless-tweaks
+            rml-resonance
         ];
         rml-configs = [
             "${tweaks-config-json}/etc/HeadlessTweaks.json"
