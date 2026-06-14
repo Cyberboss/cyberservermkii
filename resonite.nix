@@ -51,6 +51,9 @@ let
             DiscordLinkToSession = true;
             PermissionLevels = {
                 U-1jLFy9ehNjs = "Owner";
+                U-The-Honeybee = "Moderator";
+                U-Charizmare = "Moderator";
+                U-hartofstone = "Moderator";
             };
             DisableInteractivePrompt = true;
         };
