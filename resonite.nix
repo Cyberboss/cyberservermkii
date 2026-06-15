@@ -59,6 +59,13 @@ let
         };
     };
 
+    stressless-config = jsonFormat.generate "StresslessHeadless.json" {
+        version = "1.0.0";
+        values = {
+            RunAudioWaveformTexture = false;
+        };
+    };
+
     tweaks-config-json = pkgs.runCommand "copy-tweaks" {} ''
         mkdir -p $out/etc
         cp ${tweaks-config} $out/etc/HeadlessTweaks.json
@@ -78,6 +85,7 @@ in
         ];
         rml-configs = [
             "${tweaks-config-json}/etc/HeadlessTweaks.json"
+            "${tweaks-config-json}/etc/StresslessHeadless.json"
         ];
         config-json = {
             loginCredential = secrets.resonite-username;
