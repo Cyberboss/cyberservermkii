@@ -70,6 +70,11 @@ let
         mkdir -p $out/etc
         cp ${tweaks-config} $out/etc/HeadlessTweaks.json
     '';
+
+    stressless-config-json = pkgs.runCommand "copy-tweaks" {} ''
+        mkdir -p $out/etc
+        cp ${stressless-config} $out/etc/StresslessHeadless.json
+    '';
 in
 {
     services.resonite-headless = {
@@ -85,7 +90,7 @@ in
         ];
         rml-configs = [
             "${tweaks-config-json}/etc/HeadlessTweaks.json"
-            "${tweaks-config-json}/etc/StresslessHeadless.json"
+            "${stressless-config-json}/etc/StresslessHeadless.json"
         ];
         config-json = {
             loginCredential = secrets.resonite-username;
