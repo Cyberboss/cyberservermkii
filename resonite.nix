@@ -122,13 +122,13 @@ in
                     defaultUserRoles = {
                         Dominion = "Admin";
                         Seyfert = "Builder";
-                        Charizmare = "Builder";
+                        Charizmare = "Admin";
                         HamoCorp = "Builder";
                         Shywizz = "Builder";
-                        "The Honeybee" = "Builder";
+                        "The Honeybee" = "Admin";
                         Zandario = "Builder";
                         GrandpaVape = "Builder";
-                        hartofstone = "Builder";
+                        hartofstone = "Admin";
                         "ItsAPuddin" = "Builder";
                         SvenTheRedPanda = "Builder";
                         VirisTheDragon = "Builder";
