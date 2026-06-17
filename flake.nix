@@ -21,6 +21,7 @@
                     ./configuration.nix
                     ./jellyfin.nix
                     ./resonite.nix
+                    ./samba.nix
                     inputs.resonite-headless.nixosModules.default
                 ];
             };
