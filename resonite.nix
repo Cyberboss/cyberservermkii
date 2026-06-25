@@ -120,19 +120,20 @@ in
                     ];
                     loadWorldUrl = "resrec:///G-1nmN4fjhq9g/R-019ea2c0-0b13-704d-8890-b28d22b80757";
                     defaultUserRoles = {
-                        Dominion = "Admin";
-                        Seyfert = "Builder";
                         Charizmare = "Admin";
+                        Dominion = "Admin";
                         HamoCorp = "Builder";
-                        Shywizz = "Builder";
                         "The Honeybee" = "Admin";
-                        Zandario = "Builder";
-                        GrandpaVape = "Builder";
                         hartofstone = "Admin";
+                        GrandpaVape = "Builder";
                         "ItsAPuddin" = "Builder";
+                        Jinxtiest = "Builder";
+                        Seyfert = "Builder";
+                        Shywizz = "Builder";
                         SvenTheRedPanda = "Builder";
                         VirisTheDragon = "Builder";
                         Water = "Builder";
+                        Zandario = "Builder";
                     };
                     autoInviteUsernames = [ ];
                     inviteRequestHandlerUsernames = [
