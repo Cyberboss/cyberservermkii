@@ -80,7 +80,7 @@ in
     services = {
         resonite-dominion = {
             enable = true;
-            shutdown-seconds = 60;
+            shutdown-seconds = 600;
         };
         resonite-headless = {
             enable = true;
@@ -88,6 +88,7 @@ in
             steam-password = secrets.steam-password;
             headless-code = secrets.resonite-headless-code;
             enable-rml = true;
+            auto-update-interval = "5m";
             rml-mods = [
                 rml-stressless-headless
                 rml-headless-tweaks
