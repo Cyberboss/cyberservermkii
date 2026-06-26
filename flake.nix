@@ -2,6 +2,7 @@
     inputs = {
         nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
         resonite-headless.url = "github:Cyberboss/resonite-headless-nix";
+        resonite-dominion.url = "github:Cyberboss/resonite-dominion";
     };
     outputs = inputs@{ self, nixpkgs, ... }:
     let
@@ -23,6 +24,7 @@
                     ./resonite.nix
                     ./samba.nix
                     inputs.resonite-headless.nixosModules.default
+                    inputs.resonite-dominion.nixosModules.default
                 ];
             };
         };

@@ -77,6 +77,7 @@ let
     '';
 in
 {
+    services.resonite-dominion.enable = true;
     services.resonite-headless = {
         enable = true;
         steam-username = secrets.steam-username;
@@ -148,7 +149,6 @@ in
             ];
         };
     };
+
+    systemd.services"${service-name}".serviceConfig.ExecStop = "${resonite-dominion}/bin/resonite-dominion-ctl stop";
 }
-
-
-
