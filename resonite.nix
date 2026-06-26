@@ -77,76 +77,81 @@ let
     '';
 in
 {
-    services.resonite-dominion.enable = true;
-    services.resonite-headless = {
-        enable = true;
-        steam-username = secrets.steam-username;
-        steam-password = secrets.steam-password;
-        headless-code = secrets.resonite-headless-code;
-        enable-rml = true;
-        rml-mods = [
-            rml-stressless-headless
-            rml-headless-tweaks
-            rml-resonance
-        ];
-        rml-configs = [
-            "${tweaks-config-json}/etc/HeadlessTweaks.json"
-            "${stressless-config-json}/etc/StresslessHeadless.json"
-        ];
-        config-json = {
-            loginCredential = secrets.resonite-username;
-            loginPassword = secrets.resonite-password;
-            startWorlds = [
-                {
-                    "$schema" = "https://raw.githubusercontent.com/Yellow-Dog-Man/JSONSchemas/main/schemas/HeadlessConfig.schema.json";
-                    sessionName = "<color=#0900BDFF>Dominion</color>'s Flat";
-                    customSessionId = "U-1nPiX9NfQQ4:DominionsFlat";
-                    accessLevel = "ContactsPlus";
-                    description = "Dominion's personal hideaway. Come say hello!";
-                    hideFromPublicListing = false;
-                    tags = [
-                        "after"
-                        "glow"
-                        "cozy"
-                        "cyberpunk"
-                        "home" 
-                        "apartment" 
-                        "social" 
-                        "afterglow"
-                        "after glow"
-                        "dominion"
-                        "flat" 
-                        "memes" 
-                        "workshop"
-                    ];
-                    loadWorldUrl = "resrec:///G-1nmN4fjhq9g/R-019ea2c0-0b13-704d-8890-b28d22b80757";
-                    defaultUserRoles = {
-                        Charizmare = "Admin";
-                        Dominion = "Admin";
-                        HamoCorp = "Builder";
-                        "The Honeybee" = "Admin";
-                        hartofstone = "Admin";
-                        GrandpaVape = "Builder";
-                        "ItsAPuddin" = "Builder";
-                        Jinxtiest = "Builder";
-                        Seyfert = "Builder";
-                        Shywizz = "Builder";
-                        SvenTheRedPanda = "Builder";
-                        VirisTheDragon = "Builder";
-                        Water = "Builder";
-                        Zandario = "Builder";
-                    };
-                    autoInviteUsernames = [ ];
-                    inviteRequestHandlerUsernames = [
-                        "Dominion"
-                    ];
-                    autoInviteMessage = "Astral connection re-established.";
-                    idleRestartInterval = 14400;
-                    saveOnExit = false;
-                    autoSleep = true;
-                    enableResoniteLink = false;
-                }
+    services = {
+        resonite-dominion = {
+            enable = true;
+            shutdown-seconds = 60;
+        };
+        resonite-headless = {
+            enable = true;
+            steam-username = secrets.steam-username;
+            steam-password = secrets.steam-password;
+            headless-code = secrets.resonite-headless-code;
+            enable-rml = true;
+            rml-mods = [
+                rml-stressless-headless
+                rml-headless-tweaks
+                rml-resonance
             ];
+            rml-configs = [
+                "${tweaks-config-json}/etc/HeadlessTweaks.json"
+                "${stressless-config-json}/etc/StresslessHeadless.json"
+            ];
+            config-json = {
+                loginCredential = secrets.resonite-username;
+                loginPassword = secrets.resonite-password;
+                startWorlds = [
+                    {
+                        "$schema" = "https://raw.githubusercontent.com/Yellow-Dog-Man/JSONSchemas/main/schemas/HeadlessConfig.schema.json";
+                        sessionName = "<color=#0900BDFF>Dominion</color>'s Flat";
+                        customSessionId = "U-1nPiX9NfQQ4:DominionsFlat";
+                        accessLevel = "ContactsPlus";
+                        description = "Dominion's personal hideaway. Come say hello!";
+                        hideFromPublicListing = false;
+                        tags = [
+                            "after"
+                            "glow"
+                            "cozy"
+                            "cyberpunk"
+                            "home" 
+                            "apartment" 
+                            "social" 
+                            "afterglow"
+                            "after glow"
+                            "dominion"
+                            "flat" 
+                            "memes" 
+                            "workshop"
+                        ];
+                        loadWorldUrl = "resrec:///G-1nmN4fjhq9g/R-019ea2c0-0b13-704d-8890-b28d22b80757";
+                        defaultUserRoles = {
+                            Charizmare = "Admin";
+                            Dominion = "Admin";
+                            HamoCorp = "Builder";
+                            "The Honeybee" = "Admin";
+                            hartofstone = "Admin";
+                            GrandpaVape = "Builder";
+                            "ItsAPuddin" = "Builder";
+                            Jinxtiest = "Builder";
+                            Seyfert = "Builder";
+                            Shywizz = "Builder";
+                            SvenTheRedPanda = "Builder";
+                            VirisTheDragon = "Builder";
+                            Water = "Builder";
+                            Zandario = "Builder";
+                        };
+                        autoInviteUsernames = [ ];
+                        inviteRequestHandlerUsernames = [
+                            "Dominion"
+                        ];
+                        autoInviteMessage = "Astral connection re-established.";
+                        idleRestartInterval = 14400;
+                        saveOnExit = false;
+                        autoSleep = true;
+                        enableResoniteLink = false;
+                    }
+                ];
+            };
         };
     };
 }
