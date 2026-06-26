@@ -149,6 +149,4 @@ in
             ];
         };
     };
-
-    systemd.services"${service-name}".serviceConfig.ExecStop = "${resonite-dominion}/bin/resonite-dominion-ctl stop";
 }
