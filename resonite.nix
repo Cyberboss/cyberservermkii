@@ -100,7 +100,7 @@ in
             config-json = {
                 loginCredential = secrets.resonite-username;
                 loginPassword = secrets.resonite-password;
-                allowedUrlHosts = [ "localhost" ];
+                allowedUrlHosts = [ "ws://localhost:24444" ];
                 startWorlds = [
                     {
                         "$schema" = "https://raw.githubusercontent.com/Yellow-Dog-Man/JSONSchemas/main/schemas/HeadlessConfig.schema.json";
