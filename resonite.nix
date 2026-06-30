@@ -164,6 +164,7 @@ in
                         defaultUserRoles = {
                             Dominion = "Admin";
                             Seyfert = "Admin";
+                            Cloud_Jumper = "Admin";
                         };
                         autoInviteUsernames = [ ];
                         inviteRequestHandlerUsernames = [
