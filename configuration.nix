@@ -7,6 +7,15 @@ let
         fi
         nix flake update --flake /etc/nixos && nixos-rebuild switch
     '';
+    update-script-with-headless-reboot = pkgs.writeShellScriptBin "update-system-reboot-headless" ''
+        if [ "$EUID" -ne 0 ]; then
+            echo "Please run as root or with sudo."
+            exit 1
+        fi
+        systemctl stop resonite-dominion
+        nix flake update --flake /etc/nixos && nixos-rebuild switch
+        systemctl start resonite-dominion
+    '';
 in
 {
     boot.loader = {
@@ -34,7 +43,10 @@ in
         root.hashedPassword = "!";
     };
 
-    environment.systemPackages = [ update-script ];
+    environment.systemPackages = [ 
+        update-script
+        update-script-with-headless-reboot
+    ];
     
     systemd.services."getty@tty1".enable = true;
 
