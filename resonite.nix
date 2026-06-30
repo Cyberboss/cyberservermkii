@@ -152,6 +152,29 @@ in
                         autoSleep = true;
                         enableResoniteLink = false;
                     }
+                    {
+                        "$schema" = "https://raw.githubusercontent.com/Yellow-Dog-Man/JSONSchemas/main/schemas/HeadlessConfig.schema.json";
+                        sessionName = "OutCast";
+                        customSessionId = "U-1nPiX9NfQQ4:OutCast";
+                        accessLevel = "RegisteredUsers";
+                        description = "World by WispoWoo, Ported to Resonite by Seyfert & Cloud_Jumper, Headless provided by Dominion.";
+                        hideFromPublicListing = false;
+                        tags = [ ];
+                        loadWorldUrl = "resrec:///G-1nmN4fjhq9g/R-019f161a-6d7c-77a1-809a-fe40fcca0da9";
+                        defaultUserRoles = {
+                            Dominion = "Admin";
+                            Seyfert = "Admin";
+                        };
+                        autoInviteUsernames = [ ];
+                        inviteRequestHandlerUsernames = [
+                            "Seyfert"
+                        ];
+                        autoInviteMessage = "OutCast Online";
+                        idleRestartInterval = 14400;
+                        saveOnExit = false;
+                        autoSleep = true;
+                        enableResoniteLink = false;
+                    }
                 ];
             };
         };
