@@ -181,6 +181,7 @@ in
                             Dominion = "Admin";
                             Seyfert = "Admin";
                             Cloud_Jumper = "Admin";
+                            kittysquirrel = "Builder";
                         };
                         autoInviteUsernames = [ ];
                         inviteRequestHandlerUsernames = [
