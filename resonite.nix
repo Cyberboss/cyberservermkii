@@ -69,7 +69,7 @@ let
                 # Seyfert
                 U-1iHTvyAEdSi = {
                     OutCast = "Moderator";
-                }
+                };
             };
             DisableInteractivePrompt = true;
         };
