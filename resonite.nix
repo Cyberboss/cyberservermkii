@@ -5,13 +5,12 @@ let
         sha256 = "sha256-DipeSX1F604p/zMAyjggab6O2kOfnjibfdURAhSz4cU=";
     };
     rml-headless-tweaks-source = pkgs.fetchurl {
-        url = "https://github.com/Cyberboss/HeadlessTweaks/releases/download/2.3.0-preview1/HeadlessTweaks.dll";
-        sha256 = "sha256-Ztcr2xGi5LN1iTyeFMW0/wl0w0qSjmmZLlzmtMgCslY=";
+        url = "https://github.com/Cyberboss/HeadlessTweaks/releases/download/2.3.0-preview2/HeadlessTweaks.dll";
+        sha256 = "sha256-h6pke2o44iS61/LGvMlWaSewbzvHZ+zyovwTq/jEhXM=";
     };
     rml-resonance-source = pkgs.fetchurl {
         url = "https://github.com/SeyfertGames/Resonance/releases/download/v2.0.0/Resonance.dll";
         sha256 = "sha256-RMe0XEoUu4wsjRmq6CV/WREU/kqs72qWbO/mvyXqjNo=";
-
     };
 
     rml-stressless-headless = "${pkgs.runCommand "StresslessHeadless.dll" { } ''
@@ -30,6 +29,8 @@ let
     ''}/bin/Resonance.dll";
 
     jsonFormat = pkgs.formats.json {};
+
+    DominionsFlat = "<color=#0900BDFF>Dominion</color>'s Flat";
     
     tweaks-config = jsonFormat.generate "HeadlessTweaks.json" {
         version = "1.0.0";
@@ -51,9 +52,24 @@ let
             DiscordLinkToSession = true;
             PermissionLevels = {
                 U-1jLFy9ehNjs = "Owner";
-                U-The-Honeybee = "Moderator";
-                U-Charizmare = "Moderator";
-                U-hartofstone = "Moderator";
+            };
+            WorldScopedPermissions = {
+                U-The-Honeybee = {
+                    "${DominionsFlat}" = "Moderator";
+                };
+                U-Charizmare = {
+                    "${DominionsFlat}" = "Moderator";
+                };
+                U-hartofstone = {
+                    "${DominionsFlat}" = "Moderator";
+                };
+                U-Cloud-Jumper = {
+                    OutCast = "Moderator";
+                };
+                # Seyfert
+                U-1iHTvyAEdSi = {
+                    OutCast = "Moderator";
+                }
             };
             DisableInteractivePrompt = true;
         };
@@ -62,7 +78,7 @@ let
     stressless-config = jsonFormat.generate "StresslessHeadless.json" {
         version = "1.0.0";
         values = {
-            RunAudioWaveformTexture = false;
+            #RunAudioWaveformTexture = false;
         };
     };
 
@@ -105,7 +121,7 @@ in
                 startWorlds = [
                     {
                         "$schema" = "https://raw.githubusercontent.com/Yellow-Dog-Man/JSONSchemas/main/schemas/HeadlessConfig.schema.json";
-                        sessionName = "<color=#0900BDFF>Dominion</color>'s Flat";
+                        sessionName = DominionsFlat;
                         customSessionId = "U-1nPiX9NfQQ4:DominionsFlat";
                         accessLevel = "ContactsPlus";
                         description = "Dominion's personal hideaway. Come say hello!";
