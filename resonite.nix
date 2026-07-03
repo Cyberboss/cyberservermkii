@@ -52,6 +52,9 @@ let
             DiscordLinkToSession = true;
             PermissionLevels = {
                 U-1jLFy9ehNjs = "Owner";
+                U-Charizmare = "Moderator";
+                U-hartofstone = "Moderator";
+                U-The-Honeybee = "Moderator";
             };
             WorldScopedPermissions = {
                 U-The-Honeybee = {
