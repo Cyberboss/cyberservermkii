@@ -5,8 +5,8 @@ let
         sha256 = "sha256-DipeSX1F604p/zMAyjggab6O2kOfnjibfdURAhSz4cU=";
     };
     rml-headless-tweaks-source = pkgs.fetchurl {
-        url = "https://github.com/Cyberboss/HeadlessTweaks/releases/download/2.3.0-preview3/HeadlessTweaks.dll";
-        sha256 = "sha256-C2rGOjpm7bdnHntRO9eUXvj5I44345iCP6sa6nlxiT4=";
+        url = "https://github.com/Cyberboss/HeadlessTweaks/releases/download/2.3.0-preview4/HeadlessTweaks.dll";
+        sha256 = "sha256-R6XaxvmaNNTpupVolUJ3HKxrI3o/Zu5dkd6grNYs4K4=";
     };
     rml-resonance-source = pkgs.fetchurl {
         url = "https://github.com/SeyfertGames/Resonance/releases/download/v2.0.0/Resonance.dll";
@@ -49,7 +49,6 @@ let
             SessionIdToName = {};
             DefaultSessionAccessLevel = {};
             DiscordWebhookEventColors = {};
-            AutoHandleInviteRequests = true;
             DiscordLinkToSession = true;
             PermissionLevels = {
                 U-1jLFy9ehNjs = "Owner";
