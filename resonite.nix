@@ -49,6 +49,7 @@ let
             SessionIdToName = {};
             DefaultSessionAccessLevel = {};
             DiscordWebhookEventColors = {};
+            AutoHandleInviteRequests = true;
             DiscordLinkToSession = true;
             PermissionLevels = {
                 U-1jLFy9ehNjs = "Owner";
