@@ -21,6 +21,8 @@
                     "guest ok" = "no";
                     "create mask" = "0644";
                     "directory mask" = "0755";
+                    "force user" = "samba";
+                    "force group" = "samba";
                 };
             };
         };
@@ -29,4 +31,7 @@
             openFirewall = true;
         };
     };
+    systemd.tmpfiles.rules = [
+        "d /samba/shares/private 0775 samba samba - -"
+    ];
 }
