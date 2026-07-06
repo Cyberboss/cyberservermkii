@@ -31,6 +31,7 @@ let
     jsonFormat = pkgs.formats.json {};
 
     DominionsFlat = "<color=#0900BDFF>Dominion</color>'s Flat";
+    DominionsFlatNoRtf = "Dominion's Flat";
     
     tweaks-config = jsonFormat.generate "HeadlessTweaks.json" {
         version = "1.0.0";
