@@ -56,13 +56,13 @@ let
             };
             WorldScopedPermissions = {
                 U-The-Honeybee = {
-                    "${DominionsFlat}" = "Moderator";
+                    "${DominionsFlatNoRtf}" = "Moderator";
                 };
                 U-Charizmare = {
-                    "${DominionsFlat}" = "Moderator";
+                    "${DominionsFlatNoRtf}" = "Moderator";
                 };
                 U-hartofstone = {
-                    "${DominionsFlat}" = "Moderator";
+                    "${DominionsFlatNoRtf}" = "Moderator";
                 };
                 U-Cloud-Jumper = {
                     OutCast = "Moderator";
