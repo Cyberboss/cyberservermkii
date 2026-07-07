@@ -1,4 +1,12 @@
 { config, lib, ... }: {
+    users = {
+      groups.samba = { };
+      users.samba = {
+        isSystemUser = true;
+        group = "samba";
+      };
+    };
+
     services = {
         samba = {
             enable = true;
