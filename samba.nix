@@ -1,4 +1,4 @@
-{ config, ... }: {
+{ config, lib, ... }: {
     services = {
         samba = {
             enable = true;
@@ -35,7 +35,7 @@
         "d /samba/shares/private 0775 samba samba - -"
     ];
     
-    system.activationScripts.makeSambaShares = stringAfter [ "users" ] ''
+    system.activationScripts.makeSambaShares = lib.stringAfter [ "users" ] ''
         mkdir -p /samba/shares/private
         chown samba:samba /samba/shares/private
         chmod 0775 /samba/shares/private
