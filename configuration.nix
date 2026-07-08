@@ -10,7 +10,10 @@ let
 in
 {
     boot.loader = {
-        systemd-boot.enable = true;
+        systemd-boot = {
+            configurationLimit = 3;
+            enable = true;
+        };
         efi.canTouchEfiVariables = true;
     };
 
@@ -52,6 +55,12 @@ in
     }) ];
 
     nix = {
+        gc = {
+            automatic = true;
+            persistent = true;
+            dates = "daily";
+            options = "--delete-old";
+        };
         package = pkgs.lixPackageSets.stable.lix;
         settings = {
             experimental-features = [ "nix-command" "flakes" ];
