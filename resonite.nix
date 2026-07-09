@@ -5,8 +5,8 @@ let
         sha256 = "sha256-DipeSX1F604p/zMAyjggab6O2kOfnjibfdURAhSz4cU=";
     };
     rml-headless-tweaks-source = pkgs.fetchurl {
-        url = "https://github.com/Cyberboss/HeadlessTweaks/releases/download/2.3.0-preview9/HeadlessTweaks.dll";
-        sha256 = "sha256-9WoWzCTiTD1qowcbPK9r0wBM7SoK3fvl7B4NBmMmZ+Q=";
+        url = "https://github.com/Cyberboss/HeadlessTweaks/releases/download/2.3.0-preview11/HeadlessTweaks.dll";
+        sha256 = "sha256-mwKlvGH44ujj0OYMZ77RIQMgObMUB2imuyGrxim3XjE=";
     };
     rml-resonance-source = pkgs.fetchurl {
         url = "https://github.com/SeyfertGames/Resonance/releases/download/v2.0.0/Resonance.dll";
@@ -105,6 +105,7 @@ in
             steam-password = secrets.steam-password;
             headless-code = secrets.resonite-headless-code;
             enable-rml = true;
+            disable-ready-notify = true;
             auto-update-interval = "10m";
             rml-mods = [
                 rml-stressless-headless
