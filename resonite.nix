@@ -5,8 +5,8 @@ let
         sha256 = "sha256-DipeSX1F604p/zMAyjggab6O2kOfnjibfdURAhSz4cU=";
     };
     rml-headless-tweaks-source = pkgs.fetchurl {
-        url = "https://github.com/Cyberboss/HeadlessTweaks/releases/download/2.3.0-preview8/HeadlessTweaks.dll";
-        sha256 = "sha256-hNl26AYsV8XvZ9pzd4s9TnS3LJ3t3zZtcx9d967T9IA=";
+        url = "https://github.com/Cyberboss/HeadlessTweaks/releases/download/2.3.0-preview9/HeadlessTweaks.dll";
+        sha256 = "sha256-9WoWzCTiTD1qowcbPK9r0wBM7SoK3fvl7B4NBmMmZ+Q=";
     };
     rml-resonance-source = pkgs.fetchurl {
         url = "https://github.com/SeyfertGames/Resonance/releases/download/v2.0.0/Resonance.dll";
