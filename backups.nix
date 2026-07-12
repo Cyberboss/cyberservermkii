@@ -40,6 +40,6 @@ in
 
         repository = secrets.restic.repository;
         passwordFile = "${pkgs.writeText "restic" secrets.restic.encryption-password}";
-        environmentFile = to-env-file "restic-env" secrets.restic.environment;
+        environmentFile = "${to-env-file "restic-env" secrets.restic.environment}";
     };
 }
