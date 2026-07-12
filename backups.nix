@@ -38,8 +38,7 @@ in
             "--keep-yearly 1"
         ];
 
-        repository = secrets.restic.repository.address;
         passwordFile = "${pkgs.writeText "restic" secrets.restic.encryption-password}";
-        repositoryFile = to-env-file "restic-env" secrets.restic.repository.config;
+        repositoryFile = to-env-file "restic-env" secrets.restic.repository;
     };
 }
