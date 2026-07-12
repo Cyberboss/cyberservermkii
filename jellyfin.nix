@@ -3,6 +3,7 @@ let
     service-name = "jellyfin";
     home-directory = "/home/${service-name}";
     data-directory = "${home-directory}/data";
+    libraries-directory = "${home-directory}/libraries";
     domain = "${service-name}.${secrets.tld}";
     service-port = "8096";
 in
@@ -32,7 +33,18 @@ in
       };
     };
 
+    systemd.tmpfiles.rules = [
+        "d ${libraries-directory} 0775 ${service-name} ${service-name} - -"
+    ];
+    
+    system.activationScripts.makeJellyfinLibrariesDir = lib.stringAfter [ "users" ] ''
+        mkdir -p ${libraries-directory}
+        chown ${service-name}:${service-name} ${libraries-directory}
+        chmod 0770 ${libraries-directory}
+    '';
+
     backups.jellyfin = [
       config.services.${service-name}.dataDir
+      libraries-directory
     ];
 }
