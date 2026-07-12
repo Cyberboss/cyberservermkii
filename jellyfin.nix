@@ -16,7 +16,7 @@ in
         logDir = "/var/log/${service-name}";
     };
 
-    cloudflared.tunnels.primary-tunnel.ingress."${domain}" = "http://localhost:${service-port}";
+    services.cloudflared.tunnels.primary-tunnel.ingress."${domain}" = "http://localhost:${service-port}";
     
     users = {
       groups."${service-name}" = { };

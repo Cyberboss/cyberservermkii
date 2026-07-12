@@ -14,7 +14,7 @@ in
         };
     };
 
-    cloudflared.tunnels.primary-tunnel.ingress."${domain}" = "http://localhost:${service-port}";
+    services.cloudflared.tunnels.primary-tunnel.ingress."${domain}" = "http://localhost:${service-port}";
 
     backups.bluesky = [
         config.services.bluesky-pds.settings.PDS_DATA_DIRECTORY
