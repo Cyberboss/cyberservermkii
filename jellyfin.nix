@@ -38,9 +38,14 @@ in
     ];
     
     system.activationScripts.makeJellyfinLibrariesDir = lib.stringAfter [ "users" ] ''
-        mkdir -p ${libraries-directory}
-        chown ${service-name}:${service-name} ${libraries-directory}
-        chmod 0770 ${libraries-directory}
+        mkdir -p ${libraries-directory}/Movies
+        mkdir -p ${libraries-directory}/Music
+        mkdir -p ${libraries-directory}/Shows
+        mkdir -p ${libraries-directory}/Books
+        mkdir -p ${libraries-directory}/Personal
+        mkdir -p ${libraries-directory}/MusicVideos
+        chown -R ${service-name}:${service-name} ${libraries-directory}
+        chmod -R 0770 ${libraries-directory}
     '';
 
     backups.jellyfin = [
