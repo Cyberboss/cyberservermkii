@@ -54,8 +54,8 @@ in
     
     system.activationScripts.makeSambaShares = lib.stringAfter [ "users" ] ''
         mkdir -p ${private-share}
-        chown ${usergroup}:${usergroup} ${private-share}
-        chmod 0770 ${private-share}
+        chown -R ${usergroup}:${usergroup} ${samba-root}
+        chmod 0770 ${samba-root}
     '';
 
     backups.samba = [
