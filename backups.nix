@@ -1,4 +1,4 @@
-{ lib, config, ... }:
+{ pkgs, lib, config, ... }:
 let
     paths = lib.lists.uniqueStrings (lib.lists.flatten (builtins.attrValues config.backups));
     to-env-file = (file-name: attrset: pkgs.writeText file-name (
