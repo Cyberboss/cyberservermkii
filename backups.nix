@@ -3,7 +3,7 @@ let
     paths = lib.lists.uniqueStrings (lib.lists.flatten (builtins.attrValues config.backups));
     to-env-file = (file-name: attrset: pkgs.writeText file-name (
         pkgs.lib.concatStringsSep "\n" (
-        pkgs.lib.mapAttrsToList (name: value: "${name}=${value}") attrset
+            pkgs.lib.mapAttrsToList (name: value: "${name}=${value}") attrset
         )
     ));
 in
@@ -23,7 +23,7 @@ in
       };
     };
 
-    services.restic.backups.primary = {
+    config.services.restic.backups.primary = {
         initialize = true;
         paths = paths;
         timerConfig = {
