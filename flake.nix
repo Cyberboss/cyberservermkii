@@ -20,6 +20,7 @@
                     ./state-version.nix
                     hardware-configuration
                     ./configuration.nix
+                    ./cloudflared.nix
                     ./jellyfin.nix
                     ./resonite.nix
                     ./samba.nix
