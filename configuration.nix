@@ -70,4 +70,9 @@ in
             ];
         };
     };
+
+    system.activationScripts.keepSecretsSafe = ''
+        chown root:root /etc/nixos/secrets.nix
+        chmod 600 /etc/nixos/secrets.nix
+    '';
 }
