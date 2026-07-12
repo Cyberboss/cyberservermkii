@@ -47,15 +47,6 @@ in
             openFirewall = true;
         };
     };
-    systemd.tmpfiles.rules = [
-        "d ${private-share} 0775 ${usergroup} ${usergroup} - -"
-    ];
-    
-    system.activationScripts.makeSambaShares = lib.stringAfter [ "users" ] ''
-        mkdir -p ${private-share}
-        chown ${usergroup}:${usergroup} ${private-share}
-        chmod 0770 ${private-share}
-    '';
 
     backups.samba = [
         samba-root
