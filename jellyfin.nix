@@ -20,11 +20,11 @@ in
         ./modules/cloudflared.nix
     ];
 
-    services.cloudflared.tunnels.primary-tunnel.ingress."${domain}" = "http://localhost:${service-port}";
+    services.cloudflared.tunnels.primary-tunnel.ingress.${domain} = "http://localhost:${service-port}";
     
     users = {
-      groups."${service-name}" = { };
-      users."${service-name}" = {
+      groups.${service-name} = { };
+      users.${service-name} = {
         isSystemUser = true;
         createHome = true;
         group = service-name;
