@@ -40,6 +40,7 @@ in
                     "directory mask" = "0755";
                     "force user" = usergroup;
                     "force group" = usergroup;
+                    "allow insecure wide links" = "yes";
                 };
             };
         };
