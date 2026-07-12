@@ -12,6 +12,7 @@ in
         isSystemUser = true;
         createHome = true;
         group = usergroup;
+        extraGroups = [ "jellyfin" ];
       };
     };
 
