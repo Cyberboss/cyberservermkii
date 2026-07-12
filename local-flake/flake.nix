@@ -1,3 +1,6 @@
+# /etc/nixos/flake.nix
+# This + /etc/nixos/secrets.nix and /etc/nixous/hardward-configuration.nix should be all that's necessary to configure the system
+
 {
   inputs = {
    remote.url = "github:Cyberboss/cyberservermkii";
