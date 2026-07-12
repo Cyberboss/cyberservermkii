@@ -16,6 +16,10 @@ in
         logDir = "/var/log/${service-name}";
     };
 
+    imports = [
+        ./cloudflared.nix
+    ];
+
     services.cloudflared.tunnels.primary-tunnel.ingress."${domain}" = "http://localhost:${service-port}";
     
     users = {

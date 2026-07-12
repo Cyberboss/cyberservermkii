@@ -14,6 +14,10 @@ in
         };
     };
 
+    imports = [
+        ./cloudflared.nix
+    ];
+
     services.cloudflared.tunnels.primary-tunnel.ingress."${domain}" = "http://localhost:${service-port}";
 
     backups.bluesky = [

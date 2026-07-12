@@ -22,7 +22,6 @@
                     ./configuration.nix
                     ./backups.nix
                     ./bluesky.nix
-                    ./cloudflared.nix
                     ./jellyfin.nix
                     ./resonite.nix
                     ./samba.nix
