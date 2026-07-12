@@ -3,6 +3,7 @@
   config,
   pkgs,
   lib,
+  secrets,
   ...
 }: let
   published-route-script-name-map = builtins.listToAttrs (map (published-route: { name = "cloudflared-publish-route-${published-route}"; value = published-route; }) (lib.attrNames config.services.cloudflared.tunnels.primary-tunnel.ingress));
