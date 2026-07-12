@@ -2,6 +2,7 @@
 let
     service-port = "3000";
     domain = "bsky.${secrets.tld}";
+    pds-domain = "pds.${domain}";
 in
 {
     services.bluesky-pds = {
@@ -18,7 +19,7 @@ in
         ./cloudflared.nix
     ];
 
-    services.cloudflared.tunnels.primary-tunnel.ingress."${domain}" = "http://localhost:${service-port}";
+    services.cloudflared.tunnels.primary-tunnel.ingress."${pds-domain}" = "http://localhost:${service-port}";
 
     backups.bluesky = [
         config.services.bluesky-pds.settings.PDS_DATA_DIRECTORY
