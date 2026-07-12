@@ -1,6 +1,6 @@
 { config, lib, ... }: 
 let
-    samba-root = "/samba";
+    samba-root = "/home/samba/samba";
     shares-root = "${samba-root}/shares";
     private-share = "${shares-root}/private";
     usergroup = "samba";
@@ -10,6 +10,7 @@ in
       groups.samba = { };
       users.samba = {
         isSystemUser = true;
+        createHome = true;
         group = usergroup;
       };
     };
