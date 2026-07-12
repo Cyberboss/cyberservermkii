@@ -1,4 +1,4 @@
-{ config, secrets, ... }:
+{ lib, config, secrets, ... }:
 let
     service-name = "jellyfin";
     home-directory = "/home/${service-name}";
