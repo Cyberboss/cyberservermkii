@@ -1,8 +1,8 @@
-{ config, ... }:
+{ lib, config, ... }:
 let
 in
 {
-    options.backups =  lib.mkOption {
+    options.backups = lib.mkOption {
       description = ''
         Backup specifications.
       '';
