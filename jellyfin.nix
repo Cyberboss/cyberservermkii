@@ -3,7 +3,7 @@ let
     service-name = "jellyfin";
     home-directory = "/home/${service-name}";
     data-directory = "${home-directory}/data";
-    domain = "${service-name}.${tld}";
+    domain = "${service-name}.${secrets.tld}";
     service-port = "8096";
 in
 {
