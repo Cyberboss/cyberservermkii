@@ -19,8 +19,9 @@
                 modules = [
                     ./state-version.nix
                     hardware-configuration
-                    ./bluesky.nix
                     ./configuration.nix
+                    ./backups.nix
+                    ./bluesky.nix
                     ./cloudflared.nix
                     ./jellyfin.nix
                     ./resonite.nix
