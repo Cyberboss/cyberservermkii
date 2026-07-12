@@ -1,9 +1,16 @@
-{ config, lib, ... }: {
+{ config, lib, ... }: 
+let
+    samba-root = "/samba";
+    shares-root = "${samba-root}/shares";
+    private-share = "${shares-root}/private";
+    usergroup = "samba";
+in
+{
     users = {
       groups.samba = { };
       users.samba = {
         isSystemUser = true;
-        group = "samba";
+        group = usergroup;
       };
     };
 
@@ -23,14 +30,14 @@
                     "map to guest" = "bad user";
                 };
                 private = {
-                    path = "/samba/shares/private";
+                    path = private-share;
                     browseable = "yes";
                     "read only" = "no";
                     "guest ok" = "no";
                     "create mask" = "0644";
                     "directory mask" = "0755";
-                    "force user" = "samba";
-                    "force group" = "samba";
+                    "force user" = usergroup;
+                    "force group" = usergroup;
                 };
             };
         };
@@ -40,12 +47,16 @@
         };
     };
     systemd.tmpfiles.rules = [
-        "d /samba/shares/private 0775 samba samba - -"
+        "d ${private-share} 0775 ${usergroup} ${usergroup} - -"
     ];
     
     system.activationScripts.makeSambaShares = lib.stringAfter [ "users" ] ''
-        mkdir -p /samba/shares/private
-        chown samba:samba /samba/shares/private
-        chmod 0775 /samba/shares/private
+        mkdir -p ${private-share}
+        chown ${usergroup}:${usergroup} ${private-share}
+        chmod 0775 ${private-share}
     '';
+
+    backups.samba = [
+        samba-root
+    ];
 }

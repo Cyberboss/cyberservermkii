@@ -1,7 +1,10 @@
-{...}:
+{ config, secrets, ... }:
 let
     service-name = "jellyfin";
-    home-directory = "/home/${service-name}/data";
+    home-directory = "/home/${service-name}";
+    data-directory = "${home-directory}/data";
+    domain = "${service-name}.${tld}";
+    service-port = "8096";
 in
 {
     services.${service-name} = {
@@ -9,8 +12,11 @@ in
         openFirewall = true;
         user = service-name;
         group = service-name;
-        dataDir = home-directory;
+        dataDir = data-directory;
+        logDir = "/var/log/${service-name}";
     };
+
+    cloudflared.tunnels.primary-tunnel.ingress."${domain}" = "http://localhost:${service-port}";
     
     users = {
       groups."${service-name}" = { };
@@ -21,4 +27,8 @@ in
         home = home-directory;
       };
     };
+
+    backups.jellyfin = [
+      config.services.${service-name}.dataDir
+    ];
 }

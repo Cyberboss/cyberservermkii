@@ -19,6 +19,7 @@
                 modules = [
                     ./state-version.nix
                     hardware-configuration
+                    ./bluesky.nix
                     ./configuration.nix
                     ./cloudflared.nix
                     ./jellyfin.nix

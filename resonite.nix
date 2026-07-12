@@ -101,9 +101,9 @@ in
         };
         resonite-headless = {
             enable = true;
-            steam-username = secrets.steam-username;
-            steam-password = secrets.steam-password;
-            headless-code = secrets.resonite-headless-code;
+            steam-username = secrets.steam.username;
+            steam-password = secrets.steam.password;
+            headless-code = secrets.resonite.headless-code;
             enable-rml = true;
             disable-ready-notify = true;
             auto-update-interval = "24h";
@@ -117,8 +117,8 @@ in
                 "${stressless-config-json}/etc/StresslessHeadless.json"
             ];
             config-json = {
-                loginCredential = secrets.resonite-username;
-                loginPassword = secrets.resonite-password;
+                loginCredential = secrets.resonite.username;
+                loginPassword = secrets.resonite.password;
                 allowedUrlHosts = [ "ws://localhost:24444" ];
                 startWorlds = [
                     {
