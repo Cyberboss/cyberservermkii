@@ -30,7 +30,6 @@ in
                     "hosts deny" = "0.0.0.0/0";
                     "guest account" = "nobody";
                     "map to guest" = "bad user";
-                    "allow insecure wide links" = "yes";
                 };
                 private = {
                     path = private-share;
@@ -41,8 +40,16 @@ in
                     "directory mask" = "0755";
                     "force user" = usergroup;
                     "force group" = usergroup;
-                    "follow symlinks" = "yes";
-                    "wide links" = "yes";
+                };
+                jellyfin = {
+                    path = "/home/jellyfin/libraries";
+                    browseable = "yes";
+                    "read only" = "no";
+                    "guest ok" = "no";
+                    "create mask" = "0660";
+                    "directory mask" = "0770";
+                    "force user" = usergroup;
+                    "force group" = "jellyfin";
                 };
             };
         };
