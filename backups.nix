@@ -27,7 +27,7 @@ in
         initialize = true;
         paths = paths;
         timerConfig = {
-            OnCalendar = "daily";
+            OnCalendar = "*-*-* 06:00:00";
             Persistent = true;
         };
 
