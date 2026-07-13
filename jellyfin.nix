@@ -46,6 +46,7 @@ in
         mkdir -p ${libraries-directory}/MusicVideos
         chown -R ${service-name}:${service-name} ${libraries-directory}
         chmod -R 0770 ${libraries-directory}
+        chmod 0750 ${libraries-directory}
         chmod 0710 ${home-directory}
     '';
 
