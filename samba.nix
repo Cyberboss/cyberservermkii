@@ -41,6 +41,8 @@ in
                     "directory mask" = "0755";
                     "force user" = usergroup;
                     "force group" = usergroup;
+                    "follow symlinks" = "yes";
+                    "wide links" = "yes";
                 };
             };
         };
