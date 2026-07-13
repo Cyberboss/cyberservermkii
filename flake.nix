@@ -1,6 +1,6 @@
 {
     inputs = {
-        nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+        nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
         resonite-headless.url = "github:Cyberboss/resonite-headless-nix";
         resonite-dominion.url = "github:Cyberboss/resonite-dominion";
     };
