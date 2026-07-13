@@ -8,13 +8,19 @@ let
     service-port = "8096";
 in
 {
-    services.${service-name} = {
+    services = {
+      "${service-name}" = {
         enable = true;
         openFirewall = true;
         user = service-name;
         group = service-name;
         dataDir = data-directory;
         logDir = "/var/log/${service-name}";
+      };
+      seerr = {
+        enable = true;
+        openFirewall = true;
+      };
     };
 
     imports = [
