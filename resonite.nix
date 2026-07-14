@@ -106,7 +106,7 @@ in
             headless-code = secrets.resonite.headless-code;
             enable-rml = true;
             disable-ready-notify = true;
-            auto-update-interval = "24h";
+            auto-update-interval = "5m";
             rml-mods = [
                 rml-stressless-headless
                 rml-headless-tweaks
