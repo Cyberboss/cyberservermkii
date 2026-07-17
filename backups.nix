@@ -63,7 +63,7 @@ in
           {
             options = {
                 pre = lib.mkOption {
-                    type = with lib.types; nullOr path;
+                    type = with lib.types; nullOr nonEmptyStr;
                     default = null;
                     example = "/path/to/script.sh";
                     description = ''
@@ -71,7 +71,7 @@ in
                     '';
                 };
                 paths = {
-                    type = lib.types.listOf lib.types.path;
+                    type = lib.types.listOf lib.types.nonEmptyStr;
                     example = [
                         "/var/logs/some-service"
                         "/home/some-service/data"
@@ -80,7 +80,7 @@ in
                     default = [ ];
                 };
                 post = lib.mkOption {
-                    type = with lib.types; nullOr path;
+                    type = with lib.types; nullOr nonEmptyStr;
                     default = null;
                     example = "/path/to/script.sh";
                     description = ''
