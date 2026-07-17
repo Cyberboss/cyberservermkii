@@ -43,7 +43,7 @@ in {
 
       # Check if hash file exists and compare
       if [ ! -f "$HASH_FILE" ] || [ "$(cat "$HASH_FILE")" != "$NEW_HASH" ]; then
-        echo "Attrset changed! Running activation actions..."
+        echo "Tunnel ${script-name} changed! Running activation actions..."
         
         mkdir -p /root/.cloudflared
         cp ${cert-path} /root/.cloudflared/cert.pem
