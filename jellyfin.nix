@@ -18,9 +18,7 @@ let
         hash = "sha256-5M8dMMZrpo6Q7RQQJn8h6zXsL6tSdqywRG0+AKV5ITc=";
       };
 
-      # Automatically vendored Cargo dependencies
-      # (Newer Nixpkgs versions prefer `cargoHash` over `cargoSha256`)
-      cargoHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      cargoHash = "sha256-TdUPh0Zf7ZBl8hvf8A8rVEa2leOz+p4tPLZXVYWiEPw=";
     };
 
     jellyroller-config = {
