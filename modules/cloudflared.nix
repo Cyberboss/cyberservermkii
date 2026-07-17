@@ -9,6 +9,9 @@
   published-route-script-name-map = builtins.listToAttrs (map (published-route: { name = "cloudflared-publish-route-${published-route}"; value = published-route; }) (lib.attrNames config.services.cloudflared.tunnels.primary-tunnel.ingress));
   cert-path = pkgs.writeText "cloudflared-cert" secrets.cloudflared.cert;
   jsonFormat = pkgs.formats.json {};
+
+  attrsetJSON = builtins.toJSON config.services.cloudflared;
+  attrsetHash = builtins.hashString "sha256" attrsetJSON;
 in {
   services.cloudflared = {
     enable = true;
@@ -25,10 +28,28 @@ in {
     # Register the tunnel with DNS
     # Need the cert in-place temporarily for this
     pkgs.lib.stringAfter ["users"] ''
-      mkdir -p /root/.cloudflared
-      cp ${cert-path} /root/.cloudflared/cert.pem
-      ${config.services.cloudflared.package}/bin/cloudflared tunnel route dns ${config.networking.hostName} ${published-route}
-      rm -rf /root/.cloudflared
+      STATE_DIR="/var/lib/my-module"
+      HASH_FILE="$STATE_DIR/attrset.hash"
+      
+      # Ensure state directory exists
+      mkdir -p "$STATE_DIR"
+
+      NEW_HASH="${attrsetHash}"
+
+      # Check if hash file exists and compare
+      if [ ! -f "$HASH_FILE" ] || [ "$(cat "$HASH_FILE")" != "$NEW_HASH" ]; then
+        echo "Attrset changed! Running activation actions..."
+        
+        mkdir -p /root/.cloudflared
+        cp ${cert-path} /root/.cloudflared/cert.pem
+        ${config.services.cloudflared.package}/bin/cloudflared tunnel route dns ${config.networking.hostName} ${published-route}
+        rm -rf /root/.cloudflared
+
+        # Save the new hash so we don't run this again unless the attrset changes
+        echo "$NEW_HASH" > "$HASH_FILE"
+      else
+        echo "cloudflared attrset has not changed. Skipping."
+      fi
     ''
     ) published-route-script-name-map;
 }
