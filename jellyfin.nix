@@ -56,8 +56,10 @@ in
         chmod 0710 ${home-directory}
     '';
 
-    backups.jellyfin.paths = [
-      config.services.${service-name}.dataDir
-      libraries-directory
-    ];
+    backups.jellyfin = {
+      paths = [
+        config.services.${service-name}.dataDir
+        libraries-directory
+      ];
+    };
 }
