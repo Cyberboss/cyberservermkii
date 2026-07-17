@@ -18,7 +18,7 @@ scripts=(
 pids=()
 
 # 2. Spawn each script asynchronously
-for script in "${scripts[@]}"; do
+for script in "''${scripts[@]}"; do
     echo "Launching $script..."
     
     # Run the script in the background
@@ -32,7 +32,7 @@ echo "All jobs launched. Waiting for completion..."
 
 # 3. Wait for all tracking PIDs to finish and check exit codes
 exit_code=0
-for pid in "${pids[@]}"; do
+for pid in "''${pids[@]}"; do
     if ! wait "$pid"; then
         echo "Process with PID $pid failed!"
         exit_code=1
