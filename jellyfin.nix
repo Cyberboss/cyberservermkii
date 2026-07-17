@@ -31,7 +31,7 @@ let
     };
     tomlFormat = pkgs.formats.toml { };
     jellyroller-config-path = tomlFormat.generate "jellyroller.toml" jellyroller-config;
-    jellyroller-config-directory = pkgs.runCommand "my-packaged-script" {} ''
+    jellyroller-config-directory = pkgs.runCommand "jellyroller-config" {} ''
       mkdir -p $out/jellyroller
       ln -s ${jellyroller-config-path} $out/jellyroller/jellyroller.toml
     '';
