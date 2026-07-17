@@ -30,7 +30,11 @@ let
       token = "apiKey";
     };
     tomlFormat = pkgs.formats.toml { };
-    jellyroller-config-path = tomlFormat.generate "jellyroller/jellyroller.toml" jellyroller-config;
+    jellyroller-config-path = tomlFormat.generate "jellyroller.toml" jellyroller-config;
+    jellyroller-config-directory = pkgs.runCommand "my-packaged-script" {} ''
+      mkdir -p $out/jellyroller
+      ln -s ${jellyroller-config-path} $out/jellyroller/jellyroller.toml
+    '';
 in
 {
     services = {
@@ -84,7 +88,7 @@ in
     backups.jellyfin = {
       pre = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
         set -euxo pipefail
-        export XDG_CONFIG_HOME=${jellyroller-config-path}
+        export XDG_CONFIG_HOME=${jellyroller-config-directory}
         ${jellyroller}/bin/jellyroller create-backup
       '');
       paths = [
