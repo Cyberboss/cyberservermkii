@@ -94,7 +94,7 @@ in
       post = ''
         set -euxo pipefail
         shopt -s dotglob
-        rm -rf ${data-directory}/backups/*
+        rm -rf ${data-directory}/data/backups/*
       '';
     };
 }
