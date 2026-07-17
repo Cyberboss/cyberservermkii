@@ -1,6 +1,6 @@
 { pkgs, lib, config, secrets, ... }:
 let
-    paths = lib.lists.uniqueStrings (lib.lists.flatten (lib.mapAttrs (name: value: value.paths)));
+    paths = lib.lists.uniqueStrings (lib.lists.flatten (builtins.attrValues (lib.mapAttrs (name: value: value.paths))));
     all-pre-scripts = lib.mapAttrs (name: value: value.pre);
     all-post-scripts = lib.mapAttrs (name: value: value.post);
     to-env-file = (file-name: attrset: pkgs.writeText file-name (
