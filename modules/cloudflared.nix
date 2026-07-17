@@ -32,9 +32,9 @@ in {
   system.activationScripts = builtins.mapAttrs (script-name: published-route:
     # Register the tunnel with DNS
     # Need the cert in-place temporarily for this
-    pkgs.lib.stringAfter ["users"] ''
-      STATE_DIR="/var/lib/my-module"
-      HASH_FILE="$STATE_DIR/attrset.hash"
+    lib.stringAfter ["users"] ''
+      STATE_DIR="/var/lib/cloudflared-tunnel-attrset-hashes"
+      HASH_FILE="$STATE_DIR/${script-name}.hash"
       
       # Ensure state directory exists
       mkdir -p "$STATE_DIR"
@@ -51,9 +51,7 @@ in {
         rm -rf /root/.cloudflared
 
         # Save the new hash so we don't run this again unless the attrset changes
-        echo "$NEW_HASH" > "$HASH_FILE"
-      else
-        echo "cloudflared attrset has not changed. Skipping."
+        echo "${attrsetHash}" > "$HASH_FILE"
       fi
     ''
     ) published-route-script-name-map;
