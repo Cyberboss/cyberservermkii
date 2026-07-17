@@ -70,7 +70,7 @@ in
                         The script to run that must complete before the backup begins
                     '';
                 };
-                paths = {
+                paths = lib.mkOption {
                     type = lib.types.listOf lib.types.nonEmptyStr;
                     example = [
                         "/var/logs/some-service"
