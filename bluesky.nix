@@ -21,9 +21,7 @@ in
 
     services.cloudflared.tunnels.primary-tunnel.ingress.${pds-domain} = "http://localhost:${service-port}";
 
-    backups.bluesky = {
-        paths = [
-            config.services.bluesky-pds.settings.PDS_DATA_DIRECTORY
-        ];
-    };
+    backups.bluesky.paths = [
+        config.services.bluesky-pds.settings.PDS_DATA_DIRECTORY
+    ];
 }
