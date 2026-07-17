@@ -82,11 +82,11 @@ in
     '';
 
     backups.jellyfin = {
-      pre = ''
+      pre = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
         set -euxo pipefail
         export XDG_CONFIG_HOME=${jellyroller-config-path}
         ${jellyroller}/bin/jellyroller create-backup
-      '';
+      '');
       paths = [
         config.services.${service-name}.dataDir
         libraries-directory
