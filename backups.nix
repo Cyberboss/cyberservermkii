@@ -11,43 +11,45 @@ let
         )
     ));
     script-template = name: array: if array != [ ] then lib.getExe (pkgs.writeShellScriptBin name ''
-# 1. Define your array of scripts
-scripts=(
-    "${(builtins.concatStringsSep "\"\n\"" array)}"
-)
+        set -euxo pipefail
 
-# Initialize an array to keep track of background PIDs
-pids=()
+        # 1. Define your array of scripts
+        scripts=(
+            "${(builtins.concatStringsSep "\"\n\"" array)}"
+        )
 
-# 2. Spawn each script asynchronously
-for script in "''${scripts[@]}"; do
-    echo "Launching $script..."
-    
-    # Run the script in the background
-    $script &
-    
-    # Capture the PID of the last backgrounded process and store it
-    pids+=($!)
-done
+        # Initialize an array to keep track of background PIDs
+        pids=()
 
-echo "All jobs launched. Waiting for completion..."
+        # 2. Spawn each script asynchronously
+        for script in "''${scripts[@]}"; do
+            echo "Launching $script..."
+            
+            # Run the script in the background
+            $script &
+            
+            # Capture the PID of the last backgrounded process and store it
+            pids+=($!)
+        done
 
-# 3. Wait for all tracking PIDs to finish and check exit codes
-exit_code=0
-for pid in "''${pids[@]}"; do
-    if ! wait "$pid"; then
-        echo "Process with PID $pid failed!"
-        exit_code=1
-    fi
-done
+        echo "All jobs launched. Waiting for completion..."
 
-# 4. Final verification
-if [ $exit_code -eq 0 ]; then
-    echo "All scripts finished successfully!"
-else
-    echo "One or more scripts failed."
-    exit 1
-fi
+        # 3. Wait for all tracking PIDs to finish and check exit codes
+        exit_code=0
+        for pid in "''${pids[@]}"; do
+            if ! wait "$pid"; then
+                echo "Process with PID $pid failed!"
+                exit_code=1
+            fi
+        done
+
+        # 4. Final verification
+        if [ $exit_code -eq 0 ]; then
+            echo "All scripts finished successfully!"
+        else
+            echo "One or more scripts failed."
+            exit 1
+        fi
     '') else null;
 
     pre-script = script-template "backup-prepare.sh" all-pre-scripts;

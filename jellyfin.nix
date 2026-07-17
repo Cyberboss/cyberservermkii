@@ -91,10 +91,10 @@ in
         config.services.${service-name}.dataDir
         libraries-directory
       ];
-      post = ''
+      post = lib.getExe (pkgs.writeShellScriptBin "delete-jellyfin-backup.sh" ''
         set -euxo pipefail
         shopt -s dotglob
         rm -rf ${data-directory}/data/backups/*
-      '';
+      '');
     };
 }
