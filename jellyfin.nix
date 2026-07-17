@@ -15,7 +15,7 @@ let
         owner = "LSchallot";
         repo = "JellyRoller";
         rev = "v${version}";
-        hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+        hash = "5M8dMMZrpo6Q7RQQJn8h6zXsL6tSdqywRG0+AKV5ITc=";
       };
 
       # Automatically vendored Cargo dependencies
