@@ -30,7 +30,7 @@ let
       token = "apiKey";
     };
     tomlFormat = pkgs.formats.toml { };
-    jellyroller-config-path = tomlFormat.generate "jellyroller.toml" jellyroller-config;
+    jellyroller-config-path = tomlFormat.generate "jellyroller/jellyroller.toml" jellyroller-config;
 in
 {
     services = {
