@@ -68,7 +68,7 @@ in
         chmod 0770 ${samba-root}
     '';
 
-    backups.samba = [
+    backups.samba.paths = [
         samba-root
     ];
 }

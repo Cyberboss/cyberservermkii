@@ -1,25 +1,105 @@
 { pkgs, lib, config, secrets, ... }:
 let
-    paths = lib.lists.uniqueStrings (lib.lists.flatten (builtins.attrValues config.backups));
+    paths = lib.lists.uniqueStrings (lib.lists.flatten (lib.mapAttrs (name: value: value.paths)));
+    all-pre-scripts = lib.mapAttrs (name: value: value.pre);
+    all-post-scripts = lib.mapAttrs (name: value: value.post);
     to-env-file = (file-name: attrset: pkgs.writeText file-name (
         pkgs.lib.concatStringsSep "\n" (
             pkgs.lib.mapAttrsToList (name: value: "${name}=${value}") attrset
         )
     ));
+    script-template = name: array: (pkgs.writeShellScriptBin name ''
+# 1. Define your array of scripts
+scripts=(
+    "${(builtins.concatStringsSep "\"\n\"" array)}"
+)
+
+# Initialize an array to keep track of background PIDs
+pids=()
+
+# 2. Spawn each script asynchronously
+for script in "${scripts[@]}"; do
+    echo "Launching $script..."
+    
+    # Run the script in the background
+    $script &
+    
+    # Capture the PID of the last backgrounded process and store it
+    pids+=($!)
+done
+
+echo "All jobs launched. Waiting for completion..."
+
+# 3. Wait for all tracking PIDs to finish and check exit codes
+exit_code=0
+for pid in "${pids[@]}"; do
+    if ! wait "$pid"; then
+        echo "Process with PID $pid failed!"
+        exit_code=1
+    fi
+done
+
+# 4. Final verification
+if [ $exit_code -eq 0 ]; then
+    echo "All scripts finished successfully!"
+else
+    echo "One or more scripts failed."
+    exit 1
+fi
+    '');
+
+    pre-script = lib.mkIf (pre-scripts != [ ]) (script-template "backup-prepare" pre-scripts);
+    post-script = lib.mkIf (pre-scripts != [ ]) (script-template "backup-cleanup" post-scripts);
 in
 {
     options.backups = lib.mkOption {
       description = ''
         Backup specifications.
       '';
-      type = lib.types.attrsOf (lib.types.listOf lib.types.nonEmptyStr);
+      type = lib.types.attrsOf (
+         lib.types.submodule (
+          { name, ... }:
+          {
+            options = {
+                pre = lib.mkOption {
+                    type = with lib.types; nullOr path;
+                    default = null;
+                    example = "/path/to/script.sh";
+                    description = ''
+                        The script to run that must complete before the backup begins
+                    '';
+                };
+                paths = {
+                    type = lib.types.listOf lib.types.path;
+                    example = [
+                        "/var/logs/some-service"
+                        "/home/some-service/data"
+                        "/some-service"
+                    ];
+                    default = [ ];
+                };
+                post = lib.mkOption {
+                    type = with lib.types; nullOr path;
+                    default = null;
+                    example = "/path/to/script.sh";
+                    description = ''
+                        The script to run that must complete before the backup begins
+                    '';
+                };
+            };
+          }
+      ));
+      
       default = { };
       example = {
-        some-service = [
-            "/var/logs/some-service"
-            "/home/some-service/data"
-            "/some-service"
-        ];
+        some-service = {
+          pre = "/pre/backup/script.sh";
+          paths = [
+            /backup/path/1
+            /backup/path/2
+          ];
+          post = "/post/backup/script.sh";
+        };
       };
     };
 
@@ -41,5 +121,7 @@ in
         repository = secrets.restic.repository;
         passwordFile = "${pkgs.writeText "restic" secrets.restic.encryption-password}";
         environmentFile = "${to-env-file "restic-env" secrets.restic.environment}";
+        backupPrepareCommand = pre-script;
+        backupCleanupCommand = post-script;
     };
 }
