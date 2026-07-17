@@ -2,8 +2,9 @@
 let
     cfg = config.backups;
     paths = lib.lists.uniqueStrings (lib.lists.flatten (builtins.attrValues (lib.mapAttrs (name: value: value.paths) cfg)));
-    all-pre-scripts = builtins.attrValues (lib.mapAttrs (name: value: value.pre) cfg);
-    all-post-scripts = builtins.attrValues (lib.mapAttrs (name: value: value.post) cfg);
+    script-aggregator = selector: builtins.filter (x: x != null) (builtins.attrValues (lib.mapAttrs (name: value: (selector value)) cfg));
+    all-pre-scripts = script-aggregator (x: x.pre);
+    all-post-scripts = script-aggregator (x: x.post);
     to-env-file = (file-name: attrset: pkgs.writeText file-name (
         pkgs.lib.concatStringsSep "\n" (
             pkgs.lib.mapAttrsToList (name: value: "${name}=${value}") attrset
