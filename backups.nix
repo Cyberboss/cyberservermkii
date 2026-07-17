@@ -9,7 +9,7 @@ let
             pkgs.lib.mapAttrsToList (name: value: "${name}=${value}") attrset
         )
     ));
-    script-template = name: array: (lib.mkIf (all-pre-scripts != [ ]) "${(pkgs.writeShellScriptBin name ''
+    script-template = name: array: if array != [ ] then "${(pkgs.writeShellScriptBin name ''
 # 1. Define your array of scripts
 scripts=(
     "${(builtins.concatStringsSep "\"\n\"" array)}"
@@ -47,7 +47,7 @@ else
     echo "One or more scripts failed."
     exit 1
 fi
-    '')}");
+    '')}" else null;
 
     pre-script = script-template "backup-prepare" all-pre-scripts;
     post-script = script-template "backup-cleanup" all-post-scripts;
