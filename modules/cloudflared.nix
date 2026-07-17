@@ -13,7 +13,7 @@
   cfg = config.cloudflared;
   attrset = {
     tunnels = cfg.tunnels;
-    certificateFile = cfg.certificateFile
+    certificateFile = cfg.certificateFile;
   };
   attrsetJSON = builtins.toJSON attrset;
   attrsetHash = builtins.hashString "sha256" attrsetJSON;
