@@ -10,7 +10,12 @@
   cert-path = pkgs.writeText "cloudflared-cert" secrets.cloudflared.cert;
   jsonFormat = pkgs.formats.json {};
 
-  attrsetJSON = builtins.toJSON config.services.cloudflared;
+  cfg = config.cloudflared;
+  attrset = {
+    tunnels = cfg.tunnels;
+    certificateFile = cfg.certificateFile
+  };
+  attrsetJSON = builtins.toJSON attrset;
   attrsetHash = builtins.hashString "sha256" attrsetJSON;
 in {
   services.cloudflared = {
