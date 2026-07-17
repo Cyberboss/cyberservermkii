@@ -48,10 +48,10 @@ else
     echo "One or more scripts failed."
     exit 1
 fi
-    '')}" else null;
+    '')}/bin/${name}" else null;
 
-    pre-script = script-template "backup-prepare" all-pre-scripts;
-    post-script = script-template "backup-cleanup" all-post-scripts;
+    pre-script = script-template "backup-prepare.sh" all-pre-scripts;
+    post-script = script-template "backup-cleanup.sh" all-post-scripts;
 in
 {
     options.backups = lib.mkOption {
