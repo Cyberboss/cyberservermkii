@@ -1,4 +1,4 @@
-{ lib, config, secrets, ... }:
+{ lib, config, secrets, pkgs, ... }:
 let
     service-name = "jellyfin";
     home-directory = "/home/${service-name}";
@@ -6,6 +6,33 @@ let
     libraries-directory = "${home-directory}/libraries";
     domain = "${service-name}.${secrets.tld}";
     service-port = "8096";
+    local-url = "http://localhost:${service-port}";
+    jellyroller = pkgs.rustPlatform.buildRustPackage rec {
+      pname = "jellyroller";
+      version = "1.1.3";
+
+      src = pkgs.fetchFromGitHub {
+        owner = "LSchallot";
+        repo = "JellyRoller";
+        rev = "v${version}";
+        hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      };
+
+      # Automatically vendored Cargo dependencies
+      # (Newer Nixpkgs versions prefer `cargoHash` over `cargoSha256`)
+      cargoHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    };
+
+    jellyroller-config = {
+      status = "configured";
+      comfy = true;
+      server_url = local-url;
+      os = "linux";
+      api_key = secrets.jellyfin.api-key;
+      token = "apiKey";
+    };
+    tomlFormat = pkgs.formats.toml { };
+    jellyroller-config-path = tomlFormat.generate "jellyroller.toml" jellyroller-config;
 in
 {
     services = {
@@ -27,7 +54,7 @@ in
         ./modules/cloudflared.nix
     ];
 
-    services.cloudflared.tunnels.primary-tunnel.ingress.${domain} = "http://localhost:${service-port}";
+    services.cloudflared.tunnels.primary-tunnel.ingress.${domain} = local-url;
     
     users = {
       groups.${service-name} = { };
@@ -56,8 +83,20 @@ in
         chmod 0710 ${home-directory}
     '';
 
-    backups.jellyfin.paths = [
-      config.services.${service-name}.dataDir
-      libraries-directory
-    ];
+    backups.jellyfin = {
+      pre = ''
+        set -euxo pipefail
+        export XDG_CONFIG_HOME=${jellyroller-config-path}
+        ${jellyroller}/bin/jellyroller create-backup
+      '';
+      paths = [
+        config.services.${service-name}.dataDir
+        libraries-directory
+      ];
+      post = ''
+        set -euxo pipefail
+        shopt -s dotglob
+        rm -rf ${data-directory}/backups/*
+      '';
+    };
 }
