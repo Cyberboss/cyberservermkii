@@ -10,7 +10,7 @@
   cert-path = pkgs.writeText "cloudflared-cert" secrets.cloudflared.cert;
   jsonFormat = pkgs.formats.json {};
 
-  cfg = config.cloudflared;
+  cfg = config.services.cloudflared;
   attrset = {
     tunnels = cfg.tunnels;
     certificateFile = cfg.certificateFile;
