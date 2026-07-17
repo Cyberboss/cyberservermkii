@@ -88,8 +88,10 @@ in
     backups.jellyfin = {
       pre = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
         set -euxo pipefail
+        echo "Creating Jellyfin backup..."
         export XDG_CONFIG_HOME=${jellyroller-config-directory}
         ${jellyroller}/bin/jellyroller create-backup
+        echo "Done creating Jellyfin backup"
       '');
       paths = [
         config.services.${service-name}.dataDir
@@ -97,8 +99,10 @@ in
       ];
       post = lib.getExe (pkgs.writeShellScriptBin "delete-jellyfin-backup.sh" ''
         set -euxo pipefail
+        echo "Removing Jellyfin backups..."
         shopt -s dotglob
         rm -rf ${data-directory}/data/backups/*
+        echo "Done removing Jellyfin backups"
       '');
     };
 }
