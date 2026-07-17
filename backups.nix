@@ -48,8 +48,8 @@ else
 fi
     '');
 
-    pre-script = lib.mkIf (pre-scripts != [ ]) (script-template "backup-prepare" pre-scripts);
-    post-script = lib.mkIf (pre-scripts != [ ]) (script-template "backup-cleanup" post-scripts);
+    all-pre-script = lib.mkIf (pre-scripts != [ ]) (script-template "backup-prepare" pre-scripts);
+    all-post-script = lib.mkIf (pre-scripts != [ ]) (script-template "backup-cleanup" post-scripts);
 in
 {
     options.backups = lib.mkOption {
