@@ -9,7 +9,7 @@ let
             pkgs.lib.mapAttrsToList (name: value: "${name}=${value}") attrset
         )
     ));
-    script-template = name: array: "${(pkgs.writeShellScriptBin name ''
+    script-template = name: array: (lib.mkIf (all-pre-scripts != [ ]) "${(pkgs.writeShellScriptBin name ''
 # 1. Define your array of scripts
 scripts=(
     "${(builtins.concatStringsSep "\"\n\"" array)}"
@@ -47,10 +47,10 @@ else
     echo "One or more scripts failed."
     exit 1
 fi
-    '')}";
+    '')}");
 
-    pre-script = lib.mkIf (all-pre-scripts != [ ] && all-pre-scripts != null) (script-template "backup-prepare" all-pre-scripts);
-    post-script = lib.mkIf (all-post-scripts != [ ] && all-post-scripts != null) (script-template "backup-cleanup" all-post-scripts);
+    pre-script = script-template "backup-prepare" all-pre-scripts;
+    post-script = script-template "backup-cleanup" all-post-scripts;
 in
 {
     options.backups = lib.mkOption {
