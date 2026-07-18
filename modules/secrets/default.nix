@@ -1,4 +1,4 @@
-{ inputs, pkgs, secrets, ... }:
+{ inputs, pkgs, lib, config, ... }:
 let
   cfg = config.secrets;
   yaml-to-attrset = file: builtins.fromJSON (builtins.readFile (
