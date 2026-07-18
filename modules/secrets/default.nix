@@ -14,7 +14,7 @@ let
   };
   create-secret-directory-entry = secret-directory: (secret-entry: create-secret-entry secret-directory secret-entry);
   create-secret-directory = secret-directory: {
-    paths = lib.foldl' lib.recursiveUpdate {} (map (create-secret-directory-entry secret-directory) (lib.attrNames secrets-manifest.${secret-directory}));
+    paths = lib.attrsets.mergeAttrsList (map (create-secret-directory-entry secret-directory) (lib.attrNames secrets-manifest.${secret-directory}));
   };
 
   create-sops-secrets = secret-directory: map (secret-entry: {
@@ -67,15 +67,15 @@ in
         defaultSopsFile = secrets-file;
         defaultSopsFormat = "yaml";
         age.keyFile = "/etc/nixos/age.txt";
-        secrets = lib.foldl' lib.recursiveUpdate {} (map create-sops-secrets (lib.attrNames secrets-manifest));
+        secrets = lib.attrsets.mergeAttrsList (map create-sops-secrets (lib.attrNames secrets-manifest));
     };
 
-    secrets = lib.foldl' lib.recursiveUpdate {} (map create-secret-directory (lib.attrNames secrets-manifest));
+    secrets = lib.attrsets.mergeAttrsList (map create-secret-directory (lib.attrNames secrets-manifest));
 
-    assertions = lib.lists.flatten (map (secret-directory: (secret-name:
+    assertions = lib.lists.flatten (map (secret-directory: (map (secret-name:
       {
         assertion = cfg.${secret-directory}.${secret-name}.isDefined;
         message = "Secret ${secret-directory}.${secret-name} was never assigned! All secrets in /modules/secrets/secrets.yml must either be used or removed!";
-      }) (lib.attrNames secrets-manifest.${secret-directory})) (lib.attrNames secrets-manifest));
+      }) (lib.attrNames secrets-manifest.${secret-directory})) (lib.attrNames secrets-manifest)));
   };
 }
