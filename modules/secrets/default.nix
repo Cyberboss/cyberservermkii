@@ -57,10 +57,11 @@ in
     };
   };
 
+  imports = [
+      inputs.sops-nix.nixosModules.sops
+  ];
+
   config = {
-    imports = [
-        inputs.sops-nix.nixosModules.sops
-    ];
 
     sops = {
         defaultSopsFile = secrets-file;

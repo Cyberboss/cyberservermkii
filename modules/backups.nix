@@ -110,11 +110,11 @@ in
       };
     };
 
-    config = {
-        imports = [
-          ./secrets
-        ];
+    imports = [
+      ./secrets
+    ];
 
+    config = {
         services.restic.backups.primary = {
             initialize = true;
             paths = paths;
