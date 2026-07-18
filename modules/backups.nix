@@ -112,7 +112,7 @@ in
 
     config = {
         imports = [
-          ./secrets.nix
+          ./secrets
         ];
 
         services.restic.backups.primary = {

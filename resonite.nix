@@ -95,7 +95,7 @@ let
 in
 {
     imports = [
-        ./modules/secrets.nix
+        ./modules/secrets
         inputs.resonite-headless.nixosModules.default
         inputs.resonite-dominion.nixosModules.default
     ];
