@@ -17,9 +17,9 @@ let
     paths = lib.attrsets.mergeAttrsList (map (create-secret-directory-entry secret-directory) (lib.attrNames secrets-manifest.${secret-directory}));
   };
 
-  create-sops-secrets = secret-directory: map (secret-entry: {
+  create-sops-secrets = secret-directory: lib.attrsets.mergeAttrsList (map (secret-entry: {
     "${secret-directory}/${secret-entry}" = { };
-  }) (lib.attrNames secrets-manifest.${secret-directory});
+  }) (lib.attrNames secrets-manifest.${secret-directory}));
 in
 {
   options = {
