@@ -1,4 +1,4 @@
-{ pkgs, secrets, inputs, ... }:
+{ pkgs, secrets, inputs, config, ... }:
 let
     rml-stressless-headless-source = pkgs.fetchurl {
         url = "https://codeberg.org/Raidriar/StresslessHeadless/releases/download/2.2.1/StresslessHeadless.dll";
