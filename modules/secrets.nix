@@ -5,7 +5,7 @@
     ];
 
     sops = {
-        defaultSopsFile = ./secrets.yml;
+        defaultSopsFile = ./../secrets.yml;
         defaultSopsFormat = "yaml";
         age.keyFile = "/etc/nixos/age.txt";
     };
