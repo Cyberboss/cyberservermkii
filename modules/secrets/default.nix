@@ -67,7 +67,7 @@ in
         defaultSopsFile = secrets-file;
         defaultSopsFormat = "yaml";
         age.keyFile = "/etc/nixos/age.txt";
-        secrets = lib.foldl' lib.recursiveUpdate {} (map create-sops-secrets (lib.attrNames cfg));
+        secrets = lib.foldl' lib.recursiveUpdate {} (map create-sops-secrets (lib.attrNames secrets-manifest));
     };
 
     secrets = lib.foldl' lib.recursiveUpdate {} (map create-secret-directory (lib.attrNames secrets-manifest));
