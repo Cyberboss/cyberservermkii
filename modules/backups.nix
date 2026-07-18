@@ -6,8 +6,8 @@ let
     all-pre-scripts = script-aggregator (x: x.pre);
     all-post-scripts = script-aggregator (x: x.post);
     to-env-file = (file-name: attrset: pkgs.writeText file-name (
-        pkgs.lib.concatStringsSep "\n" (
-            pkgs.lib.mapAttrsToList (name: value: "${name}=${value}") attrset
+        lib.concatStringsSep "\n" (
+            lib.mapAttrsToList (name: value: "${name}=${value}") attrset
         )
     ));
     script-template = name: array: if array != [ ] then lib.getExe (pkgs.writeShellScriptBin name ''
@@ -54,6 +54,8 @@ let
 
     pre-script = script-template "backup-prepare.sh" all-pre-scripts;
     post-script = script-template "backup-cleanup.sh" all-post-scripts;
+
+    secrets = config.secrets.restic;
 in
 {
     options.backups = lib.mkOption {
@@ -130,9 +132,9 @@ in
                 "--keep-yearly 1"
             ];
 
-            repositoryFile = config.secrets.restic.repository;
-            passwordFile = config.secrets.restic.password;
-            environmentFile = config.secrets.restic.environment;
+            repositoryFile = secrets.repository;
+            passwordFile = secrets.password;
+            environmentFile = secrets.environment;
             backupPrepareCommand = pre-script;
             backupCleanupCommand = post-script;
         };
