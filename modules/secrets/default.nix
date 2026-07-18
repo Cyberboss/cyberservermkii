@@ -43,10 +43,6 @@ in
                             description = ''
                                 The runtime path that the ${secret-directory}/${secret-name} secret may be accessed at
                             '';
-                            apply = value:
-                              if config.secrets-used.${secret-directory}.${secret-name} == "USED"
-                              then value
-                              else value;
                         };
                     };
                   }) (lib.attrNames secrets-manifest.${secret-directory})));
