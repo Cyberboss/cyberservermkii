@@ -46,16 +46,13 @@ in
         openssh.enable = true;
     };
     
-    nixpkgs = {
-        overlays = [ (final: prev: {
-            inherit (prev.lixPackageSets.stable)
-            nixpkgs-review
-            nix-eval-jobs
-            nix-fast-build
-            colmena;
-        }) ];
-        config.contentAddressedByDefault = true;
-    };
+    nixpkgs.overlays = [ (final: prev: {
+        inherit (prev.lixPackageSets.stable)
+        nixpkgs-review
+        nix-eval-jobs
+        nix-fast-build
+        colmena;
+    }) ];
 
     nix = {
         gc = {
@@ -66,7 +63,7 @@ in
         };
         package = pkgs.lixPackageSets.stable.lix;
         settings = {
-            experimental-features = [ "nix-command" "flakes" "ca-derivations" "ca-references" ];
+            experimental-features = [ "nix-command" "flakes" ];
             access-tokens = [
                 "github.com=${secrets.github-token}"
             ];
