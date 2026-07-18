@@ -13,9 +13,7 @@ let
     "${secret-entry}" = config.sops.secrets."${secret-directory}/${secret-entry}".path;
   };
   create-secret-directory-entry = secret-directory: (secret-entry: create-secret-entry secret-directory secret-entry);
-  create-secret-directory = secret-directory: {
-    paths = lib.attrsets.mergeAttrsList (map (create-secret-directory-entry secret-directory) (lib.attrNames secrets-manifest.${secret-directory}));
-  };
+  create-secret-directory = secret-directory: lib.attrsets.mergeAttrsList (map (create-secret-directory-entry secret-directory) (lib.attrNames secrets-manifest.${secret-directory}));
 
   create-sops-secrets = secret-directory: lib.attrsets.mergeAttrsList (map (secret-entry: {
     "${secret-directory}/${secret-entry}" = { };
