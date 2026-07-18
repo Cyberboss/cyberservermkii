@@ -1,0 +1,11 @@
+*
+!*/
+
+!.gitattributes
+!.gitignore
+!LICENSE
+!.sops.yaml
+!secrets/*.yaml
+!*.nix
+
+!.github/**
