@@ -19,7 +19,7 @@ let
 
   create-sops-secrets = secret-directory: map (secret-entry: {
     "${secret-directory}/${secret-entry}" = { };
-  }) (lib.attrNames cfg.${secret-directory});
+  }) (lib.attrNames secrets-manifest.${secret-directory});
 in
 {
   options = {
