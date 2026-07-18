@@ -6,8 +6,8 @@
   secrets,
   ...
 }: let
-  published-route-script-name-map = builtins.listToAttrs (map (published-route: { name = "cloudflared-publish-route-${published-route}"; value = published-route; }) (lib.attrNames config.services.cloudflared.tunnels.primary-tunnel.ingress));
-  cert-path = pkgs.writeText "cloudflared-cert" secrets.cloudflared.cert;
+  published-route-script-name-map = builtins.listToAttrs (map (published-route: { name = "cloudflared-publish-route-${published-route}"; value = published-route; }) (lib.attrNames cfg.tunnels.primary-tunnel.ingress));
+  cert-path = secrets.cloudflared.cert.path;
   jsonFormat = pkgs.formats.json {};
 
   cfg = config.services.cloudflared;
@@ -35,7 +35,7 @@ in {
     lib.stringAfter ["users"] ''
       STATE_DIR="/var/lib/cloudflared-tunnel-attrset-hashes"
       HASH_FILE="$STATE_DIR/${script-name}.hash"
-      
+
       # Ensure state directory exists
       mkdir -p "$STATE_DIR"
 
@@ -44,7 +44,7 @@ in {
       # Check if hash file exists and compare
       if [ ! -f "$HASH_FILE" ] || [ "$(cat "$HASH_FILE")" != "$NEW_HASH" ]; then
         echo "Tunnel ${script-name} changed! Running activation actions..."
-        
+
         mkdir -p /root/.cloudflared
         cp ${cert-path} /root/.cloudflared/cert.pem
         ${config.services.cloudflared.package}/bin/cloudflared tunnel route dns ${config.networking.hostName} ${published-route}

@@ -100,7 +100,12 @@ in
         inputs.resonite-dominion.nixosModules.default
     ];
 
-    sops.secrets.resonite.owner = config.services.resonite-headless.username;
+    secrets.resonite = {
+      owner = config.services.resonite-headless.username;
+      entries = [
+
+      ];
+    };
 
     services = {
         resonite-dominion = {

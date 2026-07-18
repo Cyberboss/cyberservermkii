@@ -54,10 +54,11 @@ in
 
     imports = [
         ./modules/cloudflared.nix
+        ./modules/backups.nix
     ];
 
     services.cloudflared.tunnels.primary-tunnel.ingress.${domain} = local-url;
-    
+
     users = {
       groups.${service-name} = { };
       users.${service-name} = {
@@ -71,7 +72,7 @@ in
     systemd.tmpfiles.rules = [
         "d ${libraries-directory} 0775 ${service-name} ${service-name} - -"
     ];
-    
+
     system.activationScripts.makeJellyfinLibrariesDir = lib.stringAfter [ "users" ] ''
         mkdir -p ${libraries-directory}/Movies
         mkdir -p ${libraries-directory}/Music

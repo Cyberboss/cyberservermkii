@@ -17,6 +17,7 @@ in
 
     imports = [
         ./modules/cloudflared.nix
+        ./modules/backups.nix
     ];
 
     services.cloudflared.tunnels.primary-tunnel.ingress.${pds-domain} = "http://localhost:${service-port}";

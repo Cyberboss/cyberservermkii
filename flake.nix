@@ -24,7 +24,6 @@
                     ./state-version.nix
                     hardware-configuration
                     ./configuration.nix
-                    ./backups.nix
                     ./bluesky.nix
                     ./jellyfin.nix
                     ./resonite.nix

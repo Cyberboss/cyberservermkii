@@ -1,4 +1,4 @@
-{ pkgs, lib, config, secrets, ... }:
+{ pkgs, lib, config, ... }:
 let
     cfg = config.backups;
     paths = lib.lists.uniqueStrings (lib.lists.flatten (builtins.attrValues (lib.mapAttrs (name: value: value.paths) cfg)));
@@ -24,10 +24,10 @@ let
         # 2. Spawn each script asynchronously
         for script in "''${scripts[@]}"; do
             echo "Launching $script..."
-            
+
             # Run the script in the background
             $script &
-            
+
             # Capture the PID of the last backgrounded process and store it
             pids+=($!)
         done
@@ -80,6 +80,9 @@ in
                         "/home/some-service/data"
                         "/some-service"
                     ];
+                    description = ''
+                        Paths to backup
+                    '';
                     default = [ ];
                 };
                 post = lib.mkOption {
@@ -93,7 +96,7 @@ in
             };
           }
       ));
-      
+
       default = { };
       example = {
         some-service = {
@@ -107,25 +110,31 @@ in
       };
     };
 
-    config.services.restic.backups.primary = {
-        initialize = true;
-        paths = paths;
-        timerConfig = {
-            OnCalendar = "*-*-* 06:00:00";
-            Persistent = true;
-        };
-
-        pruneOpts = [
-            "--keep-daily 7"
-            "--keep-weekly 4"
-            "--keep-monthly 6"
-            "--keep-yearly 1"
+    config = {
+        imports = [
+          ./secrets.nix
         ];
 
-        repository = secrets.restic.repository;
-        passwordFile = "${pkgs.writeText "restic" secrets.restic.encryption-password}";
-        environmentFile = "${to-env-file "restic-env" secrets.restic.environment}";
-        backupPrepareCommand = pre-script;
-        backupCleanupCommand = post-script;
+        services.restic.backups.primary = {
+            initialize = true;
+            paths = paths;
+            timerConfig = {
+                OnCalendar = "*-*-* 06:00:00";
+                Persistent = true;
+            };
+
+            pruneOpts = [
+                "--keep-daily 7"
+                "--keep-weekly 4"
+                "--keep-monthly 6"
+                "--keep-yearly 1"
+            ];
+
+            repositoryFile = config.secrets.restic.repository;
+            passwordFile = config.secrets.restic.password;
+            environmentFile = config.secrets.restic.environment;
+            backupPrepareCommand = pre-script;
+            backupCleanupCommand = post-script;
+        };
     };
 }

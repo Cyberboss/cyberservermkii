@@ -1,4 +1,4 @@
-{ config, lib, ... }: 
+{ config, lib, ... }:
 let
     samba-root = "/home/${usergroup}/data";
     shares-root = "${samba-root}/shares";
@@ -6,6 +6,10 @@ let
     usergroup = "samba";
 in
 {
+    imports = [
+      ./modules/backups.nix
+    ];
+
     users = {
       groups.samba = { };
       users.samba = {
@@ -61,7 +65,7 @@ in
     systemd.tmpfiles.rules = [
         "d ${private-share} 0775 ${usergroup} ${usergroup} - -"
     ];
-    
+
     system.activationScripts.makeSambaShares = lib.stringAfter [ "users" ] ''
         mkdir -p ${private-share}
         chown -R ${usergroup}:${usergroup} ${samba-root}
