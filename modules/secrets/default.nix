@@ -13,7 +13,9 @@ let
     "${secret-entry}" = config.sops.secrets."${secret-directory}/${secret-entry}".path;
   };
   create-secret-directory-entry = secret-directory: (secret-entry: create-secret-entry secret-directory secret-entry);
-  create-secret-directory = secret-directory: lib.attrsets.mergeAttrsList (map (create-secret-directory-entry secret-directory) (lib.attrNames secrets-manifest.${secret-directory}));
+  create-secret-directory = secret-directory: {
+    "${secret-directory}" = lib.attrsets.mergeAttrsList (map (create-secret-directory-entry secret-directory) (lib.attrNames secrets-manifest.${secret-directory}));
+  };
 
   create-sops-secrets = secret-directory: lib.attrsets.mergeAttrsList (map (secret-entry: {
     "${secret-directory}/${secret-entry}" = { };
@@ -60,7 +62,6 @@ in
   ];
 
   config = {
-
     sops = {
         defaultSopsFile = secrets-file;
         defaultSopsFormat = "yaml";
@@ -72,7 +73,7 @@ in
 
     assertions = lib.lists.flatten (map (secret-directory: (map (secret-name:
       {
-        assertion = builtins.trace "Evaluating ${secret-directory} ${secret-name}" cfg.${secret-directory}.${secret-name}.isDefined;
+        assertion = cfg.${secret-directory}.${secret-name}.isDefined;
         message = "Secret ${secret-directory}.${secret-name} was never assigned! All secrets in /modules/secrets/secrets.yml must either be used or removed!";
       }) (lib.attrNames secrets-manifest.${secret-directory}))) (lib.attrNames secrets-manifest));
   };
