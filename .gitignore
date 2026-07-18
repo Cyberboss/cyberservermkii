@@ -1,11 +1,13 @@
 *
 !*/
 
+!.editorconfig
 !.gitattributes
 !.gitignore
 !LICENSE
 !.sops.yaml
-!secrets/*.yaml
+!secrets.yml
 !*.nix
 
 !.github/**
+!.local/**

@@ -1,7 +1,9 @@
 keys:
-  - &primary age1wukgfrjpl3l3wdw5m2y703v2fkjangpzxs9ct4wev4ylwv7sycvszp6cgp
+  - &dominion age1wukgfrjpl3l3wdw5m2y703v2fkjangpzxs9ct4wev4ylwv7sycvszp6cgp
+  - &system age1c44ucek3zrqc29glfakgt039mclfsu46c3enu7tentjkmdak3g2s93xsts
 creation_rules:
-  - path_regex: secrets/secrets.yaml$
+  - path_regex: secrets\\secrets.yml
     key_groups:
     - age:
-      - *primary
+      - *dominion
+      - *system

@@ -1,4 +1,4 @@
-{ pkgs, secrets, ... }:
+{ pkgs, secrets, inputs, ... }:
 let
     rml-stressless-headless-source = pkgs.fetchurl {
         url = "https://codeberg.org/Raidriar/StresslessHeadless/releases/download/2.2.1/StresslessHeadless.dll";
@@ -32,7 +32,7 @@ let
 
     DominionsFlat = "<color=#0900BDFF>Dominion</color>'s Flat";
     DominionsFlatNoRtf = "Dominion's Flat";
-    
+
     tweaks-config = jsonFormat.generate "HeadlessTweaks.json" {
         version = "1.0.0";
         values = {
@@ -94,6 +94,13 @@ let
     '';
 in
 {
+    imports = [
+        inputs.resonite-headless.nixosModules.default
+        inputs.resonite-dominion.nixosModules.default
+    ];
+
+    sops.secrets.resonite.owner = config.users.services.resonite-headless.username;
+
     services = {
         resonite-dominion = {
             enable = true;
@@ -133,14 +140,14 @@ in
                             "glow"
                             "cozy"
                             "cyberpunk"
-                            "home" 
-                            "apartment" 
-                            "social" 
+                            "home"
+                            "apartment"
+                            "social"
                             "afterglow"
                             "after glow"
                             "dominion"
-                            "flat" 
-                            "memes" 
+                            "flat"
+                            "memes"
                             "workshop"
                         ];
                         loadWorldUrl = "resrec:///G-1nmN4fjhq9g/R-019ea2c0-0b13-704d-8890-b28d22b80757";

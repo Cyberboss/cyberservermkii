@@ -1,6 +1,10 @@
 {
     inputs = {
         nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+        sops-nix = {
+            url = "github:Mic92/sops-nix";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
         resonite-headless.url = "github:Cyberboss/resonite-headless-nix";
         resonite-dominion.url = "github:Cyberboss/resonite-dominion";
     };
@@ -13,7 +17,7 @@
                 system = "x86_64-linux";
 
                 specialArgs = {
-                    inherit hostName secrets;
+                    inherit hostName secrets inputs;
                 };
 
                 modules = [
@@ -25,8 +29,6 @@
                     ./jellyfin.nix
                     ./resonite.nix
                     ./samba.nix
-                    inputs.resonite-headless.nixosModules.default
-                    inputs.resonite-dominion.nixosModules.default
                 ];
             };
         };

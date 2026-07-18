@@ -1,0 +1,7 @@
+To generate this file run
+
+sudo nix shell nixpkgs#age -c age-keygen -o /etc/nixos/age_key.txt
+
+Then update the "system" public key in sops.yaml with the output public key. You can review it with the following
+
+sudo nix shell nixpkgs#age -c age-keygen -y /etc/nixos/age_key.txt
