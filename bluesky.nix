@@ -8,7 +8,7 @@ in
 {
     services.bluesky-pds = {
         enable = true;
-        environmentFiles = [ secrets.environment ];
+        environmentFiles = [ secrets.environment.path ];
         settings.PDS_HOSTNAME = domain;
     };
 
