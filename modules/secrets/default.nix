@@ -22,13 +22,8 @@ let
   create-sops-secrets = secret-directory: lib.attrsets.mergeAttrsList (map (secret-entry: {
     "${secret-directory}/${secret-entry}" = { };
   }) (lib.attrNames secrets-manifest.${secret-directory}));
-in
-{
-  options.secrets = lib.mkOption {
-    description = ''
-      Secrets registry
-    '';
-    type = lib.types.submodule (lib.foldl' lib.recursiveUpdate {} (map
+
+  secrets-submodule = lib.types.submodule (lib.foldl' lib.recursiveUpdate {} (map
       (secret-directory: {
         options = {
           "${secret-directory}" = lib.mkOption {
@@ -63,6 +58,13 @@ in
         };
       })
     (lib.attrNames secrets-manifest)));
+in
+{
+  options.secrets = lib.mkOption {
+    description = ''
+      Secrets registry
+    '';
+    type = builtins.trace "Secret options: ${(builtins.toJSON secrets-submodule)}" secrets-submodule;
   };
 
   imports = [
@@ -81,7 +83,7 @@ in
 
     assertions = lib.lists.flatten (map (secret-directory: (map (secret-name:
       {
-        assertion = (builtins.trace "Secret options: ${(builtins.toJSON options.secrets)}" options.secrets).${secret-directory}.${secret-name}.isDefined;
+        assertion = options.secrets.${secret-directory}.${secret-name}.isDefined;
         message = "Secret ${secret-directory}.${secret-name} was never assigned! All secrets in /modules/secrets/secrets.yml must either be used or removed!";
       }) (lib.attrNames secrets-manifest.${secret-directory}))) (lib.attrNames secrets-manifest));
   };
