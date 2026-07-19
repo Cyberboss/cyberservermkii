@@ -69,39 +69,40 @@ in {
 
   system.activationScripts.makeJellyfinLibrariesDir =
     lib.stringAfter [ "users" ] ''
-      
-              mkdir -p ${libraries-directory}/Movies
-              mkdir -p ${libraries-directory}/Music
-              mkdir -p ${libraries-directory}/Shows
-              mkdir -p ${libraries-directory}/Books
-              mkdir -p ${libraries-directory}/Personal
-              mkdir -p ${libraries-directory}/MusicVideos
-              chown -R ${service-name}:${service-name} ${libraries-directory}
-              chmod -R 0770 ${libraries-directory}
-              chmod 0750 ${libraries-directory}
-              chmod 0710 ${home-directory}
+
+      mkdir -p ${libraries-directory}/Movies
+      mkdir -p ${libraries-directory}/Music
+      mkdir -p ${libraries-directory}/Shows
+      mkdir -p ${libraries-directory}/Books
+      mkdir -p ${libraries-directory}/Personal
+      mkdir -p ${libraries-directory}/MusicVideos
+      chown -R ${service-name}:${service-name} ${libraries-directory}
+      chmod -R 0770 ${libraries-directory}
+      chmod 0750 ${libraries-directory}
+      chmod 0710 ${home-directory}
     '';
 
   backups.jellyfin = {
     pre = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
-      
-              set -euxo pipefail
-              echo "Creating Jellyfin backup..."
-              mkdir -p $RUNTIME_DIRECTORY/jellyroller
-              cp ${jellyroller-config} $RUNTIME_DIRECTORY/jellyroller
-              echo "api_key = \"$(cat ${secrets.api_key.path})\"" >> $RUNTIME_DIRECTORY/jellyroller/${jellyroller-config-filename}
-              export XDG_CONFIG_HOME=$RUNTIME_DIRECTORY
-              ${jellyroller} create-backup
-              echo "Done creating Jellyfin backup"
+
+      set -euxo pipefail
+      echo "Creating Jellyfin backup..."
+      mkdir -p $RUNTIME_DIRECTORY/jellyroller
+      cp ${jellyroller-config} $RUNTIME_DIRECTORY/jellyroller
+      echo "api_key = \"$(cat ${secrets.api_key.path})\"" >> $RUNTIME_DIRECTORY/jellyroller/${jellyroller-config-filename}
+      export XDG_CONFIG_HOME=$RUNTIME_DIRECTORY
+      echo "$RUNTIME_DIRECTORY/jellyroller/${jellyroller-config-filename}: $(cat $RUNTIME_DIRECTORY/jellyroller/${jellyroller-config-filename})"
+      ${jellyroller} create-backup
+      echo "Done creating Jellyfin backup"
     '');
     paths = [ config.services.${service-name}.dataDir libraries-directory ];
     post = lib.getExe (pkgs.writeShellScriptBin "delete-jellyfin-backup.sh" ''
-      
-              set -euxo pipefail
-              echo "Removing Jellyfin backups..."
-              shopt -s dotglob
-              rm -rf ${data-directory}/data/backups/*
-              echo "Done removing Jellyfin backups"
+
+      set -euxo pipefail
+      echo "Removing Jellyfin backups..."
+      shopt -s dotglob
+      rm -rf ${data-directory}/data/backups/*
+      echo "Done removing Jellyfin backups"
     '');
   };
 }
