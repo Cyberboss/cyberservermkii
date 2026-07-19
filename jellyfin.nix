@@ -11,6 +11,7 @@ let
       pname = "jellyroller";
       version = "1.1.3";
 
+      meta.mainProgram = pname;
       src = pkgs.fetchFromGitHub {
         owner = "LSchallot";
         repo = "JellyRoller";
