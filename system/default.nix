@@ -12,6 +12,11 @@ in
 {
     imports = [
       ./users
+
+      ./bluesky.nix
+      ./jellyfin.nix
+      ./resonite.nix
+      ./samba.nix
     ];
 
     boot.loader = {

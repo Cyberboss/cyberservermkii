@@ -23,11 +23,7 @@
                 modules = [
                     ./state-version.nix
                     hardware-configuration
-                    ./system.nix
-                    ./bluesky.nix
-                    ./jellyfin.nix
-                    ./resonite.nix
-                    ./samba.nix
+                    ./system
                 ];
             };
         };
