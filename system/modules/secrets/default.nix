@@ -131,7 +131,7 @@ in {
     assertions = lib.lists.flatten (map (secret-directory:
       (map (secret-name: {
         assertion =
-          lib.strings.hasInfix cfg.${secret-directory}.${secret-entry}.path
+          lib.strings.hasInfix cfg.${secret-directory}.${secret-name}.path
           full-config-json;
         message =
           "Secret ${secret-directory}.${secret-name} was never assigned! All secrets in /modules/secrets/secrets.yml must either be used or removed!";
