@@ -10,6 +10,10 @@ let
     '';
 in
 {
+    imports = [
+      ./users
+    ];
+
     boot.loader = {
         systemd-boot = {
             configurationLimit = 3;
@@ -26,17 +30,6 @@ in
     time.timeZone = "America/Toronto";
 
     i18n.defaultLocale = "en_CA.UTF-8";
-
-    users.users = {
-        dominion = {
-            isNormalUser = true;
-            extraGroups = [ "wheel" ];
-            openssh.authorizedKeys.keys = [
-                "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJNL86w85bS/+5aDj8fe4gZ2obLiiRn+1lXhWA2tX7Jt eddsa-key-20241023"
-            ];
-        };
-        root.hashedPassword = "!";
-    };
 
     environment.systemPackages = [ update-script ];
 
