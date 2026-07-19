@@ -43,11 +43,11 @@ in
                             type = lib.types.submodule {
                               options = {
                                 path = lib.mkOption {
-                                type = lib.types.submodule;
-                                example = "/run/secrets/${secret-directory}/${secret-name}";
-                                description = ''
-                                    The runtime path that the ${secret-directory}/${secret-name} secret may be accessed at
-                                '';
+                                  type = builtins.trace "Generating option for secrets.${secret-directory}.${secret-name}" lib.types.nonEmptyStr;
+                                  example = "/run/secrets/${secret-directory}/${secret-name}";
+                                  description = ''
+                                      The runtime path that the ${secret-directory}/${secret-name} secret may be accessed at
+                                  '';
                                 };
                               };
                             };
