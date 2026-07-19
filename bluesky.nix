@@ -6,18 +6,22 @@ let
     secrets = config.secrets.bluesky;
 in
 {
-    services.bluesky-pds = {
-        enable = true;
-        environmentFiles = [ secrets.environment.path ];
-        settings.PDS_HOSTNAME = domain;
-    };
-
     imports = [
         ./modules/cloudflared.nix
         ./modules/backups.nix
     ];
 
-    services.cloudflared.tunnels.primary-tunnel.ingress.${pds-domain} = "http://localhost:${service-port}";
+    services = {
+      bluesky-pds = {
+          enable = true;
+          environmentFiles = [ secrets.environment.path ];
+          settings.PDS_HOSTNAME = domain;
+      };
+
+      cloudflared.tunnels.primary-tunnel.ingress.${pds-domain} = "http://localhost:${service-port}";
+    };
+
+    systemd.services.bluesky-pds.restartTriggers = secrets.bluesky.restartTriggers;
 
     backups.bluesky.paths = [
         config.services.bluesky-pds.settings.PDS_DATA_DIRECTORY
