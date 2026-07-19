@@ -1,7 +1,8 @@
 { config, globals, lib, ... }:
 let
   service-port = "3000";
-  pds-domain = "bsky-pds.${globals.tld}";
+  domain = "bsky.${globals.tld}";
+  pds-domain = "pds.${domain}";
   secrets = config.secrets.bluesky;
 in {
   imports = [ ./modules/cloudflared.nix ./modules/backups.nix ];
@@ -12,7 +13,7 @@ in {
       goat.enable = true;
       pdsadmin.enable = true;
       environmentFiles = [ secrets.environment.path ];
-      settings.PDS_HOSTNAME = domain;
+      settings.PDS_HOSTNAME = pds-domain;
     };
 
     cloudflared.tunnels.primary-tunnel.ingress.${pds-domain} =
@@ -23,4 +24,6 @@ in {
 
   backups.bluesky.paths =
     [ config.services.bluesky-pds.settings.PDS_DATA_DIRECTORY ];
+PDS_DATA_DIRECTORY
+    ];
 }
