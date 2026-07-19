@@ -22,7 +22,7 @@ let
       cargoHash = "sha256-TdUPh0Zf7ZBl8hvf8A8rVEa2leOz+p4tPLZXVYWiEPw=";
     });
 
-    jellyroller-config = {
+    jellyroller-config-attrs = {
       status = "configured";
       comfy = true;
       server_url = local-url;
@@ -31,7 +31,7 @@ let
     };
     tomlFormat = pkgs.formats.toml { };
     jellyroller-config-filename = "jellyroller.toml";
-    jellyroller-config = tomlFormat.generate jellyroller-config-filename jellyroller-config;
+    jellyroller-config = tomlFormat.generate jellyroller-config-filename jellyroller-config-attrs;
 in
 {
     services = {
