@@ -68,9 +68,4 @@ in
           !include ${secrets.github_token_include.path}
         '';
     };
-
-    system.activationScripts.keepSecretsSafe = ''
-        chown root:root /etc/nixos/secrets.nix
-        chmod 600 /etc/nixos/secrets.nix
-    '';
 }
