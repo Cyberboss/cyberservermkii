@@ -56,7 +56,7 @@ in {
 
   i18n.defaultLocale = "en_CA.UTF-8";
 
-  environment.systemPackages = [ update-script ];
+  environment.systemPackages = [ update-script secrets-leak-script ];
 
   systemd.services."getty@tty1".enable = true;
 
