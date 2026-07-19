@@ -67,7 +67,7 @@ in {
 
         mkdir -p /root/.cloudflared
         cp ${cert-path} /root/.cloudflared/cert.pem
-        ${config.services.cloudflared.package}/bin/cloudflared tunnel route dns ${config.networking.hostName} ${published-route}
+        ${lib.getExe config.services.cloudflared.package} tunnel route dns ${config.networking.hostName} ${published-route}
         rm -rf /root/.cloudflared
 
         # Save the new hash so we don't run this again unless the attrset changes

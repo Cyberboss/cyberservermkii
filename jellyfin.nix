@@ -7,7 +7,7 @@ let
     domain = "${service-name}.${secrets.tld}";
     service-port = "8096";
     local-url = "http://localhost:${service-port}";
-    jellyroller = pkgs.rustPlatform.buildRustPackage rec {
+    jellyroller = lib.getExe (pkgs.rustPlatform.buildRustPackage rec {
       pname = "jellyroller";
       version = "1.1.3";
 
@@ -19,7 +19,7 @@ let
       };
 
       cargoHash = "sha256-TdUPh0Zf7ZBl8hvf8A8rVEa2leOz+p4tPLZXVYWiEPw=";
-    };
+    });
 
     jellyroller-config = {
       status = "configured";
@@ -91,7 +91,7 @@ in
         set -euxo pipefail
         echo "Creating Jellyfin backup..."
         export XDG_CONFIG_HOME=${jellyroller-config-directory}
-        ${jellyroller}/bin/jellyroller create-backup
+        ${jellyroller} create-backup
         echo "Done creating Jellyfin backup"
       '');
       paths = [
