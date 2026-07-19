@@ -1,10 +1,10 @@
-{ lib, config, secrets, pkgs, ... }:
+{ lib, config, globals, pkgs, ... }:
 let
     service-name = "jellyfin";
     home-directory = "/home/${service-name}";
     data-directory = "${home-directory}/data";
     libraries-directory = "${home-directory}/libraries";
-    domain = "${service-name}.${secrets.tld}";
+    domain = "${service-name}.${globals.tld}";
     service-port = "8096";
     local-url = "http://localhost:${service-port}";
     jellyroller = lib.getExe (pkgs.rustPlatform.buildRustPackage rec {

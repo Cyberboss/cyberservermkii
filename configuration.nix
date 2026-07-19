@@ -1,5 +1,6 @@
-{ pkgs, hostName, secrets, ... }:
+{ pkgs, globals, config, ... }:
 let
+    secrets = config.secrets.nix;
     update-script = pkgs.writeShellScriptBin "update-system" ''
         if [ "$EUID" -ne 0 ]; then
             echo "Please run as root or with sudo."
@@ -18,7 +19,7 @@ in
     };
 
     networking = {
-        hostName = hostName;
+        hostName = globals.hostName;
         networkmanager.enable = true;
     };
 
@@ -38,14 +39,14 @@ in
     };
 
     environment.systemPackages = [ update-script ];
-    
+
     systemd.services."getty@tty1".enable = true;
 
     services = {
         xserver.enable = false;
         openssh.enable = true;
     };
-    
+
     nixpkgs.overlays = [ (final: prev: {
         inherit (prev.lixPackageSets.stable)
         nixpkgs-review
@@ -62,12 +63,10 @@ in
             options = "--delete-old";
         };
         package = pkgs.lixPackageSets.stable.lix;
-        settings = {
-            experimental-features = [ "nix-command" "flakes" ];
-            access-tokens = [
-                "github.com=${secrets.github-token}"
-            ];
-        };
+        settings.experimental-features = [ "nix-command" "flakes" ];
+        extraOptions = ''
+          !include ${secrets.github_token_include.path}
+        ''
     };
 
     system.activationScripts.keepSecretsSafe = ''

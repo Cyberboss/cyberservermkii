@@ -10,14 +10,14 @@
     };
     outputs = inputs@{ self, nixpkgs, ... }:
     let
-        hostName = "cyberservermkii";
+        globals = ./globals.nix;
     in {
-        build-system = hardware-configuration: secrets: {
-            ${hostName} = nixpkgs.lib.nixosSystem {
+        build-system = hardware-configuration: {
+            "${globals.hostName}" = nixpkgs.lib.nixosSystem {
                 system = "x86_64-linux";
 
                 specialArgs = {
-                    inherit hostName secrets inputs;
+                    inherit inputs globals;
                 };
 
                 modules = [
