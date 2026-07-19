@@ -10,6 +10,8 @@ in {
   services = {
     bluesky-pds = {
       enable = true;
+      goat.enable = true;
+      pdsadmin.enable = true;
       environmentFiles = [ secrets.environment.path ];
       settings.PDS_HOSTNAME = domain;
     };
