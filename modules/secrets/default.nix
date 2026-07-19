@@ -32,7 +32,7 @@ let
     (secret-name: {
       options = {
           owner = lib.mkOption {
-            type = lib.types.nonEmptyString;
+            type = lib.types.nonEmptyStr;
             example = "service-account-name";
             default = "root";
             description = ''
@@ -40,7 +40,7 @@ let
             '';
           };
           restartTrigger = lib.mkOption {
-            type = lib.types.nonEmptyString;
+            type = lib.types.nonEmptyStr;
             example = "<some random sha256 hash>";
             description = ''
               (Read-only) Hash of the secrets in this directory that may be used to drive systemd restartTriggers.
@@ -57,7 +57,7 @@ let
                     '';
                   };
                   restartTrigger = lib.mkOption {
-                    type = lib.types.nonEmptyString;
+                    type = lib.types.nonEmptyStr;
                     example = "<some random sha256 hash>";
                     description = ''
                       (Read-only) Hash of this secret that may be used to drive systemd restartTriggers.
