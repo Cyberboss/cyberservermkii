@@ -10,7 +10,7 @@
     };
     outputs = inputs@{ self, nixpkgs, ... }:
     let
-        globals = import ./globals.nix;
+        globals = import ./system/globals.nix;
     in {
         build-system = hardware-configuration: {
             "${globals.hostName}" = nixpkgs.lib.nixosSystem {
