@@ -27,15 +27,11 @@ let
       comfy = true;
       server_url = local-url;
       os = "linux";
-      api_key = secrets.jellyfin.api-key;
       token = "apiKey";
     };
     tomlFormat = pkgs.formats.toml { };
-    jellyroller-config-path = tomlFormat.generate "jellyroller.toml" jellyroller-config;
-    jellyroller-config-directory = pkgs.runCommand "jellyroller-config" {} ''
-      mkdir -p $out/jellyroller
-      ln -s ${jellyroller-config-path} $out/jellyroller/jellyroller.toml
-    '';
+    jellyroller-config-filename = "jellyroller.toml";
+    jellyroller-config = tomlFormat.generate jellyroller-config-filename jellyroller-config;
 in
 {
     services = {
@@ -91,7 +87,10 @@ in
       pre = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
         set -euxo pipefail
         echo "Creating Jellyfin backup..."
-        export XDG_CONFIG_HOME=${jellyroller-config-directory}
+        mkdir -p ${config.backups.runtime-directory}/jellyroller
+        cp ${jellyroller-config} ${config.backups.runtime-directory}/jellyroller
+        echo "api_key = \"$(cat ${secrets.api_key.path})\"" >> ${config.backups.runtime-directory}/jellyroller/${jellyroller-config-filename}
+        export XDG_CONFIG_HOME=${config.backups.runtime-directory}
         ${jellyroller} create-backup
         echo "Done creating Jellyfin backup"
       '');
