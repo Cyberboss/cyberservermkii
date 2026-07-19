@@ -86,15 +86,16 @@ in {
     pre = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
 
       set -euxo pipefail
+
       echo "Creating Jellyfin backup..."
       mkdir -p $RUNTIME_DIRECTORY/jellyroller
       cp ${jellyroller-config} $RUNTIME_DIRECTORY/jellyroller/${jellyroller-config-filename}
+
       set +x
       echo "api_key = \"$(cat ${secrets.api_key.path})\"" >> $RUNTIME_DIRECTORY/jellyroller/${jellyroller-config-filename}
       set -x
 
       export XDG_CONFIG_HOME=$RUNTIME_DIRECTORY
-      echo "$RUNTIME_DIRECTORY/jellyroller/${jellyroller-config-filename}: $(cat $RUNTIME_DIRECTORY/jellyroller/${jellyroller-config-filename})"
       ${jellyroller} create-backup
       echo "Done creating Jellyfin backup"
     '');
