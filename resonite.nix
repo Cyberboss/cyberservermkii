@@ -110,7 +110,7 @@ in
         };
         resonite-headless = {
             enable = true;
-            depotdownloader-env-file = secrets.resonite.depotdownloader.path;
+            depotdownloader-env-file = secrets.depotdownloader.path;
             enable-rml = true;
             disable-ready-notify = true;
             auto-update-interval = "5m";
@@ -120,13 +120,13 @@ in
                 rml-resonance
             ];
             additional-restart-triggers = [
-                secrets.resonite.credentials.restartTrigger
+                secrets.credentials.restartTrigger
             ];
             rml-configs = [
                 "${tweaks-config-json}/etc/HeadlessTweaks.json"
                 "${stressless-config-json}/etc/StresslessHeadless.json"
             ];
-            credentials-file = secret.resonite.credentials.path;
+            credentials-file = secret.credentials.path;
             config-json = {
                 allowedUrlHosts = [ "ws://localhost:24444" ];
                 startWorlds = [
