@@ -40,10 +40,22 @@ in
                   (secret-name: {
                     options = {
                         "${secret-name}" = lib.mkOption {
-                            type = lib.types.nonEmptyStr;
-                            example = "/run/secrets/${secret-directory}/${secret-name}";
+                            type = lib.types.submodule {
+                              options = {
+                                path = lib.mkOption {
+                                type = lib.types.submodule;
+                                example = "/run/secrets/${secret-directory}/${secret-name}";
+                                description = ''
+                                    The runtime path that the ${secret-directory}/${secret-name} secret may be accessed at
+                                '';
+                                };
+                              };
+                            };
+                            example = {
+                              path = "/run/secrets/${secret-directory}/${secret-name}";
+                            };
                             description = ''
-                                The runtime path that the ${secret-directory}/${secret-name} secret may be accessed at
+                                Secret file registry for ${secret-directory}/${secret-name} secret may be accessed at
                             '';
                         };
                     };
