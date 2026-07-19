@@ -8,7 +8,9 @@ let
         echo "Please run as root or with sudo."
         exit 1
     fi
-    nix-collect-garbage
+
+    nix flake update --flake /etc/nixos
+    nixos-rebuild switch
   '';
   secrets-leak-script = pkgs.writeShellScriptBin "secrets-leak" ''
     set -xeuo pipefail
@@ -18,7 +20,7 @@ let
         exit 1
     fi
 
-    nix flake update --flake /etc/nixos && nixos-rebuild switch
+    nix-collect-garbage -d
 
     journalctl --rotate
     journalctl --vacuum-time=1s
