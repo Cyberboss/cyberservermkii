@@ -25,7 +25,9 @@ let
   };
 
   create-sops-secrets = secret-directory: lib.attrsets.mergeAttrsList (map (secret-entry: {
-    "${secret-directory}/${secret-entry}" = { };
+    "${secret-directory}/${secret-entry}" = {
+      owner = cfg.${secret-directory}.owner;
+    };
   }) (lib.attrNames secrets-manifest.${secret-directory}));
 
   secrets-directory-submodule = secret-directory: (lib.foldl' lib.recursiveUpdate {} (map
