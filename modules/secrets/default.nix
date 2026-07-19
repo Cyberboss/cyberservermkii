@@ -25,12 +25,12 @@ let
 
   secrets-directory-submodule = secret-directory: (lib.foldl' lib.recursiveUpdate {} (map
     (secret-name: {
-      options = builtins.trace "Tracing ${secret-directory}/${secret-name}" {
+      options = {
           "${secret-name}" = lib.mkOption {
               type = lib.types.submodule {
                 options = {
                   path = lib.mkOption {
-                    type = builtins.trace "Generating option for secrets.${secret-directory}.${secret-name}" lib.types.nonEmptyStr;
+                    type = lib.types.nonEmptyStr;
                     example = "/run/secrets/${secret-directory}/${secret-name}";
                     description = ''
                         The runtime path that the ${secret-directory}/${secret-name} secret may be accessed at
@@ -54,7 +54,7 @@ let
               description = ''
                   Secret directory registry for ${secret-directory}
               '';
-              type = lib.types.submodule (builtins.trace "AHHHH: ${(builtins.toJSON (secrets-directory-submodule secret-directory))}" (secrets-directory-submodule secret-directory));
+              type = lib.types.submodule (secrets-directory-submodule secret-directory);
             };
         };
       })
