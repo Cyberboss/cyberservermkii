@@ -11,6 +11,7 @@ let
 in
 {
     imports = [
+      ./state-version.nix
       ./users
 
       ./bluesky.nix

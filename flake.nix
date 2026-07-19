@@ -21,7 +21,6 @@
                 };
 
                 modules = [
-                    ./state-version.nix
                     hardware-configuration
                     ./system
                 ];
