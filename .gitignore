@@ -12,3 +12,5 @@
 
 !.github/**
 !.local/**
+!.vscode/extensions.json
+!.vscode/settings.json
