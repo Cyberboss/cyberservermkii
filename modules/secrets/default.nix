@@ -23,7 +23,7 @@ let
     "${secret-directory}" = lib.attrsets.mergeAttrsList ((map (create-secret-directory-entry secret-directory) (lib.attrNames secrets-manifest.${secret-directory})) ++ [
       {
         restartTriggers = [
-          builtins.concatStringsSep "" (map (secret-name: config.sops.secrets."${secret-directory}/${secret-name}".sopsFileHash) (lib.attrNames secrets-manifest.${secret-directory}))
+          (builtins.concatStringsSep "" (map (secret-name: config.sops.secrets."${secret-directory}/${secret-name}".sopsFileHash) (lib.attrNames secrets-manifest.${secret-directory})))
           cfg.${secret-directory}.owner
         ];
       }
