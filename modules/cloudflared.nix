@@ -3,7 +3,6 @@
   config,
   pkgs,
   lib,
-  secrets,
   ...
 }: let
   published-route-script-name-map = builtins.listToAttrs (map (published-route: { name = "cloudflared-publish-route-${published-route}"; value = published-route; }) (lib.attrNames cfg.tunnels.primary-tunnel.ingress));
@@ -11,6 +10,7 @@
   jsonFormat = pkgs.formats.json {};
 
   cfg = config.services.cloudflared;
+  secrets = config.secrets.cloudflared;
   attrset = {
     tunnels = cfg.tunnels;
     certificateFile = cfg.certificateFile;
@@ -23,7 +23,7 @@ in {
     certificateFile = cert-path;
     tunnels = {
       primary-tunnel = {
-        credentialsFile = jsonFormat.generate "cloudflared-tunnel.json" secrets.cloudflared.tunnel;
+        credentialsFile = secrets.cloudflared.tunnel.path;
         default = "http_status:404";
       };
     };
