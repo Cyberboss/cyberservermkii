@@ -40,7 +40,7 @@ in {
   };
 
   systemd.services.cloudflared-tunnel-primary-tunnel.serviceConfig = {
-    DynamicUser = false;
+    DynamicUser = lib.mkForce false;
     User = usergroup;
   };
 
