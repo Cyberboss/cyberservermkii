@@ -1,6 +1,7 @@
 { lib, config, globals, pkgs, ... }:
 let
     service-name = "jellyfin";
+    secrets = config.secrets.jellyfin;
     home-directory = "/home/${service-name}";
     data-directory = "${home-directory}/data";
     libraries-directory = "${home-directory}/libraries";
