@@ -99,7 +99,6 @@ in
           }
       ));
 
-      default = { };
       example = {
         some-service = {
           pre = "/pre/backup/script.sh";
@@ -116,27 +115,25 @@ in
       ./secrets
     ];
 
-    config = {
-        services.restic.backups.primary = {
-            initialize = true;
-            paths = paths;
-            timerConfig = {
-                OnCalendar = "*-*-* 06:00:00";
-                Persistent = true;
-            };
-
-            pruneOpts = [
-                "--keep-daily 7"
-                "--keep-weekly 4"
-                "--keep-monthly 6"
-                "--keep-yearly 1"
-            ];
-
-            repositoryFile = secrets.repository.path;
-            passwordFile = secrets.password.path;
-            environmentFile = secrets.environment.path;
-            backupPrepareCommand = pre-script;
-            backupCleanupCommand = post-script;
+    config.services.restic.backups.primary = {
+        initialize = true;
+        paths = paths;
+        timerConfig = {
+            OnCalendar = "*-*-* 06:00:00";
+            Persistent = true;
         };
+
+        pruneOpts = [
+            "--keep-daily 7"
+            "--keep-weekly 4"
+            "--keep-monthly 6"
+            "--keep-yearly 1"
+        ];
+
+        repositoryFile = secrets.repository.path;
+        passwordFile = secrets.password.path;
+        environmentFile = secrets.environment.path;
+        backupPrepareCommand = pre-script;
+        backupCleanupCommand = post-script;
     };
 }
