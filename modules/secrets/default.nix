@@ -24,47 +24,45 @@ let
   }) (lib.attrNames secrets-manifest.${secret-directory}));
 in
 {
-  options = {
-    secrets = lib.mkOption {
-      description = ''
-        Secrets registry
-      '';
-      type = lib.types.submodule (lib.foldl' lib.recursiveUpdate {} (map
-        (secret-directory: {
-          options = {
-            "${secret-directory}" = lib.mkOption {
-                description = ''
-                    Secret directory registry for ${secret-directory}
-                '';
-                type = lib.types.submodule (lib.foldl' lib.recursiveUpdate {} (map
-                  (secret-name: {
-                    options = {
-                        "${secret-name}" = lib.mkOption {
-                            type = lib.types.submodule {
-                              options = {
-                                path = lib.mkOption {
-                                  type = builtins.trace "Generating option for secrets.${secret-directory}.${secret-name}" lib.types.nonEmptyStr;
-                                  example = "/run/secrets/${secret-directory}/${secret-name}";
-                                  description = ''
-                                      The runtime path that the ${secret-directory}/${secret-name} secret may be accessed at
-                                  '';
-                                };
+  options.secrets = lib.mkOption {
+    description = ''
+      Secrets registry
+    '';
+    type = lib.types.submodule (lib.foldl' lib.recursiveUpdate {} (map
+      (secret-directory: {
+        options = {
+          "${secret-directory}" = lib.mkOption {
+              description = ''
+                  Secret directory registry for ${secret-directory}
+              '';
+              type = lib.types.submodule (lib.foldl' lib.recursiveUpdate {} (map
+                (secret-name: {
+                  options = {
+                      "${secret-name}" = lib.mkOption {
+                          type = lib.types.submodule {
+                            options = {
+                              path = lib.mkOption {
+                                type = builtins.trace "Generating option for secrets.${secret-directory}.${secret-name}" lib.types.nonEmptyStr;
+                                example = "/run/secrets/${secret-directory}/${secret-name}";
+                                description = ''
+                                    The runtime path that the ${secret-directory}/${secret-name} secret may be accessed at
+                                '';
                               };
                             };
-                            example = {
-                              path = "/run/secrets/${secret-directory}/${secret-name}";
-                            };
-                            description = ''
-                                Secret file registry for ${secret-directory}/${secret-name} secret may be accessed at
-                            '';
-                        };
-                    };
-                  }) (lib.attrNames secrets-manifest.${secret-directory})));
-              };
-          };
-        })
-      (lib.attrNames secrets-manifest)));
-    };
+                          };
+                          example = {
+                            path = "/run/secrets/${secret-directory}/${secret-name}";
+                          };
+                          description = ''
+                              Secret file registry for ${secret-directory}/${secret-name} secret may be accessed at
+                          '';
+                      };
+                  };
+                }) (lib.attrNames secrets-manifest.${secret-directory})));
+            };
+        };
+      })
+    (lib.attrNames secrets-manifest)));
   };
 
   imports = [
