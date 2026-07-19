@@ -1,6 +1,1 @@
-{
-  imports = [
-    ./root.nix
-    ./dominion.nix
-  ];
-}
+{ imports = [ ./root.nix ./dominion.nix ]; }

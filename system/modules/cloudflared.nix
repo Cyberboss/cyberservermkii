@@ -1,17 +1,10 @@
-{
-  age-file,
-  config,
-  pkgs,
-  lib,
-  ...
-}:
+{ age-file, config, pkgs, lib, ... }:
 let
-  published-route-script-name-map = builtins.listToAttrs (
-    map (published-route: {
+  published-route-script-name-map = builtins.listToAttrs (map
+    (published-route: {
       name = "cloudflared-publish-route-${published-route}";
       value = published-route;
-    }) (lib.attrNames cfg.tunnels.primary-tunnel.ingress)
-  );
+    }) (lib.attrNames cfg.tunnels.primary-tunnel.ingress));
   cert-path = secrets.cert.path;
   jsonFormat = pkgs.formats.json { };
 
@@ -25,8 +18,7 @@ let
   };
   attrsetJSON = builtins.toJSON attrset;
   attrsetHash = builtins.hashString "sha256" attrsetJSON;
-in
-{
+in {
   services.cloudflared = {
     enable = true;
     certificateFile = cert-path;
@@ -56,8 +48,7 @@ in
 
   secrets.cloudflared.owner = usergroup;
 
-  system.activationScripts = builtins.mapAttrs (
-    script-name: published-route:
+  system.activationScripts = builtins.mapAttrs (script-name: published-route:
     # Register the tunnel with DNS
     # Need the cert in-place temporarily for this
     lib.stringAfter [ "users" ] ''
@@ -76,12 +67,13 @@ in
       
               mkdir -p /root/.cloudflared
               cp ${cert-path} /root/.cloudflared/cert.pem
-              ${lib.getExe config.services.cloudflared.package} tunnel route dns ${config.networking.hostName} ${published-route}
+              ${
+                lib.getExe config.services.cloudflared.package
+              } tunnel route dns ${config.networking.hostName} ${published-route}
               rm -rf /root/.cloudflared
       
               # Save the new hash so we don't run this again unless the attrset changes
               echo "${attrsetHash}" > "$HASH_FILE"
             fi
-    ''
-  ) published-route-script-name-map;
+    '') published-route-script-name-map;
 }

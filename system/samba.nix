@@ -4,11 +4,8 @@ let
   shares-root = "${samba-root}/shares";
   private-share = "${shares-root}/private";
   usergroup = "samba";
-in
-{
-  imports = [
-    ./modules/backups.nix
-  ];
+in {
+  imports = [ ./modules/backups.nix ];
 
   users = {
     groups.samba = { };
@@ -62,9 +59,8 @@ in
       openFirewall = true;
     };
   };
-  systemd.tmpfiles.rules = [
-    "d ${private-share} 0775 ${usergroup} ${usergroup} - -"
-  ];
+  systemd.tmpfiles.rules =
+    [ "d ${private-share} 0775 ${usergroup} ${usergroup} - -" ];
 
   system.activationScripts.makeSambaShares = lib.stringAfter [ "users" ] ''
     
@@ -73,7 +69,5 @@ in
             chmod 0770 ${samba-root}
   '';
 
-  backups.samba.paths = [
-    samba-root
-  ];
+  backups.samba.paths = [ samba-root ];
 }

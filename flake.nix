@@ -8,24 +8,16 @@
     resonite-headless.url = "github:Cyberboss/resonite-headless-nix";
     resonite-dominion.url = "github:Cyberboss/resonite-dominion";
   };
-  outputs =
-    inputs@{ self, nixpkgs, ... }:
-    let
-      globals = import ./system/globals.nix;
-    in
-    {
+  outputs = inputs@{ self, nixpkgs, ... }:
+    let globals = import ./system/globals.nix;
+    in {
       build-system = hardware-configuration: {
         "${globals.hostName}" = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
 
-          specialArgs = {
-            inherit inputs globals;
-          };
+          specialArgs = { inherit inputs globals; };
 
-          modules = [
-            hardware-configuration
-            ./system
-          ];
+          modules = [ hardware-configuration ./system ];
         };
       };
     };

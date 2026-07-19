@@ -1,47 +1,45 @@
-{
-  pkgs,
-  inputs,
-  config,
-  ...
-}:
+{ pkgs, inputs, config, ... }:
 let
   secrets = config.secrets.resonite;
   rml-stressless-headless-source = pkgs.fetchurl {
-    url = "https://codeberg.org/Raidriar/StresslessHeadless/releases/download/2.2.1/StresslessHeadless.dll";
+    url =
+      "https://codeberg.org/Raidriar/StresslessHeadless/releases/download/2.2.1/StresslessHeadless.dll";
     sha256 = "sha256-DipeSX1F604p/zMAyjggab6O2kOfnjibfdURAhSz4cU=";
   };
   rml-headless-tweaks-source = pkgs.fetchurl {
-    url = "https://github.com/Cyberboss/HeadlessTweaks/releases/download/2.3.0-preview12/HeadlessTweaks.dll";
+    url =
+      "https://github.com/Cyberboss/HeadlessTweaks/releases/download/2.3.0-preview12/HeadlessTweaks.dll";
     sha256 = "sha256-jKnYc9eEX7T7wwhbcr2w5HAwD6FukZfnj3Fq4XKYZ64=";
   };
   rml-resonance-source = pkgs.fetchurl {
-    url = "https://github.com/SeyfertGames/Resonance/releases/download/v2.0.0/Resonance.dll";
+    url =
+      "https://github.com/SeyfertGames/Resonance/releases/download/v2.0.0/Resonance.dll";
     sha256 = "sha256-RMe0XEoUu4wsjRmq6CV/WREU/kqs72qWbO/mvyXqjNo=";
   };
 
   rml-stressless-headless = "${
-    pkgs.runCommand "StresslessHeadless.dll" { } ''
-      
-              mkdir -p $out/bin
-              cp ${rml-stressless-headless-source} $out/bin/StresslessHeadless.dll
-    ''
-  }/bin/StresslessHeadless.dll";
+      pkgs.runCommand "StresslessHeadless.dll" { } ''
+        
+                mkdir -p $out/bin
+                cp ${rml-stressless-headless-source} $out/bin/StresslessHeadless.dll
+      ''
+    }/bin/StresslessHeadless.dll";
 
   rml-headless-tweaks = "${
-    pkgs.runCommand "HeadlessTweaks.dll" { } ''
-      
-              mkdir -p $out/bin
-              cp ${rml-headless-tweaks-source} $out/bin/HeadlessTweaks.dll
-    ''
-  }/bin/HeadlessTweaks.dll";
+      pkgs.runCommand "HeadlessTweaks.dll" { } ''
+        
+                mkdir -p $out/bin
+                cp ${rml-headless-tweaks-source} $out/bin/HeadlessTweaks.dll
+      ''
+    }/bin/HeadlessTweaks.dll";
 
   rml-resonance = "${
-    pkgs.runCommand "Resonance.dll" { } ''
-      
-              mkdir -p $out/bin
-              cp ${rml-headless-tweaks-source} $out/bin/Resonance.dll
-    ''
-  }/bin/Resonance.dll";
+      pkgs.runCommand "Resonance.dll" { } ''
+        
+                mkdir -p $out/bin
+                cp ${rml-headless-tweaks-source} $out/bin/Resonance.dll
+      ''
+    }/bin/Resonance.dll";
 
   jsonFormat = pkgs.formats.json { };
 
@@ -57,35 +55,21 @@ let
       DiscordWebhookUsername = null;
       DiscordWebhookAvatar = null;
       DiscordWebhookThreadID = null;
-      DiscordWebhookEnabledEvents = {
-        EngineStart = false;
-      };
+      DiscordWebhookEnabledEvents = { EngineStart = false; };
       AutoInviteOptOut = [ ];
       WorldRoster = { };
       SessionIdToName = { };
       DefaultSessionAccessLevel = { };
       DiscordWebhookEventColors = { };
       DiscordLinkToSession = true;
-      PermissionLevels = {
-        U-1jLFy9ehNjs = "Owner";
-      };
+      PermissionLevels = { U-1jLFy9ehNjs = "Owner"; };
       WorldScopedPermissions = {
-        U-The-Honeybee = {
-          "${DominionsFlatNoRtf}" = "Moderator";
-        };
-        U-Charizmare = {
-          "${DominionsFlatNoRtf}" = "Moderator";
-        };
-        U-hartofstone = {
-          "${DominionsFlatNoRtf}" = "Moderator";
-        };
-        U-Cloud-Jumper = {
-          OutCast = "Moderator";
-        };
+        U-The-Honeybee = { "${DominionsFlatNoRtf}" = "Moderator"; };
+        U-Charizmare = { "${DominionsFlatNoRtf}" = "Moderator"; };
+        U-hartofstone = { "${DominionsFlatNoRtf}" = "Moderator"; };
+        U-Cloud-Jumper = { OutCast = "Moderator"; };
         # Seyfert
-        U-1iHTvyAEdSi = {
-          OutCast = "Moderator";
-        };
+        U-1iHTvyAEdSi = { OutCast = "Moderator"; };
       };
       DisableInteractivePrompt = true;
     };
@@ -107,8 +91,7 @@ let
             mkdir -p $out/etc
             cp ${stressless-config} $out/etc/StresslessHeadless.json
   '';
-in
-{
+in {
   imports = [
     ./modules/secrets
     inputs.resonite-headless.nixosModules.default
@@ -127,11 +110,7 @@ in
       enable-rml = true;
       disable-ready-notify = true;
       auto-update-interval = "5m";
-      rml-mods = [
-        rml-stressless-headless
-        rml-headless-tweaks
-        rml-resonance
-      ];
+      rml-mods = [ rml-stressless-headless rml-headless-tweaks rml-resonance ];
       additional-restart-triggers = secrets.credentials.restartTriggers;
       rml-configs = [
         "${tweaks-config-json}/etc/HeadlessTweaks.json"
@@ -164,7 +143,8 @@ in
               "memes"
               "workshop"
             ];
-            loadWorldUrl = "resrec:///G-1nmN4fjhq9g/R-019ea2c0-0b13-704d-8890-b28d22b80757";
+            loadWorldUrl =
+              "resrec:///G-1nmN4fjhq9g/R-019ea2c0-0b13-704d-8890-b28d22b80757";
             defaultUserRoles = {
               Charizmare = "Admin";
               Dominion = "Admin";
@@ -182,9 +162,7 @@ in
               Zandario = "Builder";
             };
             autoInviteUsernames = [ ];
-            inviteRequestHandlerUsernames = [
-              "Dominion"
-            ];
+            inviteRequestHandlerUsernames = [ "Dominion" ];
             autoInviteMessage = "Astral connection re-established.";
             idleRestartInterval = 14400;
             saveOnExit = false;
@@ -197,10 +175,12 @@ in
             sessionName = "OutCast";
             customSessionId = "U-1nPiX9NfQQ4:OutCast";
             accessLevel = "RegisteredUsers";
-            description = "World by WispoWoo, Ported to Resonite by Seyfert & Cloud_Jumper, Headless provided by Dominion.";
+            description =
+              "World by WispoWoo, Ported to Resonite by Seyfert & Cloud_Jumper, Headless provided by Dominion.";
             hideFromPublicListing = false;
             tags = [ ];
-            loadWorldUrl = "resrec:///G-1nmN4fjhq9g/R-019f161a-6d7c-77a1-809a-fe40fcca0da9";
+            loadWorldUrl =
+              "resrec:///G-1nmN4fjhq9g/R-019f161a-6d7c-77a1-809a-fe40fcca0da9";
             defaultUserRoles = {
               Dominion = "Admin";
               Seyfert = "Admin";
@@ -208,9 +188,7 @@ in
               kittysquirrel = "Builder";
             };
             autoInviteUsernames = [ ];
-            inviteRequestHandlerUsernames = [
-              "Seyfert"
-            ];
+            inviteRequestHandlerUsernames = [ "Seyfert" ];
             autoInviteMessage = "OutCast Online";
             idleRestartInterval = 14400;
             saveOnExit = false;

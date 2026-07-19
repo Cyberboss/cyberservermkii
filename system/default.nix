@@ -1,9 +1,4 @@
-{
-  pkgs,
-  globals,
-  config,
-  ...
-}:
+{ pkgs, globals, config, ... }:
 let
   secrets = config.secrets.nix;
   update-script = pkgs.writeShellScriptBin "update-system" ''
@@ -14,8 +9,7 @@ let
             fi
             nix flake update --flake /etc/nixos && nixos-rebuild switch
   '';
-in
-{
+in {
   imports = [
     ./state-version.nix
     ./users
@@ -55,11 +49,7 @@ in
   nixpkgs.overlays = [
     (final: prev: {
       inherit (prev.lixPackageSets.stable)
-        nixpkgs-review
-        nix-eval-jobs
-        nix-fast-build
-        colmena
-        ;
+        nixpkgs-review nix-eval-jobs nix-fast-build colmena;
     })
   ];
 
@@ -71,10 +61,7 @@ in
       options = "--delete-old";
     };
     package = pkgs.lixPackageSets.stable.lix;
-    settings.experimental-features = [
-      "nix-command"
-      "flakes"
-    ];
+    settings.experimental-features = [ "nix-command" "flakes" ];
     extraOptions = ''
       
                 !include ${secrets.github_token_include.path}
