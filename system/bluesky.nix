@@ -24,6 +24,4 @@ in {
 
   backups.bluesky.paths =
     [ config.services.bluesky-pds.settings.PDS_DATA_DIRECTORY ];
-PDS_DATA_DIRECTORY
-    ];
 }
