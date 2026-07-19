@@ -1,11 +1,22 @@
-{ inputs, pkgs, lib, config, options, ... }:
+{
+  inputs,
+  pkgs,
+  lib,
+  config,
+  options,
+  ...
+}:
 let
   cfg = config.secrets;
-  yaml-to-attrset = file: builtins.fromJSON (builtins.readFile (
-    pkgs.runCommand "config-json" {
-      buildInputs = [ pkgs.yj ];
-    } "yj -yj < ${file} > $out"
-  ));
+  yaml-to-attrset =
+    file:
+    builtins.fromJSON (
+      builtins.readFile (
+        pkgs.runCommand "config-json" {
+          buildInputs = [ pkgs.yj ];
+        } "yj -yj < ${file} > $out"
+      )
+    );
   secrets-file = ./secrets.yml;
   secrets-manifest = builtins.removeAttrs (yaml-to-attrset secrets-file) [ "sops" ];
 
@@ -18,103 +29,129 @@ let
       ];
     };
   };
-  create-secret-directory-entry = secret-directory: (secret-entry: create-secret-entry secret-directory secret-entry);
+  create-secret-directory-entry =
+    secret-directory: (secret-entry: create-secret-entry secret-directory secret-entry);
   create-secret-directory = secret-directory: {
-    "${secret-directory}" = lib.attrsets.mergeAttrsList ((map (create-secret-directory-entry secret-directory) (lib.attrNames secrets-manifest.${secret-directory})) ++ [
-      {
-        restartTriggers = [
-          (builtins.concatStringsSep "" (map (secret-name: config.sops.secrets."${secret-directory}/${secret-name}".sopsFileHash) (lib.attrNames secrets-manifest.${secret-directory})))
-          cfg.${secret-directory}.owner
-        ];
-      }
-    ]);
+    "${secret-directory}" = lib.attrsets.mergeAttrsList (
+      (map (create-secret-directory-entry secret-directory) (
+        lib.attrNames secrets-manifest.${secret-directory}
+      ))
+      ++ [
+        {
+          restartTriggers = [
+            (builtins.concatStringsSep "" (
+              map (secret-name: config.sops.secrets."${secret-directory}/${secret-name}".sopsFileHash) (
+                lib.attrNames secrets-manifest.${secret-directory}
+              )
+            ))
+            cfg.${secret-directory}.owner
+          ];
+        }
+      ]
+    );
   };
 
-  create-sops-secrets = secret-directory: lib.attrsets.mergeAttrsList (map (secret-entry: {
-    "${secret-directory}/${secret-entry}" = {
-      owner = cfg.${secret-directory}.owner;
-    };
-  }) (lib.attrNames secrets-manifest.${secret-directory}));
+  create-sops-secrets =
+    secret-directory:
+    lib.attrsets.mergeAttrsList (
+      map (secret-entry: {
+        "${secret-directory}/${secret-entry}" = {
+          owner = cfg.${secret-directory}.owner;
+        };
+      }) (lib.attrNames secrets-manifest.${secret-directory})
+    );
 
-  secrets-directory-submodule = secret-directory: (lib.foldl' lib.recursiveUpdate {} (map
-    (secret-name: {
-      options = {
+  secrets-directory-submodule =
+    secret-directory:
+    (lib.foldl' lib.recursiveUpdate { } (
+      map (secret-name: {
+        options = {
           owner = lib.mkOption {
             type = lib.types.nonEmptyStr;
             example = "service-account-name";
             default = "root";
             description = ''
-              User that will own the secrets file.
+              
+                            User that will own the secrets file.
             '';
           };
           restartTriggers = lib.mkOption {
             type = lib.types.listOf lib.types.anything;
             example = "<some random sha256 hash>";
             description = ''
-              (Read-only) Hash of the secrets and their owner for this directory that may be used to drive systemd restartTriggers.
+              
+                            (Read-only) Hash of the secrets and their owner for this directory that may be used to drive systemd restartTriggers.
             '';
           };
           "${secret-name}" = lib.mkOption {
-              type = lib.types.submodule {
-                options = {
-                  path = lib.mkOption {
-                    type = lib.types.nonEmptyStr;
-                    example = "/run/secrets/${secret-directory}/${secret-name}";
-                    description = ''
-                        (Read-only) The runtime path that the ${secret-directory}/${secret-name} secret may be accessed at
-                    '';
-                  };
-                  restartTriggers = lib.mkOption {
-                    type = lib.types.listOf lib.types.anything;
-                    example = "<some random sha256 hash>";
-                    description = ''
-                      (Read-only) Hash of this secret and its owner that may be used to drive systemd restartTriggers.
-                    '';
-                  };
+            type = lib.types.submodule {
+              options = {
+                path = lib.mkOption {
+                  type = lib.types.nonEmptyStr;
+                  example = "/run/secrets/${secret-directory}/${secret-name}";
+                  description = ''
+                    
+                                            (Read-only) The runtime path that the ${secret-directory}/${secret-name} secret may be accessed at
+                  '';
+                };
+                restartTriggers = lib.mkOption {
+                  type = lib.types.listOf lib.types.anything;
+                  example = "<some random sha256 hash>";
+                  description = ''
+                    
+                                          (Read-only) Hash of this secret and its owner that may be used to drive systemd restartTriggers.
+                  '';
                 };
               };
-              example = {
-                path = "/run/secrets/${secret-directory}/${secret-name}";
-              };
-              description = ''
-                  Secret file registry for ${secret-directory}/${secret-name} secret may be accessed at
-              '';
-          };
-      };
-    }) (lib.attrNames secrets-manifest.${secret-directory})));
-  secrets-submodule = (map
-      (secret-directory: {
-        options = {
-          "${secret-directory}" = lib.mkOption {
-              description = ''
-                  Secret directory registry for ${secret-directory}
-              '';
-              type = lib.types.submodule (secrets-directory-submodule secret-directory);
             };
+            example = {
+              path = "/run/secrets/${secret-directory}/${secret-name}";
+            };
+            description = ''
+              
+                                Secret file registry for ${secret-directory}/${secret-name} secret may be accessed at
+            '';
+          };
         };
-      })
-    (lib.attrNames secrets-manifest));
+      }) (lib.attrNames secrets-manifest.${secret-directory})
+    ));
+  secrets-submodule = (
+    map (secret-directory: {
+      options = {
+        "${secret-directory}" = lib.mkOption {
+          description = ''
+            
+                              Secret directory registry for ${secret-directory}
+          '';
+          type = lib.types.submodule (secrets-directory-submodule secret-directory);
+        };
+      };
+    }) (lib.attrNames secrets-manifest)
+  );
 in
 {
   options.secrets = lib.mkOption {
     description = ''
-      Secrets registry
+      
+            Secrets registry
     '';
-    type = lib.types.submodule (lib.foldl' lib.recursiveUpdate {} secrets-submodule);
+    type = lib.types.submodule (lib.foldl' lib.recursiveUpdate { } secrets-submodule);
   };
 
   imports = [
-      inputs.sops-nix.nixosModules.sops
+    inputs.sops-nix.nixosModules.sops
   ];
 
   config = {
     sops = {
-        defaultSopsFile = secrets-file;
-        age.keyFile = "/var/lib/sops-nix/age.txt";
-        secrets = lib.attrsets.mergeAttrsList (map create-sops-secrets (lib.attrNames secrets-manifest));
+      defaultSopsFile = secrets-file;
+      age.keyFile = "/var/lib/sops-nix/age.txt";
+      secrets = lib.attrsets.mergeAttrsList (map create-sops-secrets (lib.attrNames secrets-manifest));
     };
 
-    secrets = lib.attrsets.mergeAttrsList (map create-secret-directory (lib.attrNames secrets-manifest));
+    secrets = lib.attrsets.mergeAttrsList (
+      map create-secret-directory (lib.attrNames secrets-manifest)
+    );
 
     # FIXME
     #assertions = lib.lists.flatten (map (secret-directory: (map (secret-name:
