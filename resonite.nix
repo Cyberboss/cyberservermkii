@@ -79,9 +79,7 @@ let
 
     stressless-config = jsonFormat.generate "StresslessHeadless.json" {
         version = "1.0.0";
-        values = {
-            #RunAudioWaveformTexture = false;
-        };
+        values = { };
     };
 
     tweaks-config-json = pkgs.runCommand "copy-tweaks" {} ''
@@ -109,7 +107,6 @@ in
             shutdown-seconds = 600;
         };
         resonite-headless = {
-            use-steam = false; # TEMP!!!
             depotdownloader-env-file = secrets.depotdownloader.path;
             enable-rml = true;
             disable-ready-notify = true;
