@@ -12,11 +12,16 @@ let
   create-secret-entry = secret-directory: secret-entry: {
     "${secret-entry}" = {
       path = config.sops.secrets."${secret-directory}/${secret-entry}".path;
+      restartTrigger = config.sops.secrets."${secret-directory}/${secret-entry}".sopsFileHash;
     };
   };
   create-secret-directory-entry = secret-directory: (secret-entry: create-secret-entry secret-directory secret-entry);
   create-secret-directory = secret-directory: {
-    "${secret-directory}" = lib.attrsets.mergeAttrsList (map (create-secret-directory-entry secret-directory) (lib.attrNames secrets-manifest.${secret-directory}));
+    "${secret-directory}" = lib.attrsets.mergeAttrsList ((map (create-secret-directory-entry secret-directory) (lib.attrNames secrets-manifest.${secret-directory})) ++ [
+      {
+        restartTrigger = builtins.concatStringsSep "" (map (secret-name: config.sops.secrets."${secret-directory}/${secret-entry}".sopsFileHash) (lib.attrNames secrets-manifest.${secret-directory}));
+      }
+    ]);
   };
 
   create-sops-secrets = secret-directory: lib.attrsets.mergeAttrsList (map (secret-entry: {
@@ -26,6 +31,21 @@ let
   secrets-directory-submodule = secret-directory: (lib.foldl' lib.recursiveUpdate {} (map
     (secret-name: {
       options = {
+          owner = lib.mkOption {
+            type = lib.types.nonEmptyString;
+            example = "service-account-name";
+            default = "root";
+            description = ''
+              User that will own the secrets file.
+            '';
+          };
+          restartTrigger = lib.mkOption {
+            type = lib.types.nonEmptyString;
+            example = "<some random sha256 hash>";
+            description = ''
+              (Read-only) Hash of the secrets in this directory that may be used to drive systemd restartTriggers.
+            '';
+          };
           "${secret-name}" = lib.mkOption {
               type = lib.types.submodule {
                 options = {
@@ -33,7 +53,14 @@ let
                     type = lib.types.nonEmptyStr;
                     example = "/run/secrets/${secret-directory}/${secret-name}";
                     description = ''
-                        The runtime path that the ${secret-directory}/${secret-name} secret may be accessed at
+                        (Read-only) The runtime path that the ${secret-directory}/${secret-name} secret may be accessed at
+                    '';
+                  };
+                  restartTrigger = lib.mkOption {
+                    type = lib.types.nonEmptyString;
+                    example = "<some random sha256 hash>";
+                    description = ''
+                      (Read-only) Hash of this secret that may be used to drive systemd restartTriggers.
                     '';
                   };
                 };
@@ -75,8 +102,7 @@ in
   config = {
     sops = {
         defaultSopsFile = secrets-file;
-        defaultSopsFormat = "yaml";
-        age.keyFile = "/etc/nixos/age.txt";
+        age.keyFile = "/var/lib/sops-nix/age.txt";
         secrets = lib.attrsets.mergeAttrsList (map create-sops-secrets (lib.attrNames secrets-manifest));
     };
 

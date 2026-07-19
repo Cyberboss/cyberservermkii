@@ -9,6 +9,8 @@
   cert-path = secrets.cert.path;
   jsonFormat = pkgs.formats.json {};
 
+  usergroup = "cloudflared";
+
   cfg = config.services.cloudflared;
   secrets = config.secrets.cloudflared;
   attrset = {
@@ -28,6 +30,21 @@ in {
       };
     };
   };
+
+  users = {
+    groups.${usergroup} = { };
+    users.${usergroup} = {
+      isSystemUser = true;
+      group = usergroup;
+    };
+  };
+
+  systemd.services.cloudflared-tunnel-primary-tunnel.serviceConfig = {
+    DynamicUser = false;
+    User = usergroup;
+  };
+
+  secrets.cloudflared.owner = usergroup;
 
   system.activationScripts = builtins.mapAttrs (script-name: published-route:
     # Register the tunnel with DNS
