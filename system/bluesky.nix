@@ -2,7 +2,7 @@
 let
   service-port = "3000";
   domain = "bsky.${globals.tld}";
-  pds-domain = "pds.${domain}";
+  pds-domain = "bsky-pds.${globals.tld}";
   secrets = config.secrets.bluesky;
 in {
   imports = [ ./modules/cloudflared.nix ./modules/backups.nix ];
