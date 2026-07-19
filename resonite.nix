@@ -93,11 +93,6 @@ let
         mkdir -p $out/etc
         cp ${stressless-config} $out/etc/StresslessHeadless.json
     '';
-
-    pre-launch = pkgs.writeShellScriptBin "pre-launch.sh" ''
-      export $(cat ${secrets.credentials} | xargs)
-      ${pkgs.jq} --in-place '. + {loginCredential: \"$RESONITE_USERNAME\", loginPassword: \"$RESONITE_PASSWORD\"}' ${config.resonite-headless.runtime-config-path}
-    '';
 in
 {
     imports = [
@@ -131,7 +126,7 @@ in
                 "${tweaks-config-json}/etc/HeadlessTweaks.json"
                 "${stressless-config-json}/etc/StresslessHeadless.json"
             ];
-            pre-launch-command = "${pre-launch}/bin/pre-launch.sh";
+            credentials-file = secret.resonite.credentials.path;
             config-json = {
                 allowedUrlHosts = [ "ws://localhost:24444" ];
                 startWorlds = [
