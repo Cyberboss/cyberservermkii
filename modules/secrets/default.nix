@@ -23,7 +23,7 @@ let
     "${secret-directory}/${secret-entry}" = { };
   }) (lib.attrNames secrets-manifest.${secret-directory}));
 
-  secrets-directory-submodule = (lib.foldl' lib.recursiveUpdate {} (map
+  secrets-directory-submodule = secret-directory: (lib.foldl' lib.recursiveUpdate {} (map
     (secret-name: {
       options = builtins.trace "Tracing ${secret-directory}/${secret-name}" {
           "${secret-name}" = lib.mkOption {
@@ -54,7 +54,7 @@ let
               description = ''
                   Secret directory registry for ${secret-directory}
               '';
-              type = lib.types.submodule (builtins.trace "AHHHH: ${(builtins.toJSON secrets-directory-submodule)}" secrets-directory-submodule);
+              type = lib.types.submodule (builtins.trace "AHHHH: ${(builtins.toJSON (secrets-directory-submodule secret-directory))}" (secrets-directory-submodule secret-directory));
             };
         };
       })
