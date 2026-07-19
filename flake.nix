@@ -23,7 +23,7 @@
                 modules = [
                     ./state-version.nix
                     hardware-configuration
-                    ./configuration.nix
+                    ./system.nix
                     ./bluesky.nix
                     ./jellyfin.nix
                     ./resonite.nix

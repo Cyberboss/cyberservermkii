@@ -66,7 +66,7 @@ in
         settings.experimental-features = [ "nix-command" "flakes" ];
         extraOptions = ''
           !include ${secrets.github_token_include.path}
-        ''
+        '';
     };
 
     system.activationScripts.keepSecretsSafe = ''
