@@ -44,9 +44,7 @@ in {
       DynamicUser = lib.mkForce false;
       User = usergroup;
     };
-    restartTriggers = [
-      secrets.restartTrigger
-    ];
+    restartTriggers = secrets.restartTriggers;
   };
 
   secrets.cloudflared.owner = usergroup;

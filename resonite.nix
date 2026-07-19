@@ -118,9 +118,7 @@ in
                 rml-headless-tweaks
                 rml-resonance
             ];
-            additional-restart-triggers = [
-                secrets.credentials.restartTrigger
-            ];
+            additional-restart-triggers = secrets.credentials.restartTriggers;
             rml-configs = [
                 "${tweaks-config-json}/etc/HeadlessTweaks.json"
                 "${stressless-config-json}/etc/StresslessHeadless.json"

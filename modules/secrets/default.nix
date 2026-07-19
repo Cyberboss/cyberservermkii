@@ -12,14 +12,20 @@ let
   create-secret-entry = secret-directory: secret-entry: {
     "${secret-entry}" = {
       path = config.sops.secrets."${secret-directory}/${secret-entry}".path;
-      restartTrigger = config.sops.secrets."${secret-directory}/${secret-entry}".sopsFileHash;
+      restartTriggers = [
+        config.sops.secrets."${secret-directory}/${secret-entry}".sopsFileHash
+        cfg.${secret-directory}.owner
+      ];
     };
   };
   create-secret-directory-entry = secret-directory: (secret-entry: create-secret-entry secret-directory secret-entry);
   create-secret-directory = secret-directory: {
     "${secret-directory}" = lib.attrsets.mergeAttrsList ((map (create-secret-directory-entry secret-directory) (lib.attrNames secrets-manifest.${secret-directory})) ++ [
       {
-        restartTrigger = builtins.concatStringsSep "" (map (secret-name: config.sops.secrets."${secret-directory}/${secret-name}".sopsFileHash) (lib.attrNames secrets-manifest.${secret-directory}));
+        restartTriggers = [
+          builtins.concatStringsSep "" (map (secret-name: config.sops.secrets."${secret-directory}/${secret-name}".sopsFileHash) (lib.attrNames secrets-manifest.${secret-directory}))
+          cfg.${secret-directory}.owner
+        ];
       }
     ]);
   };
@@ -41,11 +47,11 @@ let
               User that will own the secrets file.
             '';
           };
-          restartTrigger = lib.mkOption {
-            type = lib.types.nonEmptyStr;
+          restartTriggers = lib.mkOption {
+            type = lib.types.listOf lib.types.anything;
             example = "<some random sha256 hash>";
             description = ''
-              (Read-only) Hash of the secrets in this directory that may be used to drive systemd restartTriggers.
+              (Read-only) Hash of the secrets and their owner for this directory that may be used to drive systemd restartTriggers.
             '';
           };
           "${secret-name}" = lib.mkOption {
@@ -58,11 +64,11 @@ let
                         (Read-only) The runtime path that the ${secret-directory}/${secret-name} secret may be accessed at
                     '';
                   };
-                  restartTrigger = lib.mkOption {
-                    type = lib.types.nonEmptyStr;
+                  restartTriggers = lib.mkOption {
+                    type = lib.types.listOf lib.types.anything;
                     example = "<some random sha256 hash>";
                     description = ''
-                      (Read-only) Hash of this secret that may be used to drive systemd restartTriggers.
+                      (Read-only) Hash of this secret and its owner that may be used to drive systemd restartTriggers.
                     '';
                   };
                 };
