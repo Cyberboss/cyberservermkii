@@ -57,7 +57,7 @@ let
             };
         };
       })
-    (lib.attrNames secrets-manifest));;
+    (lib.attrNames secrets-manifest));
 in
 {
   options.secrets = lib.mkOption {
