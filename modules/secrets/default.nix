@@ -10,7 +10,9 @@ let
   secrets-manifest = builtins.removeAttrs (yaml-to-attrset secrets-file) [ "sops" ];
 
   create-secret-entry = secret-directory: secret-entry: {
-    "${secret-entry}" = config.sops.secrets."${secret-directory}/${secret-entry}".path;
+    "${secret-entry}" = {
+      path = config.sops.secrets."${secret-directory}/${secret-entry}".path;
+    };
   };
   create-secret-directory-entry = secret-directory: (secret-entry: create-secret-entry secret-directory secret-entry);
   create-secret-directory = secret-directory: {

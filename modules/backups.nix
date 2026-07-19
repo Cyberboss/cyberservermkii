@@ -132,9 +132,9 @@ in
                 "--keep-yearly 1"
             ];
 
-            repositoryFile = secrets.repository;
-            passwordFile = secrets.password;
-            environmentFile = secrets.environment;
+            repositoryFile = secrets.repository.path;
+            passwordFile = secrets.password.path;
+            environmentFile = secrets.environment.path;
             backupPrepareCommand = pre-script;
             backupCleanupCommand = post-script;
         };
