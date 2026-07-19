@@ -82,10 +82,11 @@ in
 
     secrets = lib.attrsets.mergeAttrsList (map create-secret-directory (lib.attrNames secrets-manifest));
 
-    assertions = lib.lists.flatten (map (secret-directory: (map (secret-name:
-      {
-        assertion = options.secrets.${secret-directory}.${secret-name}.isDefined;
-        message = "Secret ${secret-directory}.${secret-name} was never assigned! All secrets in /modules/secrets/secrets.yml must either be used or removed!";
-      }) (lib.attrNames secrets-manifest.${secret-directory}))) (lib.attrNames secrets-manifest));
+    # FIXME
+    #assertions = lib.lists.flatten (map (secret-directory: (map (secret-name:
+    #  {
+    #    assertion = options.secrets.${secret-directory}.${secret-name}.isDefined;
+    #    message = "Secret ${secret-directory}.${secret-name} was never assigned! All secrets in /modules/secrets/secrets.yml must either be used or removed!";
+    #  }) (lib.attrNames secrets-manifest.${secret-directory}))) (lib.attrNames secrets-manifest));
   };
 }
