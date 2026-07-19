@@ -1,4 +1,4 @@
-{ inputs, pkgs, lib, config, ... }:
+{ inputs, pkgs, lib, config, options, ... }:
 let
   cfg = config.secrets;
   yaml-to-attrset = file: builtins.fromJSON (builtins.readFile (
@@ -83,7 +83,7 @@ in
 
     assertions = lib.lists.flatten (map (secret-directory: (map (secret-name:
       {
-        assertion = cfg.${secret-directory}.${secret-name}.isDefined;
+        assertion = options.secrets.${secret-directory}.${secret-name}.isDefined;
         message = "Secret ${secret-directory}.${secret-name} was never assigned! All secrets in /modules/secrets/secrets.yml must either be used or removed!";
       }) (lib.attrNames secrets-manifest.${secret-directory}))) (lib.attrNames secrets-manifest));
   };
