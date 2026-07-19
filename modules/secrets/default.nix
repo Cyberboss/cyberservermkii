@@ -23,6 +23,30 @@ let
     "${secret-directory}/${secret-entry}" = { };
   }) (lib.attrNames secrets-manifest.${secret-directory}));
 
+  secrets-directory-submodule = (lib.foldl' lib.recursiveUpdate {} (map
+    (secret-name: {
+      options = builtins.trace "Tracing ${secret-directory}/${secret-name}" {
+          "${secret-name}" = lib.mkOption {
+              type = lib.types.submodule {
+                options = {
+                  path = lib.mkOption {
+                    type = builtins.trace "Generating option for secrets.${secret-directory}.${secret-name}" lib.types.nonEmptyStr;
+                    example = "/run/secrets/${secret-directory}/${secret-name}";
+                    description = ''
+                        The runtime path that the ${secret-directory}/${secret-name} secret may be accessed at
+                    '';
+                  };
+                };
+              };
+              example = {
+                path = "/run/secrets/${secret-directory}/${secret-name}";
+              };
+              description = ''
+                  Secret file registry for ${secret-directory}/${secret-name} secret may be accessed at
+              '';
+          };
+      };
+    }) (lib.attrNames secrets-manifest.${secret-directory})));
   secrets-submodule = (map
       (secret-directory: {
         options = {
@@ -30,30 +54,7 @@ let
               description = ''
                   Secret directory registry for ${secret-directory}
               '';
-              type = lib.types.submodule (lib.foldl' lib.recursiveUpdate {} (map
-                (secret-name: {
-                  options = builtins.trace "Tracing ${secret-directory}/${secret-name}" {
-                      "${secret-name}" = lib.mkOption {
-                          type = lib.types.submodule {
-                            options = {
-                              path = lib.mkOption {
-                                type = builtins.trace "Generating option for secrets.${secret-directory}.${secret-name}" lib.types.nonEmptyStr;
-                                example = "/run/secrets/${secret-directory}/${secret-name}";
-                                description = ''
-                                    The runtime path that the ${secret-directory}/${secret-name} secret may be accessed at
-                                '';
-                              };
-                            };
-                          };
-                          example = {
-                            path = "/run/secrets/${secret-directory}/${secret-name}";
-                          };
-                          description = ''
-                              Secret file registry for ${secret-directory}/${secret-name} secret may be accessed at
-                          '';
-                      };
-                  };
-                }) (lib.attrNames secrets-manifest.${secret-directory})));
+              type = lib.types.submodule (builtins.trace "AHHHH: ${(builtins.toJSON secrets-directory-submodule)}" secrets-directory-submodule);
             };
         };
       })
