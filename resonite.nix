@@ -126,7 +126,7 @@ in
                 "${tweaks-config-json}/etc/HeadlessTweaks.json"
                 "${stressless-config-json}/etc/StresslessHeadless.json"
             ];
-            credentials-file = secret.credentials.path;
+            credentials-file = secrets.credentials.path;
             config-json = {
                 allowedUrlHosts = [ "ws://localhost:24444" ];
                 startWorlds = [
