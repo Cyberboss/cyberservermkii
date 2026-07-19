@@ -1,5 +1,6 @@
-{ pkgs, secrets, inputs, config, ... }:
+{ pkgs, inputs, config, ... }:
 let
+    secrets = config.secrets.resonite;
     rml-stressless-headless-source = pkgs.fetchurl {
         url = "https://codeberg.org/Raidriar/StresslessHeadless/releases/download/2.2.1/StresslessHeadless.dll";
         sha256 = "sha256-DipeSX1F604p/zMAyjggab6O2kOfnjibfdURAhSz4cU=";
@@ -92,6 +93,11 @@ let
         mkdir -p $out/etc
         cp ${stressless-config} $out/etc/StresslessHeadless.json
     '';
+
+    pre-launch = pkgs.writeShellScriptBin "pre-launch.sh" ''
+      export $(cat ${secrets.credentials} | xargs)
+      ${pkgs.jq} --in-place '. + {loginCredential: \"$RESONITE_USERNAME\", loginPassword: \"$RESONITE_PASSWORD\"}' ${config.resonite-headless.runtime-config-path}
+    '';
 in
 {
     imports = [
@@ -100,12 +106,7 @@ in
         inputs.resonite-dominion.nixosModules.default
     ];
 
-    secrets.resonite = {
-      owner = config.services.resonite-headless.username;
-      entries = [
-
-      ];
-    };
+    secrets.resonite.owner = config.services.resonite-headless.username;
 
     services = {
         resonite-dominion = {
@@ -114,9 +115,7 @@ in
         };
         resonite-headless = {
             enable = true;
-            steam-username = secrets.steam.username;
-            steam-password = secrets.steam.password;
-            headless-code = secrets.resonite.headless-code;
+            depotdownloader-env-file = secrets.resonite.depotdownloader.path;
             enable-rml = true;
             disable-ready-notify = true;
             auto-update-interval = "5m";
@@ -125,13 +124,15 @@ in
                 rml-headless-tweaks
                 rml-resonance
             ];
+            additional-restart-triggers = [
+                secrets.resonite.credentials.restartTrigger
+            ];
             rml-configs = [
                 "${tweaks-config-json}/etc/HeadlessTweaks.json"
                 "${stressless-config-json}/etc/StresslessHeadless.json"
             ];
+            pre-launch-command = "${pre-launch}/bin/pre-launch.sh";
             config-json = {
-                loginCredential = secrets.resonite.username;
-                loginPassword = secrets.resonite.password;
                 allowedUrlHosts = [ "ws://localhost:24444" ];
                 startWorlds = [
                     {

@@ -39,9 +39,14 @@ in {
     };
   };
 
-  systemd.services.cloudflared-tunnel-primary-tunnel.serviceConfig = {
-    DynamicUser = lib.mkForce false;
-    User = usergroup;
+  systemd.services.cloudflared-tunnel-primary-tunnel = {
+    serviceConfig = {
+      DynamicUser = lib.mkForce false;
+      User = usergroup;
+    };
+    restartTriggers = [
+      secrets.restartTrigger
+    ];
   };
 
   secrets.cloudflared.owner = usergroup;
