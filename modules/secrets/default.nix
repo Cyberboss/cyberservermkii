@@ -64,7 +64,7 @@ in
     description = ''
       Secrets registry
     '';
-    type = lib.types.submodule (lib.foldl' lib.recursiveUpdate {} builtins.trace "Secret options: ${(builtins.toJSON secrets-submodule)}" secrets-submodule);
+    type = lib.types.submodule (lib.foldl' lib.recursiveUpdate {} (builtins.trace "Secret options: ${(builtins.toJSON secrets-submodule)}" secrets-submodule));
   };
 
   imports = [
