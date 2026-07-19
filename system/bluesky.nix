@@ -1,7 +1,7 @@
 { config, globals, lib, ... }:
 let
   service-port = "3000";
-  pds-domain = "bsky-pds.${domain}";
+  pds-domain = "bsky-pds.${tld}";
   secrets = config.secrets.bluesky;
 in {
   imports = [ ./modules/cloudflared.nix ./modules/backups.nix ];
