@@ -2,12 +2,29 @@
 let
   secrets = config.secrets.nix;
   update-script = pkgs.writeShellScriptBin "update-system" ''
-    
-            if [ "$EUID" -ne 0 ]; then
-                echo "Please run as root or with sudo."
-                exit 1
-            fi
-            nix flake update --flake /etc/nixos && nixos-rebuild switch
+    set -xeuo pipefail
+
+    if [ "$EUID" -ne 0 ]; then
+        echo "Please run as root or with sudo."
+        exit 1
+    fi
+    nix-collect-garbage
+  '';
+  secrets-leak-script = pkgs.writeShellScriptBin "secrets-leak" ''
+    set -xeuo pipefail
+
+    if [ "$EUID" -ne 0 ]; then
+        echo "Please run as root or with sudo."
+        exit 1
+    fi
+
+    nix flake update --flake /etc/nixos && nixos-rebuild switch
+
+    journalctl --rotate
+    journalctl --vacuum-time=1s
+    rm -rf /var/log/journal/*
+    rm -rf /run/log/journal/*
+    systemctl restart systemd-journald
   '';
 in {
   imports = [
@@ -63,8 +80,7 @@ in {
     package = pkgs.lixPackageSets.stable.lix;
     settings.experimental-features = [ "nix-command" "flakes" ];
     extraOptions = ''
-      
-                !include ${secrets.github_token_include.path}
+      !include ${secrets.github_token_include.path}
     '';
   };
 }
