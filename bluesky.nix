@@ -21,7 +21,7 @@ in
       cloudflared.tunnels.primary-tunnel.ingress.${pds-domain} = "http://localhost:${service-port}";
     };
 
-    systemd.services.bluesky-pds.restartTriggers = secrets.bluesky.restartTriggers;
+    systemd.services.bluesky-pds.restartTriggers = secrets.restartTriggers;
 
     backups.bluesky.paths = [
         config.services.bluesky-pds.settings.PDS_DATA_DIRECTORY
