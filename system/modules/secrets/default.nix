@@ -9,6 +9,7 @@ let
   secrets-manifest =
     builtins.removeAttrs (yaml-to-attrset secrets-file) [ "sops" ];
 
+  full-config-json = builtins.toJSON config;
   create-secret-entry = secret-directory: secret-entry: {
     "${secret-entry}" = {
       path = config.sops.secrets."${secret-directory}/${secret-entry}".path;
@@ -48,16 +49,16 @@ let
           example = "service-account-name";
           default = "root";
           description = ''
-            
-                          User that will own the secrets file.
+
+            User that will own the secrets file.
           '';
         };
         restartTriggers = lib.mkOption {
           type = lib.types.listOf lib.types.anything;
           example = "<some random sha256 hash>";
           description = ''
-            
-                          (Read-only) Hash of the secrets and their owner for this directory that may be used to drive systemd restartTriggers.
+
+            (Read-only) Hash of the secrets and their owner for this directory that may be used to drive systemd restartTriggers.
           '';
         };
         "${secret-name}" = lib.mkOption {
@@ -67,16 +68,16 @@ let
                 type = lib.types.nonEmptyStr;
                 example = "/run/secrets/${secret-directory}/${secret-name}";
                 description = ''
-                  
-                                          (Read-only) The runtime path that the ${secret-directory}/${secret-name} secret may be accessed at
+
+                  (Read-only) The runtime path that the ${secret-directory}/${secret-name} secret may be accessed at
                 '';
               };
               restartTriggers = lib.mkOption {
                 type = lib.types.listOf lib.types.anything;
                 example = "<some random sha256 hash>";
                 description = ''
-                  
-                                        (Read-only) Hash of this secret and its owner that may be used to drive systemd restartTriggers.
+
+                  (Read-only) Hash of this secret and its owner that may be used to drive systemd restartTriggers.
                 '';
               };
             };
@@ -85,8 +86,8 @@ let
             path = "/run/secrets/${secret-directory}/${secret-name}";
           };
           description = ''
-            
-                              Secret file registry for ${secret-directory}/${secret-name} secret may be accessed at
+
+            Secret file registry for ${secret-directory}/${secret-name} secret may be accessed at
           '';
         };
       };
@@ -95,8 +96,8 @@ let
     options = {
       "${secret-directory}" = lib.mkOption {
         description = ''
-          
-                            Secret directory registry for ${secret-directory}
+
+          Secret directory registry for ${secret-directory}
         '';
         type =
           lib.types.submodule (secrets-directory-submodule secret-directory);
@@ -106,8 +107,8 @@ let
 in {
   options.secrets = lib.mkOption {
     description = ''
-      
-            Secrets registry
+
+      Secrets registry
     '';
     type = lib.types.submodule
       (lib.foldl' lib.recursiveUpdate { } secrets-submodule);
@@ -127,10 +128,14 @@ in {
       (map create-secret-directory (lib.attrNames secrets-manifest));
 
     # FIXME
-    #assertions = lib.lists.flatten (map (secret-directory: (map (secret-name:
-    #  {
-    #    assertion = options.secrets.${secret-directory}.${secret-name}.isDefined;
-    #    message = "Secret ${secret-directory}.${secret-name} was never assigned! All secrets in /modules/secrets/secrets.yml must either be used or removed!";
-    #  }) (lib.attrNames secrets-manifest.${secret-directory}))) (lib.attrNames secrets-manifest));
+    assertions = lib.lists.flatten (map (secret-directory:
+      (map (secret-name: {
+        assertion =
+          lib.strings.hasInfix cfg.${secret-directory}.${secret-entry}.path
+          full-config-json;
+        message =
+          "Secret ${secret-directory}.${secret-name} was never assigned! All secrets in /modules/secrets/secrets.yml must either be used or removed!";
+      }) (lib.attrNames secrets-manifest.${secret-directory})))
+      (lib.attrNames secrets-manifest));
   };
 }
