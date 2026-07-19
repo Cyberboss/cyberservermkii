@@ -32,7 +32,7 @@ let
               '';
               type = lib.types.submodule (lib.foldl' lib.recursiveUpdate {} (map
                 (secret-name: {
-                  options = {
+                  options = builtins.trace "Tracing ${secret-directory}/${secret-name}" {
                       "${secret-name}" = lib.mkOption {
                           type = lib.types.submodule {
                             options = {
@@ -64,7 +64,7 @@ in
     description = ''
       Secrets registry
     '';
-    type = lib.types.submodule (lib.foldl' lib.recursiveUpdate {} (builtins.trace "Secret options: ${(builtins.toJSON secrets-submodule)}" secrets-submodule));
+    type = lib.types.submodule (lib.foldl' lib.recursiveUpdate {} secrets-submodule);
   };
 
   imports = [
