@@ -34,6 +34,7 @@ in {
     ./users
 
     ./bluesky.nix
+    ./croc.nix
     ./jellyfin.nix
     ./resonite.nix
     ./samba.nix
