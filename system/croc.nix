@@ -11,5 +11,5 @@ in {
   };
 
   cloudflared.tunnels.primary-tunnel.ingress.${domain} =
-    "http://localhost:${port}";
+    "http://localhost:${toString port}";
 }
