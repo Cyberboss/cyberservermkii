@@ -66,7 +66,7 @@ in {
     openssh.enable = true;
   };
 
-  nixpkgs.overlays = [
+  nixpkgs.overlays = lib.mkIf globals.use-lix [
     (final: prev: {
       inherit (prev.lixPackageSets.stable)
         nixpkgs-review nix-eval-jobs nix-fast-build colmena;
@@ -80,8 +80,16 @@ in {
       dates = "daily";
       options = "--delete-old";
     };
-    package = pkgs.lixPackageSets.stable.lix;
-    settings.experimental-features = [ "nix-command" "flakes" ];
+    package = lib.mkIf globals.use-lix pkgs.lixPackageSets.stable.lix;
+    settings.experimental-features = if globals.use-lix then [
+      "nix-command"
+      "flakes"
+    ] else [
+      "nix-command"
+      "flakes"
+      "ca-derivations"
+      "ca-references"
+    ];
     extraOptions = ''
       !include ${secrets.github_token_include.path}
     '';
