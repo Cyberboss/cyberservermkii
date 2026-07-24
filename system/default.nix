@@ -88,7 +88,6 @@ in {
       "nix-command"
       "flakes"
       "ca-derivations"
-      "ca-references"
     ];
     extraOptions = ''
       !include ${secrets.github_token_include.path}
