@@ -57,7 +57,11 @@ in {
 
   i18n.defaultLocale = "en_CA.UTF-8";
 
-  environment.systemPackages = [ update-script secrets-leak-script ];
+  environment.systemPackages = [
+    update-script
+    secrets-leak-script
+    inputs.nix-fast-build.packages.${pkgs.system}.default
+  ];
 
   systemd.services."getty@tty1".enable = true;
 

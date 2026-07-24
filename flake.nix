@@ -1,12 +1,16 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
+    nix-fast-build = {
+      url = "github:Mic92/nix-fast-build";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     resonite-headless.url = "github:Cyberboss/resonite-headless-nix";
     resonite-dominion.url = "github:Cyberboss/resonite-dominion";
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = inputs@{ self, nixpkgs, ... }:
     let globals = import ./system/globals.nix;
