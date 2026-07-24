@@ -1,4 +1,4 @@
-{ pkgs, globals, config, ... }:
+{ pkgs, globals, inputs, config, ... }:
 let
   secrets = config.secrets.nix;
   update-script = pkgs.writeShellScriptBin "update-system" ''
