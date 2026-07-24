@@ -1,4 +1,4 @@
-{ pkgs, globals, inputs, config, ... }:
+{ pkgs, lib, stdenv, globals, inputs, config, ... }:
 let
   secrets = config.secrets.nix;
   update-script = pkgs.writeShellScriptBin "update-system" ''
@@ -57,11 +57,7 @@ in {
 
   i18n.defaultLocale = "en_CA.UTF-8";
 
-  environment.systemPackages = [
-    update-script
-    secrets-leak-script
-    inputs.nix-fast-build.packages.${pkgs.system}.default
-  ];
+  environment.systemPackages = [ update-script secrets-leak-script ];
 
   systemd.services."getty@tty1".enable = true;
 

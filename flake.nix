@@ -1,10 +1,6 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nix-fast-build = {
-      url = "github:Mic92/nix-fast-build";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     resonite-headless.url = "github:Cyberboss/resonite-headless-nix";
     resonite-dominion.url = "github:Cyberboss/resonite-dominion";
     sops-nix = {
