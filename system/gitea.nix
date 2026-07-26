@@ -23,7 +23,10 @@ in {
         createDatabase = true;
         type = "postgres";
       };
-      dump.enable = true;
+      dump = {
+        enable = true;
+        file = "gitea.dmp --skip-db --skip-log"; # psycho argument injection
+      };
       lfs.enable = true;
       settings = {
         log.ROOT_PATH = "/var/log/gitea";
@@ -41,11 +44,7 @@ in {
   };
 
   systemd = {
-    services = {
-      gitea.serviceConfig.LogDirectory = "gitea";
-      gitea-dump.serviceConfig.ExecStart = lib.mkForce
-        "${config.systemd.services.gitea-dump.serviceConfig.ExecStart} --skip-db --skip-log";
-    };
+    services.gitea.serviceConfig.LogDirectory = "gitea";
     timers.gitea-dump.wantedBy = lib.mkForce [ ];
   };
 
