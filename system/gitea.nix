@@ -3,6 +3,9 @@ let
   domain = "git.${globals.tld}";
   secrets = config.secrets.gitea;
   backup-location = config.services.gitea.dump.backupDir;
+  local-service-url = "http://localhost:${
+      toString config.services.gitea.settings.server.HTTP_PORT
+    }";
 in {
   imports = [
     ./modules/backups.nix
@@ -13,9 +16,7 @@ in {
   ];
 
   services = {
-    cloudflared.tunnels.primary-tunnel.ingress.${domain} = "http://localhost:${
-        toString config.services.gitea.settings.server.HTTP_PORT
-      }";
+    cloudflared.tunnels.primary-tunnel.ingress.${domain} = local-service-url;
     gitea = {
       enable = true;
       database = {
@@ -27,16 +28,24 @@ in {
       settings = {
         log.ROOT_PATH = "/var/log/gitea";
         service.DISABLE_REGISTRATION = true;
+        session.COOKIE_SECURE = true;
+        server.ROOT_URL = "https://${domain}";
       };
     };
     gitea-actions-runner.instances.primary = {
       enable = true;
       tokenFile = secrets.runnerToken.path;
+      url = local-service-url;
+      labels = [ "ubuntu-latest:docker://node:18-bullseye" ];
     };
   };
 
   systemd = {
-    services.gitea.serviceConfig.LogDirectory = "gitea";
+    services = {
+      gitea.serviceConfig.LogDirectory = "gitea";
+      gitea-dump.serviceConfig.ExecStart = lib.mkForce
+        "${config.systemd.services.gitea-dump.serviceConfig.ExecStart} --skip-db --skip-log";
+    };
     timers.gitea-dump.wantedBy = lib.mkForce [ ];
   };
 
