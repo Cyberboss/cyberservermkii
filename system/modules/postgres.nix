@@ -1,6 +1,8 @@
 { lib, config, ... }:
 let backup-location = config.services.postgresqlBackup.location;
 in {
+  imports = [ ./backups.nix ];
+
   services = {
     postgresql = {
       enable = true;
