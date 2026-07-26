@@ -15,8 +15,6 @@ in {
     ./modules/secrets
   ];
 
-  secrets.gitea.owner = config.services.gitea.user;
-
   services = {
     cloudflared.tunnels.primary-tunnel.ingress.${domain} = local-service-url;
     gitea = {
@@ -43,7 +41,7 @@ in {
     gitea-actions-runner.instances.local = {
       enable = true;
       name = "Local";
-      tokenFile = secrets.runnerToken.path;
+      tokenFile = secrets.runnerEnvironment.path;
       url = local-service-url;
       labels = [ "ubuntu-latest:docker://node:18-bullseye" ];
     };
