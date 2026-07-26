@@ -32,7 +32,10 @@ in {
         log.ROOT_PATH = "/var/log/gitea";
         service.DISABLE_REGISTRATION = true;
         session.COOKIE_SECURE = true;
-        server.ROOT_URL = "https://${domain}";
+        server = {
+          ROOT_URL = "https://${domain}";
+          HTTP_PORT = 3002;
+        };
       };
     };
     gitea-actions-runner.instances.local = {
