@@ -23,8 +23,10 @@ in {
       };
       dump.enable = true;
       lfs.enable = true;
-      service.DISABLE_REGISTRATION = true;
-      settings.log.ROOT_PATH = "/var/log/gitea";
+      settings = {
+        log.ROOT_PATH = "/var/log/gitea";
+        service.DISABLE_REGISTRATION = true;
+      };
     };
     gitea-actions-runner.instances.primary = {
       enable = true;
