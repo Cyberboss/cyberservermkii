@@ -7,7 +7,7 @@ in {
     postgresql = {
       enable = true;
       enableTCPIP = true;
-      enusureUsers = [{
+      ensureUsers = [{
         name = "superuser";
         ensureDBOwnership = true;
       }];
