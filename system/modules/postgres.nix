@@ -1,4 +1,4 @@
-{ lib, config, ... }:
+{ lib, pkgs, config, ... }:
 let backup-location = config.services.postgresqlBackup.location;
 in {
   imports = [ ./backups.nix ];
