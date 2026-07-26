@@ -19,25 +19,22 @@ let
 
   rml-stressless-headless = "${
       pkgs.runCommand "StresslessHeadless.dll" { } ''
-        
-                mkdir -p $out/bin
-                cp ${rml-stressless-headless-source} $out/bin/StresslessHeadless.dll
+        mkdir -p $out/bin
+        cp ${rml-stressless-headless-source} $out/bin/StresslessHeadless.dll
       ''
     }/bin/StresslessHeadless.dll";
 
   rml-headless-tweaks = "${
       pkgs.runCommand "HeadlessTweaks.dll" { } ''
-        
-                mkdir -p $out/bin
-                cp ${rml-headless-tweaks-source} $out/bin/HeadlessTweaks.dll
+        mkdir -p $out/bin
+        cp ${rml-headless-tweaks-source} $out/bin/HeadlessTweaks.dll
       ''
     }/bin/HeadlessTweaks.dll";
 
   rml-resonance = "${
       pkgs.runCommand "Resonance.dll" { } ''
-        
-                mkdir -p $out/bin
-                cp ${rml-headless-tweaks-source} $out/bin/Resonance.dll
+        mkdir -p $out/bin
+        cp ${rml-headless-tweaks-source} $out/bin/Resonance.dll
       ''
     }/bin/Resonance.dll";
 
@@ -81,15 +78,13 @@ let
   };
 
   tweaks-config-json = pkgs.runCommand "copy-tweaks" { } ''
-    
-            mkdir -p $out/etc
-            cp ${tweaks-config} $out/etc/HeadlessTweaks.json
+    mkdir -p $out/etc
+    cp ${tweaks-config} $out/etc/HeadlessTweaks.json
   '';
 
   stressless-config-json = pkgs.runCommand "copy-tweaks" { } ''
-    
-            mkdir -p $out/etc
-            cp ${stressless-config} $out/etc/StresslessHeadless.json
+    mkdir -p $out/etc
+    cp ${stressless-config} $out/etc/StresslessHeadless.json
   '';
 in {
   imports = [
