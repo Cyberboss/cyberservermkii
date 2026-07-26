@@ -19,7 +19,6 @@ in {
       database = {
         createDatabase = true;
         type = "postgres";
-        passwordFile = secrets.databasePassword.path;
       };
       dump.enable = true;
       lfs.enable = true;

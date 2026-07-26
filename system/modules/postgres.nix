@@ -7,11 +7,6 @@ in {
     postgresql = {
       enable = true;
       enableTCPIP = true;
-      ensureUsers = [{
-        name = "superuser";
-        ensureDBOwnership = true;
-      }];
-
     };
     postgresqlBackup.enable = true;
   };
