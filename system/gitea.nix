@@ -2,7 +2,7 @@
 let
   domain = "git.${globals.tld}";
   secrets = config.secrets.gitea;
-  backup-location = config.services.gitea.dump.file;
+  backup-location = config.services.gitea.dump.backupDir;
 in {
   imports = [
     ./modules/backups.nix
@@ -52,7 +52,7 @@ in {
       echo "Removing Gitea backups..."
 
       shopt -s dotglob
-      rm -rf ${backup-location}
+      rm -rf ${backup-location}/*
     '');
   };
 }
