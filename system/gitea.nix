@@ -7,6 +7,7 @@ in {
   imports = [
     ./modules/backups.nix
     ./modules/cloudflared.nix
+    ./modules/docker.nix
     ./modules/postgres.nix
     ./modules/secrets
   ];
