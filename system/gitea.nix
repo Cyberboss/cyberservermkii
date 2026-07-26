@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, globals, lib, ... }:
 let
   domain = "git.${globals.tld}";
   secrets = config.secrets.gitea;
