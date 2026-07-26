@@ -35,8 +35,9 @@ in {
         server.ROOT_URL = "https://${domain}";
       };
     };
-    gitea-actions-runner.instances.primary = {
+    gitea-actions-runner.instances.local = {
       enable = true;
+      name = "Local";
       tokenFile = secrets.runnerToken.path;
       url = local-service-url;
       labels = [ "ubuntu-latest:docker://node:18-bullseye" ];
