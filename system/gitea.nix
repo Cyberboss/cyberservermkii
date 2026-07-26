@@ -13,8 +13,9 @@ in {
   ];
 
   services = {
-    cloudflared.tunnels.primary-tunnel.ingress.${domain} =
-      "http://localhost:${config.services.gitea.settings.server.HTTP_PORT}";
+    cloudflared.tunnels.primary-tunnel.ingress.${domain} = "http://localhost:${
+        toString config.services.gitea.settings.server.HTTP_PORT
+      }";
     gitea = {
       enable = true;
       database = {
