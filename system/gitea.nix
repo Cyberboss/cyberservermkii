@@ -15,6 +15,8 @@ in {
     ./modules/secrets
   ];
 
+  secrets.gitea.owner = config.services.gitea.user;
+
   services = {
     cloudflared.tunnels.primary-tunnel.ingress.${domain} = local-service-url;
     gitea = {
