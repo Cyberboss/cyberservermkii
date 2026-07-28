@@ -8,8 +8,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     gitea-mirror = {
-      url = "github:RayLabsHQ/gitea-mirror?flake=false";
+      url = "github:RayLabsHQ/gitea-mirror";
       inputs.nixpkgs.follows = "nixpkgs";
+      flake = false;
     };
   };
   outputs = inputs@{ self, nixpkgs, ... }:
