@@ -61,7 +61,7 @@ in {
     };
 
     gitea-mirror = {
-      enable = true;
+      enable = false;
       openFirewall = true;
 
       # Perfect chronological order
