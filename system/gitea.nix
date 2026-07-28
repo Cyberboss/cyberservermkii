@@ -10,6 +10,7 @@ let
   local-mirror-url =
     "http://localhost:${toString config.services.gitea-mirror.port}";
   enabled = config.services.gitea.enable;
+  mirror-enabled = config.services.gitea-mirror.enable;
 in lib.mkIf enabled {
   imports = [
     ./modules/backups.nix
@@ -24,7 +25,7 @@ in lib.mkIf enabled {
   services = {
     cloudflared.tunnels.primary-tunnel.ingress = {
       "${domain}" = local-service-url;
-      "${mirror-domain}" = local-mirror-url;
+      "${mirror-domain}" = lib.mkIf mirror-enabled local-mirror-url;
     };
 
     gitea = {
@@ -95,7 +96,7 @@ in lib.mkIf enabled {
         rm -rf ${backup-location}/*
       '');
     };
-    gitea-mirror = lib.mkIf config.services.gitea-mirror.enable {
+    gitea-mirror = lib.mkIf mirror-enabled {
       pre = lib.getExe (pkgs.writeShellScriptBin "stop-gitea-mirror.sh" ''
         set -euxo pipefail
 
