@@ -66,7 +66,7 @@ in {
 
       # Perfect chronological order
       mirrorIssueConcurrency = 1;
-      mirrorIssueConcurrency = 1;
+      mirrorPullRequestConcurrency = 1;
 
       environmentFile = secrets.mirrorEnvironment.path;
     };
