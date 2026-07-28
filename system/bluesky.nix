@@ -1,4 +1,4 @@
-{ config, globals, lib, ... }:
+{ config, pkgs, globals, lib, ... }:
 let
   service-port = 3000;
   domain = "bsky.${globals.tld}";
