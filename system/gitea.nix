@@ -9,7 +9,8 @@ let
     }";
   local-mirror-url =
     "http://localhost:${toString config.services.gitea-mirror.port}";
-in {
+  enabled = config.services.gitea.enable;
+in lib.mkIf enabled {
   imports = [
     ./modules/backups.nix
     ./modules/cloudflared.nix
@@ -94,7 +95,7 @@ in {
         rm -rf ${backup-location}/*
       '');
     };
-    gitea-mirror = {
+    gitea-mirror = lib.mkIf config.services.gitea-mirror.enable {
       pre = lib.getExe (pkgs.writeShellScriptBin "stop-gitea-mirror.sh" ''
         set -euxo pipefail
 
