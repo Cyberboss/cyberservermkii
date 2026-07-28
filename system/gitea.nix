@@ -9,7 +9,6 @@ let
     }";
   local-mirror-url =
     "http://localhost:${toString config.services.gitea-mirror.port}";
-  enabled = config.services.gitea.enable;
   mirror-enabled = config.services.gitea-mirror.enable;
 in {
   imports = [
@@ -21,7 +20,6 @@ in {
 
     inputs.gitea-mirror.nixosModules.default
   ];
-} // lib.mkIf enabled {
 
   services = {
     cloudflared.tunnels.primary-tunnel.ingress = {
