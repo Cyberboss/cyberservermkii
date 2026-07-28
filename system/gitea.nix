@@ -11,7 +11,7 @@ let
     "http://localhost:${toString config.services.gitea-mirror.port}";
   enabled = config.services.gitea.enable;
   mirror-enabled = config.services.gitea-mirror.enable;
-in lib.mkIf enabled {
+in {
   imports = [
     ./modules/backups.nix
     ./modules/cloudflared.nix
@@ -21,6 +21,7 @@ in lib.mkIf enabled {
 
     inputs.gitea-mirror.nixosModules.default
   ];
+} // lib.mkIf enabled {
 
   services = {
     cloudflared.tunnels.primary-tunnel.ingress = {
