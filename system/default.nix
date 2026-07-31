@@ -40,7 +40,6 @@ in {
 
     ./bluesky.nix
     ./croc.nix
-    ./gitea.nix
     ./jellyfin.nix
     ./resonite.nix
     ./samba.nix
