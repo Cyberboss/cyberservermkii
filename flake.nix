@@ -8,7 +8,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     gitea-mirror.url =
-      "github:RayLabsHQ/gitea-mirror/1bca7df5ab5a41c570f5989e5d83be297b7338b8";
+      "github:RayLabsHQ/gitea-mirror/52138fcd0a0607c4e3a612295b6f5b30e546f841";
   };
   outputs = inputs@{ self, nixpkgs, ... }:
     let globals = import ./system/globals.nix;
