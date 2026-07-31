@@ -14,3 +14,4 @@
 !.local/**
 !.vscode/extensions.json
 !.vscode/settings.json
+!patches/**
