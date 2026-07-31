@@ -14,50 +14,49 @@ let
   script-template = name: array:
     if array != [ ] then
       lib.getExe (pkgs.writeShellScriptBin name ''
-        
-                set -euxo pipefail
-        
-                # 1. Define your array of scripts
-                scripts=(
-                    "${
-                      (builtins.concatStringsSep ''
-                        "
-                        "'' array)
-                    }"
-                )
-        
-                # Initialize an array to keep track of background PIDs
-                pids=()
-        
-                # 2. Spawn each script asynchronously
-                for script in "''${scripts[@]}"; do
-                    echo "Launching $script..."
-        
-                    # Run the script in the background
-                    $script &
-        
-                    # Capture the PID of the last backgrounded process and store it
-                    pids+=($!)
-                done
-        
-                echo "All jobs launched. Waiting for completion..."
-        
-                # 3. Wait for all tracking PIDs to finish and check exit codes
-                exit_code=0
-                for pid in "''${pids[@]}"; do
-                    if ! wait "$pid"; then
-                        echo "Process with PID $pid failed!"
-                        exit_code=1
-                    fi
-                done
-        
-                # 4. Final verification
-                if [ $exit_code -eq 0 ]; then
-                    echo "All scripts finished successfully!"
-                else
-                    echo "One or more scripts failed."
-                    exit 1
-                fi
+        set -euxo pipefail
+
+        # 1. Define your array of scripts
+        scripts=(
+            "${
+              (builtins.concatStringsSep ''
+                "
+                "'' array)
+            }"
+        )
+
+        # Initialize an array to keep track of background PIDs
+        pids=()
+
+        # 2. Spawn each script asynchronously
+        for script in "''${scripts[@]}"; do
+            echo "Launching $script..."
+
+            # Run the script in the background
+            $script &
+
+            # Capture the PID of the last backgrounded process and store it
+            pids+=($!)
+        done
+
+        echo "All jobs launched. Waiting for completion..."
+
+        # 3. Wait for all tracking PIDs to finish and check exit codes
+        exit_code=0
+        for pid in "''${pids[@]}"; do
+            if ! wait "$pid"; then
+                echo "Process with PID $pid failed!"
+                exit_code=1
+            fi
+        done
+
+        # 4. Final verification
+        if [ $exit_code -eq 0 ]; then
+            echo "All scripts finished successfully!"
+        else
+            echo "One or more scripts failed."
+            exit 1
+        fi
       '')
     else
       null;
@@ -69,8 +68,7 @@ let
 in {
   options.backups = lib.mkOption {
     description = ''
-      
-              Backup specifications.
+      Backup specifications.
     '';
     type = lib.types.attrsOf (lib.types.submodule ({ name, ... }: {
       options = {
@@ -79,8 +77,7 @@ in {
           default = null;
           example = "/path/to/script.sh";
           description = ''
-            
-                                    The script to run that must complete before the backup begins
+            The script to run that must complete before the backup begins
           '';
         };
         paths = lib.mkOption {
@@ -91,8 +88,7 @@ in {
             "/some-service"
           ];
           description = ''
-            
-                                    Paths to backup
+            Paths to backup
           '';
           default = [ ];
         };
@@ -101,8 +97,7 @@ in {
           default = null;
           example = "/path/to/script.sh";
           description = ''
-            
-                                    The script to run that must complete before the backup begins
+            The script to run that must complete before the backup begins
           '';
         };
       };
