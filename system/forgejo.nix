@@ -53,13 +53,15 @@ in {
       };
     };
 
-    gitea-actions-runner.instances.local = {
+    gitea-actions-runner = {
       package = pkgs.forgejo-runner;
-      enable = true;
-      name = "Local";
-      tokenFile = secrets.runnerEnvironment.path;
-      url = local-service-url;
-      labels = [ "ubuntu-latest:docker://node:18-bullseye" ];
+      instances.local = {
+        enable = true;
+        name = "Local";
+        tokenFile = secrets.runnerEnvironment.path;
+        url = local-service-url;
+        labels = [ "ubuntu-latest:docker://node:18-bullseye" ];
+      };
     };
 
     gitea-mirror = {
