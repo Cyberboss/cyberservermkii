@@ -54,6 +54,7 @@ in {
     };
 
     gitea-actions-runner.instances.local = {
+      package = pkgs.forgejo-runner;
       enable = true;
       name = "Local";
       tokenFile = secrets.runnerEnvironment.path;
