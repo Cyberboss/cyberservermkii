@@ -9,7 +9,7 @@
     };
     gitea-mirror = {
       url =
-        "github:RayLabsHQ/gitea-mirror/9d37966c10675650018728848d7b02fb9769606e";
+        "github:RayLabsHQ/gitea-mirror/61841dd7a580645160d20ea6ae0704f6eb0f78c0";
       #inputs.nixpkgs.follows = "nixpkgs";
     };
   };
