@@ -10,6 +10,14 @@ let
   local-mirror-url =
     "http://localhost:${toString config.services.gitea-mirror.port}";
   mirror-enabled = config.services.gitea-mirror.enable;
+  delete-forgejo-backups = lib.getExe
+    (pkgs.writeShellScriptBin "delete-forgejo-backup.sh" ''
+      set -euxo pipefail
+      echo "Removing Forgejo backups..."
+
+      shopt -s dotglob
+      rm -rf ${backup-location}/*
+    '');
 in {
   imports = [
     ./modules/backups.nix
@@ -37,6 +45,7 @@ in {
 
       dump = {
         enable = true;
+        type = "tar";
         file = "forgejo.dmp --skip-log"; # psycho argument injection
       };
 
@@ -91,20 +100,16 @@ in {
       pre = lib.getExe (pkgs.writeShellScriptBin "backup-forgejo.sh" ''
         set -euxo pipefail
 
+        ${delete-forgejo-backups}
+
         echo "Creating Forgejo backup..."
         systemctl start forgejo-dump
         ${
-          lib.getExe pkgs.zip
-        } -d ${backup-location}/forgejo.dmp.zip forgejo-db.sql
+          lib.getExe pkgs.tar
+        } --delete -f ${backup-location}/forgejo.dmp.tar forgejo-db.sql
       '');
       paths = [ backup-location ];
-      post = lib.getExe (pkgs.writeShellScriptBin "delete-forgejo-backup.sh" ''
-        set -euxo pipefail
-        echo "Removing Forgejo backups..."
-
-        shopt -s dotglob
-        rm -rf ${backup-location}/*
-      '');
+      post = delete-forgejo-backups;
     };
     gitea-mirror = lib.mkIf mirror-enabled {
       pre = lib.getExe (pkgs.writeShellScriptBin "stop-gitea-mirror.sh" ''

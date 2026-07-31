@@ -63,10 +63,9 @@ in {
     [ "d ${private-share} 0775 ${usergroup} ${usergroup} - -" ];
 
   system.activationScripts.makeSambaShares = lib.stringAfter [ "users" ] ''
-    
-            mkdir -p ${private-share}
-            chown -R ${usergroup}:${usergroup} ${samba-root}
-            chmod 0770 ${samba-root}
+    mkdir -p ${private-share}
+    chown -R ${usergroup}:${usergroup} ${samba-root}
+    chmod 0770 ${samba-root}
   '';
 
   backups.samba.paths = [ samba-root ];

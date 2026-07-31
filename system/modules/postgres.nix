@@ -8,7 +8,10 @@ in {
       enable = true;
       enableTCPIP = true;
     };
-    postgresqlBackup.enable = true;
+    postgresqlBackup = {
+      enable = true;
+      compression = "none";
+    };
   };
 
   systemd.services.postgresqlBackup.startAt = lib.mkForce [ ];

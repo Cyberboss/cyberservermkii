@@ -3,7 +3,8 @@ let
   service-name = "jellyfin";
   secrets = config.secrets.jellyfin;
   home-directory = "/home/${service-name}";
-  data-directory = "${home-directory}/data";
+  data-directory = config.services.${service-name}.dataDir;
+  backups-directory = "${data-directory}/data/backups";
   libraries-directory = "${home-directory}/libraries";
   domain = "${service-name}.${globals.tld}";
   service-port = "8096";
@@ -34,6 +35,15 @@ let
   jellyroller-config-filename = "jellyroller.toml";
   jellyroller-config =
     tomlFormat.generate jellyroller-config-filename jellyroller-config-attrs;
+
+  delete-jellyfin-backups = lib.getExe
+    (pkgs.writeShellScriptBin "delete-jellyfin-backup.sh" ''
+      set -euxo pipefail
+      echo "Removing Jellyfin backups..."
+      shopt -s dotglob
+      rm -rf ${backups-directory}/*
+      echo "Done removing Jellyfin backups"
+    '');
 in {
   services = {
     "${service-name}" = {
@@ -41,7 +51,6 @@ in {
       openFirewall = true;
       user = service-name;
       group = service-name;
-      dataDir = data-directory;
       logDir = "/var/log/${service-name}";
     };
     seerr = {
@@ -87,6 +96,8 @@ in {
 
       set -euxo pipefail
 
+      ${delete-jellyfin-backups}
+
       echo "Creating Jellyfin backup..."
       mkdir -p $RUNTIME_DIRECTORY/jellyroller
       cp ${jellyroller-config} $RUNTIME_DIRECTORY/jellyroller/${jellyroller-config-filename}
@@ -98,15 +109,19 @@ in {
       export XDG_CONFIG_HOME=$RUNTIME_DIRECTORY
       ${jellyroller} create-backup
       echo "Done creating Jellyfin backup"
-    '');
-    paths = [ config.services.${service-name}.dataDir libraries-directory ];
-    post = lib.getExe (pkgs.writeShellScriptBin "delete-jellyfin-backup.sh" ''
 
-      set -euxo pipefail
-      echo "Removing Jellyfin backups..."
-      shopt -s dotglob
-      rm -rf ${data-directory}/data/backups/*
-      echo "Done removing Jellyfin backups"
+      ZIP_PATH=$(ls -1 "${backup-directory}" | head -n 1)
+      TAR_PATH="''${ZIP_PATH%.zip}.tar"
+
+      echo "Unzipping $ZIP_PATH to $TAR_PATH"
+
+      TMP_DIR=$(mktemp -d)
+      trap 'rm -rf "$TMP_DIR"' EXIT
+
+      ${pkgs.unzip}/bin/unzip "$ZIP_PATH" -d "$TMP_DIR"
+      ${pkgs.gnutar}/bin/tar -cf "$TAR_PATH" -C "$TMP_DIR" .
     '');
+    paths = [ data-directory libraries-directory ];
+    post = delete-jellyfin-backups;
   };
 }

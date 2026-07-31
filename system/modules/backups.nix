@@ -134,5 +134,7 @@ in {
     environmentFile = secrets.environment.path;
     backupPrepareCommand = pre-script;
     backupCleanupCommand = post-script;
+
+    extraOptions = [ "--compression=max" ];
   };
 }
