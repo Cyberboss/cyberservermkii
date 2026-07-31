@@ -37,7 +37,7 @@ in {
 
       dump = {
         enable = true;
-        file = "forgejo.dmp --skip-db --skip-log"; # psycho argument injection
+        file = "forgejo.dmp --skip-log"; # psycho argument injection
       };
 
       lfs.enable = true;
@@ -93,6 +93,7 @@ in {
 
         echo "Creating Forgejo backup..."
         systemctl start forgejo-dump
+        rm -rf ${backup-location}/*.sql
       '');
       paths = [ backup-location ];
       post = lib.getExe (pkgs.writeShellScriptBin "delete-forgejo-backup.sh" ''
