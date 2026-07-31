@@ -10,12 +10,6 @@ let
   local-mirror-url =
     "http://localhost:${toString config.services.gitea-mirror.port}";
   mirror-enabled = config.services.gitea-mirror.enable;
-
-  patched-gitea-mirror = pkgs.applyPatches {
-    name = "remove_gitea-mirror_lockfile";
-    src = inputs.gitea-mirror;
-    patches = [ ./../remove_gitea-mirror_lockfile.patch ];
-  };
 in {
   imports = [
     ./modules/backups.nix
@@ -24,7 +18,7 @@ in {
     ./modules/postgres.nix
     ./modules/secrets
 
-    patched-gitea-mirror.nixosModules.default
+    inputs.gitea-mirror.nixosModules.default
   ];
 
   services = {
