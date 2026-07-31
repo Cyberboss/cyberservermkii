@@ -67,8 +67,10 @@ in {
     xserver.enable = false;
     openssh = {
       enable = true;
-      KbdInteractiveAuthentication = true;
-      AuthenticationMethods = "publickey,keyboard-interactive";
+      settings = {
+        KbdInteractiveAuthentication = true;
+        AuthenticationMethods = "publickey,keyboard-interactive";
+      };
     };
     fail2ban = {
       enable = true;
