@@ -93,7 +93,9 @@ in {
 
         echo "Creating Forgejo backup..."
         systemctl start forgejo-dump
-        rm -rf ${backup-location}/*.sql
+        ${
+          lib.getExe pkgs.zip
+        } -d ${backup-location}/forgejo.dmp.zip forgejo-db.sql
       '');
       paths = [ backup-location ];
       post = lib.getExe (pkgs.writeShellScriptBin "delete-forgejo-backup.sh" ''
