@@ -110,7 +110,7 @@ in {
       ${jellyroller} create-backup
       echo "Done creating Jellyfin backup"
 
-      ZIP_PATH=$(ls -1 "${backup-directory}" | head -n 1)
+      ZIP_PATH=$(ls -1 "${backups-directory}" | head -n 1)
       TAR_PATH="''${ZIP_PATH%.zip}.tar"
 
       echo "Unzipping $ZIP_PATH to $TAR_PATH"
