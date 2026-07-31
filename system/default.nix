@@ -1,7 +1,7 @@
 { pkgs, lib, stdenv, globals, inputs, config, ... }:
 let
   secrets = config.secrets.nix;
-  update-script = pkgs.writeShellScriptBin "update-system" ''
+  system-build-base = nixos-rebuild-command: ''
     set -xeuo pipefail
 
     if [ "$EUID" -ne 0 ]; then
@@ -10,8 +10,13 @@ let
     fi
 
     nix flake update --flake /etc/nixos
-    nixos-rebuild switch
+    nixos-rebuild ${nixos-rebuild-command}
   '';
+
+  update-script =
+    pkgs.writeShellScriptBin "update-system" (system-build-base "switch");
+  build-script =
+    pkgs.writeShellScriptBin "build-system" (system-build-base "build");
   secrets-leak-script = pkgs.writeShellScriptBin "secrets-leak" ''
     set -xeuo pipefail
 
@@ -58,8 +63,12 @@ in {
 
   i18n.defaultLocale = "en_CA.UTF-8";
 
-  environment.systemPackages =
-    [ update-script secrets-leak-script pkgs.google-authenticator ];
+  environment.systemPackages = [
+    build-script
+    update-script
+    secrets-leak-script
+    pkgs.google-authenticator
+  ];
 
   systemd.services."getty@tty1".enable = true;
 
