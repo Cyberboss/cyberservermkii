@@ -7,8 +7,11 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    gitea-mirror.url =
-      "github:RayLabsHQ/gitea-mirror/52138fcd0a0607c4e3a612295b6f5b30e546f841";
+    gitea-mirror = {
+      url =
+        "github:Cyberboss/gitea-mirror/DominionsFixes"; # Unpin me after https://github.com/RayLabsHQ/gitea-mirror/pull/350 is merged
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = inputs@{ self, nixpkgs, ... }:
     let globals = import ./system/globals.nix;
