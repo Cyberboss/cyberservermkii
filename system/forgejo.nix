@@ -105,7 +105,7 @@ in {
         echo "Creating Forgejo backup..."
         systemctl start forgejo-dump
         ${
-          lib.getExe pkgs.tar
+          lib.getExe pkgs.gnutar
         } --delete -f ${backup-location}/forgejo.dmp.tar forgejo-db.sql
       '');
       paths = [ backup-location ];
