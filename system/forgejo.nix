@@ -2,10 +2,10 @@
 let
   domain = "git.${globals.tld}";
   mirror-domain = "git-mirror.${globals.tld}";
-  secrets = config.secrets.gitea;
-  backup-location = config.services.gitea.dump.backupDir;
+  secrets = config.secrets.forgejo;
+  backup-location = config.services.forgejo.dump.backupDir;
   local-service-url = "http://localhost:${
-      toString config.services.gitea.settings.server.HTTP_PORT
+      toString config.services.forgejo.settings.server.HTTP_PORT
     }";
   local-mirror-url =
     "http://localhost:${toString config.services.gitea-mirror.port}";
@@ -27,7 +27,7 @@ in {
       "${mirror-domain}" = lib.mkIf mirror-enabled local-mirror-url;
     };
 
-    gitea = {
+    forgejo = {
       enable = true;
 
       database = {
@@ -37,13 +37,13 @@ in {
 
       dump = {
         enable = true;
-        file = "gitea.dmp --skip-db --skip-log"; # psycho argument injection
+        file = "forgejo.dmp --skip-db --skip-log"; # psycho argument injection
       };
 
       lfs.enable = true;
 
       settings = {
-        log.ROOT_PATH = "/var/log/gitea";
+        log.ROOT_PATH = "/var/log/forgejo";
         service.DISABLE_REGISTRATION = true;
         session.COOKIE_SECURE = true;
         server = {
@@ -74,22 +74,22 @@ in {
   };
 
   systemd = {
-    services.gitea.serviceConfig.LogDirectory = "gitea";
-    timers.gitea-dump.wantedBy = lib.mkForce [ ];
+    services.forgejo.serviceConfig.LogDirectory = "forgejo";
+    timers.forgejo-dump.wantedBy = lib.mkForce [ ];
   };
 
   backups = {
-    gitea = {
-      pre = lib.getExe (pkgs.writeShellScriptBin "backup-gitea.sh" ''
+    forgejo = {
+      pre = lib.getExe (pkgs.writeShellScriptBin "backup-forgejo.sh" ''
         set -euxo pipefail
 
-        echo "Creating Gitea backup..."
-        systemctl start gitea-dump
+        echo "Creating Forgejo backup..."
+        systemctl start forgejo-dump
       '');
       paths = [ backup-location ];
-      post = lib.getExe (pkgs.writeShellScriptBin "delete-gitea-backup.sh" ''
+      post = lib.getExe (pkgs.writeShellScriptBin "delete-forgejo-backup.sh" ''
         set -euxo pipefail
-        echo "Removing Gitea backups..."
+        echo "Removing Forgejo backups..."
 
         shopt -s dotglob
         rm -rf ${backup-location}/*
