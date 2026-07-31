@@ -7,11 +7,8 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    gitea-mirror = {
-      url =
-        "github:RayLabsHQ/gitea-mirror/755647e29c05a9ffc5cea108b18f44862fa7a1c2";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    gitea-mirror.url =
+      "github:RayLabsHQ/gitea-mirror/755647e29c05a9ffc5cea108b18f44862fa7a1c2";
   };
   outputs = inputs@{ self, nixpkgs, ... }:
     let globals = import ./system/globals.nix;
