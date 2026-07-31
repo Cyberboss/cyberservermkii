@@ -1,6 +1,6 @@
 keys:
   - &dominion age1wukgfrjpl3l3wdw5m2y703v2fkjangpzxs9ct4wev4ylwv7sycvszp6cgp
-  - &system age1c44ucek3zrqc29glfakgt039mclfsu46c3enu7tentjkmdak3g2s93xsts
+  - &system age1s2rdn4ws8qnme8kaau6m4s8dfx8anq6rsgvv7vmhr7j4h292n3cshl52em
 creation_rules:
   - path_regex: .*secrets.yml
     key_groups:

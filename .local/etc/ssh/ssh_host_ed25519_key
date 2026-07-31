@@ -1,0 +1,8 @@
+To generate this file run
+
+sudo nix shell nixpkgs#openssh
+ssh-keygen -t "ed25519" -f "/etc/ssh/ssh_host_ed25519_key" -N ""
+
+Then update the "system" public key in sops.yaml with the output public key. You can review it with the following
+
+sudo nix shell nixpkgs#age -c age-keygen -y /etc/ssh/ssh_host_ed25519_key

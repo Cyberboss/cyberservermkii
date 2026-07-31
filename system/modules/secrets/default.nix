@@ -118,7 +118,6 @@ in {
   config = {
     sops = {
       defaultSopsFile = secrets-file;
-      age.keyFile = "/var/lib/sops-nix/age.txt";
       secrets = lib.attrsets.mergeAttrsList
         (map create-sops-secrets (lib.attrNames secrets-manifest));
     };
