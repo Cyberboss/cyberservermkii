@@ -9,7 +9,7 @@
     };
     gitea-mirror = {
       url = "github:RayLabsHQ/gitea-mirror";
-      inputs.nixpkgs.follows = "nixpkgs";
+      #inputs.nixpkgs.follows = "nixpkgs";
     };
   };
   outputs = inputs@{ self, nixpkgs, ... }:
