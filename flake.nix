@@ -10,7 +10,6 @@
     gitea-mirror = {
       url =
         "github:Cyberboss/gitea-mirror/DominionFixes"; # Unpin me after https://github.com/RayLabsHQ/gitea-mirror/pull/350 is merged
-      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
   outputs = inputs@{ self, nixpkgs, ... }:
