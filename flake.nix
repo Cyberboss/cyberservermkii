@@ -9,7 +9,7 @@
     };
     gitea-mirror = {
       url =
-        "github:Cyberboss/gitea-mirror/DominionsFixes"; # Unpin me after https://github.com/RayLabsHQ/gitea-mirror/pull/350 is merged
+        "github:Cyberboss/gitea-mirror/DominionFixes"; # Unpin me after https://github.com/RayLabsHQ/gitea-mirror/pull/350 is merged
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
