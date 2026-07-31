@@ -50,10 +50,10 @@ in {
         log.ROOT_PATH = "/var/log/forgejo";
         service.DISABLE_REGISTRATION = true;
         session.COOKIE_SECURE = true;
-        SSH_PORT = lib.head config.services.openssh.ports;
         server = {
           ROOT_URL = "https://${domain}";
           HTTP_PORT = 3002;
+          SSH_PORT = lib.head config.services.openssh.ports;
         };
       };
     };
