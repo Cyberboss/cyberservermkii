@@ -85,12 +85,15 @@ in {
     allowNullOTP = true;
   };
 
-  nixpkgs.overlays = lib.mkIf globals.use-lix [
-    (final: prev: {
-      inherit (prev.lixPackageSets.stable)
-        nixpkgs-review nix-eval-jobs nix-fast-build colmena;
-    })
-  ];
+  nixpkgs = {
+    config.allowUnsupportedSystem = true;
+    overlays = lib.mkIf globals.use-lix [
+      (final: prev: {
+        inherit (prev.lixPackageSets.stable)
+          nixpkgs-review nix-eval-jobs nix-fast-build colmena;
+      })
+    ];
+  };
 
   nix = {
     gc = {
