@@ -65,6 +65,11 @@ in {
   services = {
     xserver.enable = false;
     openssh.enable = true;
+    services.fail2ban = {
+      enable = true;
+      bantime-increment.enable = true;
+      ignoreIP = [ "192.168.0.0/16" ];
+    };
   };
 
   nixpkgs.overlays = lib.mkIf globals.use-lix [
