@@ -58,18 +58,28 @@ in {
 
   i18n.defaultLocale = "en_CA.UTF-8";
 
-  environment.systemPackages = [ update-script secrets-leak-script ];
+  environment.systemPackages =
+    [ update-script secrets-leak-script pkgs.google-authenticator ];
 
   systemd.services."getty@tty1".enable = true;
 
   services = {
     xserver.enable = false;
-    openssh.enable = true;
+    openssh = {
+      enable = true;
+      KbdInteractiveAuthentication = true;
+      AuthenticationMethods = "publickey,keyboard-interactive";
+    };
     fail2ban = {
       enable = true;
       bantime-increment.enable = true;
       ignoreIP = [ "192.168.0.0/16" ];
     };
+  };
+
+  security.pam.services.sshd.googleAuthenticator = {
+    enable = true;
+    allowNullOTP = true;
   };
 
   nixpkgs.overlays = lib.mkIf globals.use-lix [
