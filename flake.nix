@@ -8,8 +8,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     gitea-mirror = {
-      url =
-        "github:RayLabsHQ/gitea-mirror/6f53a3ed41d2a06b066cbab39c772a19a26da896";
+      url = "github:Cyberboss/gitea-mirror/DominionFixes";
       #inputs.nixpkgs.follows = "nixpkgs";
     };
   };
