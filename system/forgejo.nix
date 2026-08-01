@@ -39,7 +39,6 @@ in {
 
     forgejo = {
       enable = true;
-      openFirewall = true;
 
       database = {
         createDatabase = true;
