@@ -7,8 +7,10 @@ let
   backups-directory = "${data-directory}/data/backups";
   libraries-directory = "${home-directory}/libraries";
   domain = "${service-name}.${globals.tld}";
+  seerr-domain = "seerr.${globals.tld}";
   service-port = "8096";
   local-url = "http://localhost:${service-port}";
+  seerr-port = config.services.seerr.port;
   jellyroller = lib.getExe (pkgs.rustPlatform.buildRustPackage rec {
     pname = "jellyroller";
     version = "1.1.3";
@@ -61,7 +63,10 @@ in {
 
   imports = [ ./modules/cloudflared.nix ./modules/backups.nix ];
 
-  services.cloudflared.tunnels.primary-tunnel.ingress.${domain} = local-url;
+  services.cloudflared.tunnels.primary-tunnel.ingress = {
+    "${domain}" = local-url;
+    "${seerr-domain}" = "http://localhost:${toString seerr-port}";
+  };
 
   users = {
     groups.${service-name} = { };
