@@ -29,13 +29,13 @@ in {
     inputs.gitea-mirror.nixosModules.default
   ];
 
+  networking.firewall.allowedTCPPorts = [ local-service-port ];
+
   services = {
     cloudflared.tunnels.primary-tunnel.ingress = {
       "${domain}" = local-service-url;
       "${mirror-domain}" = lib.mkIf mirror-enabled local-mirror-url;
     };
-
-    networking.firewall.allowedTCPPorts = [ local-service-port ];
 
     forgejo = {
       enable = true;
