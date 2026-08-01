@@ -50,15 +50,11 @@ in {
   services = {
     "${service-name}" = {
       enable = true;
-      openFirewall = true;
       user = service-name;
       group = service-name;
       logDir = "/var/log/${service-name}";
     };
-    seerr = {
-      enable = true;
-      openFirewall = true;
-    };
+    seerr = { enable = true; };
   };
 
   imports = [ ./modules/cloudflared.nix ./modules/backups.nix ];

@@ -4,9 +4,9 @@ let
   mirror-domain = "git-mirror.${globals.tld}";
   secrets = config.secrets.forgejo;
   backup-location = config.services.forgejo.dump.backupDir;
-  local-service-url = "http://localhost:${
-      toString config.services.forgejo.settings.server.HTTP_PORT
-    }";
+  local-service-url = "http://localhost:${toString local-service-port}";
+
+  local-service-port = config.services.forgejo.settings.server.HTTP_PORT;
   local-mirror-url =
     "http://localhost:${toString config.services.gitea-mirror.port}";
   mirror-enabled = config.services.gitea-mirror.enable;
@@ -35,8 +35,11 @@ in {
       "${mirror-domain}" = lib.mkIf mirror-enabled local-mirror-url;
     };
 
+    networking.firewall.allowedTCPPorts = [ local-service-port ];
+
     forgejo = {
       enable = true;
+      openFirewall = true;
 
       database = {
         createDatabase = true;
@@ -80,7 +83,6 @@ in {
 
     gitea-mirror = {
       enable = true;
-      openFirewall = true;
 
       # Perfect chronological order
       mirrorIssueConcurrency = 1;
