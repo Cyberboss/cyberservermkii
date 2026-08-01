@@ -65,6 +65,12 @@ let
   post-script = script-template "backup-cleanup.sh" all-post-scripts;
 
   secrets = config.secrets.restic;
+
+  test-backups-service-name = "backups-test";
+  backups-test-state-directory = "/var/lib/${test-backups-service-name}";
+
+  config-hash = builtins.hashString "sha256"
+    (builtins.toJSON config.services.restic.backups.primary);
 in {
   options.backups = lib.mkOption {
     description = ''
@@ -114,27 +120,52 @@ in {
 
   imports = [ ./secrets ];
 
-  config.services.restic.backups.primary = {
-    initialize = true;
-    paths = paths;
-    timerConfig = {
-      OnCalendar = "*-*-* 06:00:00";
-      Persistent = true;
+  config = {
+    services.restic.backups.primary = {
+      initialize = true;
+      paths = paths;
+      timerConfig = {
+        OnCalendar = "*-*-* 06:00:00";
+        Persistent = true;
+      };
+
+      pruneOpts = [
+        "--keep-daily 7"
+        "--keep-weekly 4"
+        "--keep-monthly 6"
+        "--keep-yearly 1"
+      ];
+
+      repositoryFile = secrets.repository.path;
+      passwordFile = secrets.password.path;
+      environmentFile = secrets.environment.path;
+      backupPrepareCommand = pre-script;
+      backupCleanupCommand = post-script;
+
+      extraOptions = [ "--compression=max" ];
     };
 
-    pruneOpts = [
-      "--keep-daily 7"
-      "--keep-weekly 4"
-      "--keep-monthly 6"
-      "--keep-yearly 1"
-    ];
+    systemd.services.${test-backups-service-name} = {
+      description =
+        "Backups test service. Runs backup pre and post actions without performing the restic sync.";
+      serviceConfig = {
+        Type = "oneshot";
+        User =
+          config.systemd.services.restic-backups-primary.serviceConfig.User;
+        RuntimeDirectory = test-backups-service-name;
+        StateDirectory = test-backups-service-name;
+        ExecStartPre = lib.getExe
+          (pkgs.writeShellScriptBin "clear-backups-test-state.sh" ''
+            sudo -xeou pipefail
 
-    repositoryFile = secrets.repository.path;
-    passwordFile = secrets.password.path;
-    environmentFile = secrets.environment.path;
-    backupPrepareCommand = pre-script;
-    backupCleanupCommand = post-script;
-
-    extraOptions = [ "--compression=max" ];
+            rm -rf ${backups-test-state-directory}
+          '');
+        ExecStart = pre-script;
+        ExecStopPost = post-script;
+        ConditionPathExists =
+          "!${backups-test-state-directory}/${config-hash}.flag";
+      };
+      wantedBy = [ "multi-user.target" ];
+    };
   };
 }
