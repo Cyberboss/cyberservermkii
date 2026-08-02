@@ -8,7 +8,8 @@ let
     (builtins.attrValues (lib.mapAttrs (name: value: (selector value)) cfg));
   all-pre-scripts = script-aggregator (x: x.pre);
   all-dependencies = lib.lists.uniqueStrings (lib.lists.flatten
-    (builtins.attrValues (lib.mapAttrs (name: value: value.dependencies) cfg)));
+    (builtins.attrValues
+      (lib.mapAttrs (name: value: "${value.dependencies}.service") cfg)));
   all-post-scripts = script-aggregator (x: x.post);
   to-env-file = (file-name: attrset:
     pkgs.writeText file-name (lib.concatStringsSep "\n"
@@ -120,7 +121,7 @@ in {
           default = [ ];
           example = [ "service1" "service2" ];
           description = ''
-            An array of systemd service names that should be running prior to the backup starting.
+            An array of systemd service names (Excluding ".service") that should be running prior to the backup starting.
           '';
         };
       };
