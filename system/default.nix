@@ -1,7 +1,7 @@
 { pkgs, lib, stdenv, globals, inputs, config, ... }:
 let
   secrets = config.secrets.nix;
-  system-build-base = nixos-rebuild-command: ''
+  update-script = ''
     set -euxo pipefail
 
     if [ "$EUID" -ne 0 ]; then
@@ -10,13 +10,20 @@ let
     fi
 
     nix flake update --flake /etc/nixos
-    nixos-rebuild ${nixos-rebuild-command}
+    nixos-rebuild switch
+    cp /etc/nixos/flake.lock /etc/nixos/flake.lock.lastsuccessful
   '';
+  build-script = ''
+    set -euxo pipefail
 
-  update-script =
-    pkgs.writeShellScriptBin "update-system" (system-build-base "switch");
-  build-script =
-    pkgs.writeShellScriptBin "build-system" (system-build-base "build");
+    if [ "$EUID" -ne 0 ]; then
+        echo "Please run as root or with sudo."
+        exit 1
+    fi
+
+    nix flake update --flake /etc/nixos
+    nixos-rebuild build
+  '';
   secrets-leak-script = pkgs.writeShellScriptBin "secrets-leak" ''
     set -euxo pipefail
 
@@ -38,6 +45,7 @@ in {
     ./state-version.nix
     ./users
 
+    ./modules/backups.nix
     ./bluesky.nix
     ./croc.nix
     ./forgejo.nix
@@ -45,6 +53,8 @@ in {
     ./resonite.nix
     ./samba.nix
   ];
+
+  backups.system-configuration.paths = [ "/etc/nixos/flake.lock" ];
 
   boot.loader = {
     systemd-boot = {
