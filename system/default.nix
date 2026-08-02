@@ -1,7 +1,7 @@
 { pkgs, lib, stdenv, globals, inputs, config, ... }:
 let
   secrets = config.secrets.nix;
-  update-script = ''
+  update-script = pkgs.writeShellScriptBin "update-system" ''
     set -euxo pipefail
 
     if [ "$EUID" -ne 0 ]; then
@@ -13,7 +13,7 @@ let
     nixos-rebuild switch
     cp /etc/nixos/flake.lock /etc/nixos/flake.lock.lastsuccessful
   '';
-  build-script = ''
+  build-script = pkgs.writeShellScriptBin "build-system" ''
     set -euxo pipefail
 
     if [ "$EUID" -ne 0 ]; then
