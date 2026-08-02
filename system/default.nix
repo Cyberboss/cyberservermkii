@@ -2,16 +2,16 @@
 let
   secrets = config.secrets.nix;
   system-build-base = nixos-rebuild-command: ''
-    
-        set -xeuo pipefail
-    
-        if [ "$EUID" -ne 0 ]; then
-            echo "Please run as root or with sudo."
-            exit 1
-        fi
-    
-        nix flake update --flake /etc/nixos
-        nixos-rebuild ${nixos-rebuild-command}
+
+    set -xeuo pipefail
+
+    if [ "$EUID" -ne 0 ]; then
+        echo "Please run as root or with sudo."
+        exit 1
+    fi
+
+    nix flake update --flake /etc/nixos
+    nixos-rebuild ${nixos-rebuild-command}
   '';
 
   update-script =
@@ -19,21 +19,21 @@ let
   build-script =
     pkgs.writeShellScriptBin "build-system" (system-build-base "build");
   secrets-leak-script = pkgs.writeShellScriptBin "secrets-leak" ''
-    
-        set -xeuo pipefail
-    
-        if [ "$EUID" -ne 0 ]; then
-            echo "Please run as root or with sudo."
-            exit 1
-        fi
-    
-        nix-collect-garbage -d
-    
-        journalctl --rotate
-        journalctl --vacuum-time=1s
-        rm -rf /var/log/journal/*
-        rm -rf /run/log/journal/*
-        systemctl restart systemd-journald
+
+    set -xeuo pipefail
+
+    if [ "$EUID" -ne 0 ]; then
+        echo "Please run as root or with sudo."
+        exit 1
+    fi
+
+    nix-collect-garbage -d
+
+    journalctl --rotate
+    journalctl --vacuum-time=1s
+    rm -rf /var/log/journal/*
+    rm -rf /run/log/journal/*
+    systemctl restart systemd-journald
   '';
 in {
   imports = [
@@ -89,6 +89,11 @@ in {
       bantime-increment.enable = true;
       ignoreIP = [ "192.168.0.0/16" ];
     };
+    journald.extraConfig = ''
+      SystemMaxUse=10G
+      SystemKeepFree=5G
+      MaxRetentionSec=1month
+    '';
   };
 
   security.pam.services.sshd.googleAuthenticator = {
@@ -120,8 +125,8 @@ in {
       "ca-derivations"
     ];
     extraOptions = ''
-      
-            !include ${secrets.github_token_include.path}
+
+      !include ${secrets.github_token_include.path}
     '';
   };
 }
