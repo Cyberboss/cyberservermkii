@@ -34,7 +34,7 @@ let
   rml-resonance = "${
       pkgs.runCommand "Resonance.dll" { } ''
         mkdir -p $out/bin
-        cp ${rml-headless-tweaks-source} $out/bin/Resonance.dll
+        cp ${rml-resonance-source} $out/bin/Resonance.dll
       ''
     }/bin/Resonance.dll";
 
