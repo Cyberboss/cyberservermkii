@@ -117,7 +117,7 @@ in {
         };
         dependencies = lib.mkOption {
           type = lib.types.listOf lib.types.nonEmptyStr;
-          default = null;
+          default = [ ];
           example = [ "service1" "service2" ];
           description = ''
             An array of systemd service names that should be running prior to the backup starting.
