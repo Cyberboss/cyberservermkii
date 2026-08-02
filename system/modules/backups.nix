@@ -9,7 +9,7 @@ let
   all-pre-scripts = script-aggregator (x: x.pre);
   all-dependencies = lib.lists.uniqueStrings (lib.lists.flatten
     (builtins.attrValues
-      (lib.mapAttrs (name: value: "${value.dependencies}.service") cfg)));
+      (lib.mapAttrs (name: value: (builtins.map (dep: "${dep}.service") value.dependencies) cfg)));
   all-post-scripts = script-aggregator (x: x.post);
   to-env-file = (file-name: attrset:
     pkgs.writeText file-name (lib.concatStringsSep "\n"
