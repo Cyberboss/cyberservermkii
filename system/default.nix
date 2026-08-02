@@ -2,8 +2,7 @@
 let
   secrets = config.secrets.nix;
   system-build-base = nixos-rebuild-command: ''
-
-    set -xeuo pipefail
+    set -euxo pipefail
 
     if [ "$EUID" -ne 0 ]; then
         echo "Please run as root or with sudo."
@@ -19,8 +18,7 @@ let
   build-script =
     pkgs.writeShellScriptBin "build-system" (system-build-base "build");
   secrets-leak-script = pkgs.writeShellScriptBin "secrets-leak" ''
-
-    set -xeuo pipefail
+    set -euxo pipefail
 
     if [ "$EUID" -ne 0 ]; then
         echo "Please run as root or with sudo."

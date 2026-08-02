@@ -82,8 +82,8 @@ let
   backups-test-state-file =
     "${backups-test-state-directory}/${config-hash}.flag";
   backups-test-script = lib.getExe
-    (pkgs.writeShellScriptBin "clear-backups-test-state.sh" ''
-      set -xeou pipefail
+    (pkgs.writeShellScriptBin "backups-test.sh" ''
+      set -euxo pipefail
 
       rm -rf ${backups-test-state-directory}
 
@@ -182,6 +182,8 @@ in {
     systemd.services.${test-backups-service-name} = {
       description =
         "Backups test service. Runs backup pre and post actions without performing the restic sync.";
+      unitConfig.ConditionPathExists = "!${backups-test-state-file}";
+
       serviceConfig = {
         Type = "oneshot";
         User =
@@ -189,8 +191,6 @@ in {
         RuntimeDirectory = test-backups-service-name;
         StateDirectory = test-backups-service-name;
         ExecStart = backups-test-script;
-
-        ConditionPathExists = "!${backups-test-state-file}";
       };
       wantedBy = [ "multi-user.target" ];
       after = all-dependencies;
