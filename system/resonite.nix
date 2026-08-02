@@ -8,8 +8,8 @@ let
   };
   rml-headless-tweaks-source = pkgs.fetchurl {
     url =
-      "https://github.com/Cyberboss/HeadlessTweaks/releases/download/2.3.0-preview12/HeadlessTweaks.dll";
-    sha256 = "sha256-jKnYc9eEX7T7wwhbcr2w5HAwD6FukZfnj3Fq4XKYZ64=";
+      "https://github.com/Cyberboss/HeadlessTweaks/releases/download/2.3.0-preview13/HeadlessTweaks.dll";
+    sha256 = "sha256-wO5fbFGFQBAbD0JPQaGPaJG2Zbdu58Lpy58ZfU8OXR0=";
   };
   rml-resonance-source = pkgs.fetchurl {
     url =
