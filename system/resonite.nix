@@ -46,19 +46,7 @@ let
   tweaks-config = jsonFormat.generate "HeadlessTweaks.json" {
     version = "1.0.0";
     values = {
-      UseDiscordWebhook = false;
-      DiscordWebhookID = null;
-      DiscordWebhookKey = null;
-      DiscordWebhookUsername = null;
-      DiscordWebhookAvatar = null;
-      DiscordWebhookThreadID = null;
-      DiscordWebhookEnabledEvents = { EngineStart = false; };
-      AutoInviteOptOut = [ ];
-      WorldRoster = { };
-      SessionIdToName = { };
-      DefaultSessionAccessLevel = { };
-      DiscordWebhookEventColors = { };
-      DiscordLinkToSession = true;
+      DiscordLinkToSession = false;
       PermissionLevels = { U-1jLFy9ehNjs = "Owner"; };
       WorldScopedPermissions = {
         U-The-Honeybee = { "${DominionsFlatNoRtf}" = "Moderator"; };
