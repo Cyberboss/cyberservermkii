@@ -7,14 +7,23 @@ let
     builtins.filter (x: x != null)
     (builtins.attrValues (lib.mapAttrs (name: value: (selector value)) cfg));
   all-pre-scripts = script-aggregator (x: x.pre);
+  all-dependencies = lib.lists.uniqueStrings (lib.lists.flatten
+    (builtins.attrValues (lib.mapAttrs (name: value: value.dependencies) cfg)));
   all-post-scripts = script-aggregator (x: x.post);
   to-env-file = (file-name: attrset:
     pkgs.writeText file-name (lib.concatStringsSep "\n"
       (lib.mapAttrsToList (name: value: "${name}=${value}") attrset)));
-  script-template = name: array:
+  script-template = name: array: pre:
     if array != [ ] then
       lib.getExe (pkgs.writeShellScriptBin name ''
         set -euxo pipefail
+
+        ${if pre then
+          (builtins.concatStringsSep "\n"
+            (builtins.map (service: "systemctl start ${service}")
+              all-dependencies))
+        else
+          ""}
 
         # 1. Define your array of scripts
         scripts=(
@@ -106,6 +115,14 @@ in {
             The script to run that must complete before the backup begins
           '';
         };
+        dependencies = lib.mkOption {
+          type = lib.types.listOf lib.types.nonEmptyStr;
+          default = null;
+          example = [ "service1" "service2" ];
+          description = ''
+            An array of systemd service names that should be running prior to the backup starting.
+          '';
+        };
       };
     }));
 
@@ -166,6 +183,7 @@ in {
           "!${backups-test-state-directory}/${config-hash}.flag";
       };
       wantedBy = [ "multi-user.target" ];
+      after = all-dependencies;
     };
   };
 }

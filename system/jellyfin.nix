@@ -124,5 +124,6 @@ in {
     '');
     paths = [ data-directory libraries-directory ];
     post = delete-jellyfin-backups;
+    dependencies = [ "jellyfin" ];
   };
 }
