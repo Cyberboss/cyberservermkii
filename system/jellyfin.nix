@@ -119,7 +119,7 @@ in {
       TMP_DIR=$(mktemp -d)
       trap 'rm -rf "$TMP_DIR"' EXIT
 
-      ${pkgs.unzip}/bin/unzip "$ZIP_PATH" -d "$TMP_DIR"
+      ${pkgs.unzip}/bin/unzip -q "$ZIP_PATH" -d "$TMP_DIR"
       ${pkgs.gnutar}/bin/tar -cf "$TAR_PATH" -C "$TMP_DIR" .
     '');
     paths = [ data-directory libraries-directory ];

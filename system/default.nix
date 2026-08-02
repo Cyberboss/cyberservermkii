@@ -89,11 +89,6 @@ in {
       bantime-increment.enable = true;
       ignoreIP = [ "192.168.0.0/16" ];
     };
-    journald.extraConfig = ''
-      SystemMaxUse=10G
-      SystemKeepFree=5G
-      MaxRetentionSec=1month
-    '';
   };
 
   security.pam.services.sshd.googleAuthenticator = {
