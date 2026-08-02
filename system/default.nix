@@ -46,10 +46,12 @@ in {
     ./users
 
     ./modules/backups.nix
+
     ./bluesky.nix
     ./croc.nix
     ./forgejo.nix
     ./jellyfin.nix
+    ./motd.nix
     ./resonite.nix
     ./samba.nix
   ];
@@ -128,7 +130,6 @@ in {
       "ca-derivations"
     ];
     extraOptions = ''
-
       !include ${secrets.github_token_include.path}
     '';
   };
