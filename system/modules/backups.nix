@@ -79,6 +79,21 @@ let
 
   test-backups-service-name = "backups-test";
   backups-test-state-directory = "/var/lib/${test-backups-service-name}";
+  backups-test-state-file =
+    "${backups-test-state-directory}/${config-hash}.flag";
+  backups-test-script = lib.getExe
+    (pkgs.writeShellScriptBin "clear-backups-test-state.sh" ''
+      set -xeou pipefail
+
+      rm -rf ${backups-test-state-directory}
+
+      ${pre-script}
+
+      ${post-script}
+
+      mkdir -p ${backups-test-state-directory}
+      touch ${backups-test-state-file}
+    '');
 
   config-hash = builtins.hashString "sha256"
     (builtins.toJSON config.services.restic.backups.primary);
@@ -173,16 +188,9 @@ in {
           config.systemd.services.restic-backups-primary.serviceConfig.User;
         RuntimeDirectory = test-backups-service-name;
         StateDirectory = test-backups-service-name;
-        ExecStartPre = lib.getExe
-          (pkgs.writeShellScriptBin "clear-backups-test-state.sh" ''
-            sudo -xeou pipefail
+        ExecStart = backups-test-script;
 
-            rm -rf ${backups-test-state-directory}
-          '');
-        ExecStart = pre-script;
-        ExecStopPost = post-script;
-        ConditionPathExists =
-          "!${backups-test-state-directory}/${config-hash}.flag";
+        ConditionPathExists = "!${backups-tests-state-file}";
       };
       wantedBy = [ "multi-user.target" ];
       after = all-dependencies;
