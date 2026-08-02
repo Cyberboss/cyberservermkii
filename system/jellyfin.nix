@@ -47,21 +47,20 @@ let
       echo "Done removing Jellyfin backups"
     '');
 in {
+  imports = [ ./modules/cloudflared.nix ./modules/backups.nix ];
+
   services = {
+    cloudflared.tunnels.primary-tunnel.ingress = {
+      "${domain}" = local-url;
+      "${seerr-domain}" = "http://localhost:${toString seerr-port}";
+    };
     "${service-name}" = {
       enable = true;
       user = service-name;
       group = service-name;
       logDir = "/var/log/${service-name}";
     };
-    seerr = { enable = true; };
-  };
-
-  imports = [ ./modules/cloudflared.nix ./modules/backups.nix ];
-
-  services.cloudflared.tunnels.primary-tunnel.ingress = {
-    "${domain}" = local-url;
-    "${seerr-domain}" = "http://localhost:${toString seerr-port}";
+    seerr.enable = true;
   };
 
   users = {
@@ -112,15 +111,11 @@ in {
       echo "Done creating Jellyfin backup"
 
       ZIP_PATH="${backups-directory}/$(ls -1 "${backups-directory}" | head -n 1)"
-      TAR_PATH="''${ZIP_PATH%.zip}.tar"
 
-      echo "Unzipping $ZIP_PATH to $TAR_PATH"
+      echo "Unzipping $ZIP_PATH"
 
-      TMP_DIR=$(mktemp -d)
-      trap 'rm -rf "$TMP_DIR"' EXIT
-
-      ${pkgs.unzip}/bin/unzip -q "$ZIP_PATH" -d "$TMP_DIR"
-      ${pkgs.gnutar}/bin/tar -cf "$TAR_PATH" -C "$TMP_DIR" .
+      ${lib.getExe pkgs.unzip} -q "$ZIP_PATH" -d ${backups-directory}
+      rm $ZIP_PATH
     '');
     paths = [ data-directory libraries-directory ];
     post = delete-jellyfin-backups;

@@ -107,7 +107,9 @@ in {
         systemctl start forgejo-dump
         ${
           lib.getExe pkgs.gnutar
-        } --delete -f ${backup-location}/forgejo.dmp.tar forgejo-db.sql
+        } -xf ${backup-location}/forgejo.dmp.tar -C ${backup-location}
+        rm ${backup-location}/forgejo.dmp.tar
+        rm ${backup-location}/forgejo-db.sql
       '');
       paths = [ backup-location ];
       post = delete-forgejo-backups;
