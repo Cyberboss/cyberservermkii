@@ -72,8 +72,8 @@ let
     else
       null;
 
-  pre-script = script-template "backup-prepare.sh" all-pre-scripts;
-  post-script = script-template "backup-cleanup.sh" all-post-scripts;
+  pre-script = script-template "backup-prepare.sh" all-pre-scripts true;
+  post-script = script-template "backup-cleanup.sh" all-post-scripts false;
 
   secrets = config.secrets.restic;
 
