@@ -190,7 +190,7 @@ in {
         StateDirectory = test-backups-service-name;
         ExecStart = backups-test-script;
 
-        ConditionPathExists = "!${backups-tests-state-file}";
+        ConditionPathExists = "!${backups-test-state-file}";
       };
       wantedBy = [ "multi-user.target" ];
       after = all-dependencies;
