@@ -9,6 +9,6 @@
 
   services.postgresql.ensureUsers = [{
     name = "dominion";
-    superuser = true;
+    ensureClauses.superuser = true;
   }];
 }
