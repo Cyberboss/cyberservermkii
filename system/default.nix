@@ -47,6 +47,7 @@ in {
 
     ./modules/backups.nix
 
+    ./acquisition.nix
     ./bluesky.nix
     ./croc.nix
     ./forgejo.nix
