@@ -36,5 +36,6 @@ in {
     '');
     paths = [ backup-location ];
     post = delete-postgres-backups;
+    dependencies = [ "postgresql" ];
   };
 }
