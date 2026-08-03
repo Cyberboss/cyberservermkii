@@ -3,12 +3,10 @@ let
   makeServarrConfig = service-name:
     let db-username = config.services.${service-name}.user;
     in {
-      networking.firewall.allowedTCPPorts =
-        [ config.services.${service-name}.settings.server.port ];
-
       services = {
         "${service-name}" = {
           enable = true;
+          openFirewall = true;
           settings = {
             postgres.host = "127.0.0.1";
             postgres.logdb = "${db-username}-log";
