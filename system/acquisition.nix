@@ -1,32 +1,61 @@
 { lib, pkgs, config, ... }:
 let
-  makeServarrConfig = service-name: {
-    services.${service-name} = {
-      enable = true;
-      settings = {
-        postgres.host = "127.0.0.1";
-        postgres.logdb = "${service-name}-log";
-        postgres.maindb = "${service-name}-main";
-        postgres.password = config.services.${service-name}.user;
-        # Not secure if the port is exposed
-        postgres.user = config.services.${service-name}.user;
-        server.port = config.services.postgresql.settings.port;
+  makeServarrConfig = service-name:
+    let db-username = config.services.${service-name}.user;
+    in {
+      services = {
+        "${service-name}" = {
+          enable = true;
+          settings = {
+            postgres.host = "127.0.0.1";
+            postgres.logdb = "${db-username}-log";
+            postgres.maindb = "${db-username}-main";
+            postgres.password = db-username;
+            postgres.user = db-username;
+          };
+        };
+        postgresql = {
+          ensureDatabases = [ "${db-username}-log" "${db-username}-main" ];
+          ensureUsers = [{ name = db-username; }];
+        };
+      };
+
+      backups.${service-name} = {
+        pre = lib.getExe (pkgs.writeShellScriptBin "stop-${service-name}.sh" ''
+          set -euxo pipefail
+          systemctl stop ${service-name}
+        '');
+        paths = [ config.services.${service-name}.dataDir ];
+        post = lib.getExe
+          (pkgs.writeShellScriptBin "start-${service-name}.sh" ''
+            set -euxo pipefail
+            systemctl start ${service-name}
+          '');
       };
     };
 
-    backups.${service-name} = {
-      pre = lib.getExe (pkgs.writeShellScriptBin "stop-${service-name}.sh" ''
-        set -euxo pipefail
-        systemctl stop ${service-name}
-      '');
-      paths = [ config.services.radarr.dataDir ];
-      post = lib.getExe (pkgs.writeShellScriptBin "start-${service-name}.sh" ''
-        set -euxo pipefail
-        systemctl start ${service-name}
-      '');
-    };
+  makeServarrConfigs = service-names: {
+    config = (lib.attrsets.mergeAttrsList
+      (builtins.map makeServarrConfig service-names)) // {
+        services.postgresql = {
+          authentication = ''
+            #type database DBuser origin-address auth-method
+            # this is for local database access with psql
+            local all all trust
+            ${lib.concatStringsSep "\n" (builtins.map (service-name:
+              let db-username = config.services.${service-name}.user;
+              in ''
+                # this is for ${service-name} to connect
+                host ${db-username}-log ${db-username} 127.0.0.1/32 trust
+                host ${db-username}-log ${db-username} ::1/128 trust
+                host ${db-username}-main ${db-username} 127.0.0.1/32 trust
+                host ${db-username}-main ${db-username} ::1/128 trust
+              '') service-names)}
+          '';
+        };
+      };
   };
 in {
   imports = [ ./modules/backups.nix ./modules/postgres.nix ];
-  config = (makeServarrConfig "radarr");
+  config = (makeServarrConfigs [ "radarr" ]);
 }
