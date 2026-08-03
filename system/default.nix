@@ -45,7 +45,6 @@ in {
     ./state-version.nix
     ./users
 
-    ./acquisition.nix
     ./bluesky.nix
     ./croc.nix
     ./forgejo.nix
