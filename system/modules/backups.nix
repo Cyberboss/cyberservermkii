@@ -1,4 +1,4 @@
-{ pkgs, lib, config, ... }:
+{ pkgs, lib, config, globals, ... }:
 let
   cfg = config.backups;
   paths = lib.lists.uniqueStrings (lib.lists.flatten
@@ -155,6 +155,8 @@ in {
   imports = [ ./secrets ];
 
   config = {
+    backups.system-configuration.paths = [ globals.flake-backup-path ];
+
     services.restic.backups.primary = {
       initialize = true;
       paths = paths;

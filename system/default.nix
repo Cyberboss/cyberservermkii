@@ -9,9 +9,9 @@ let
         exit 1
     fi
 
-    nix flake update --flake /etc/nixos
+    nix flake update --flake ${globals.flake-path}
     nixos-rebuild switch
-    cp /etc/nixos/flake.lock /etc/nixos/flake.lock.lastsuccessful
+    cp ${globals.flake-path}/flake.lock ${globals.flake-lock-backup-path}
   '';
   build-script = pkgs.writeShellScriptBin "build-system" ''
     set -euxo pipefail
@@ -21,7 +21,7 @@ let
         exit 1
     fi
 
-    nix flake update --flake /etc/nixos
+    nix flake update --flake ${globals.flake-path}
     nixos-rebuild build
   '';
   secrets-leak-script = pkgs.writeShellScriptBin "secrets-leak" ''
@@ -45,8 +45,6 @@ in {
     ./state-version.nix
     ./users
 
-    ./modules/backups.nix
-
     ./acquisition.nix
     ./bluesky.nix
     ./croc.nix
@@ -56,9 +54,6 @@ in {
     ./resonite.nix
     ./samba.nix
   ];
-
-  backups.system-configuration.paths =
-    [ "/etc/nixos/flake.lock.lastsuccessful" ];
 
   boot.loader = {
     systemd-boot = {
