@@ -21,7 +21,7 @@ let
           ensureDatabases = [ "${db-username}-log" "${db-username}-main" ];
           ensureUsers = [{
             name = db-username;
-            ensureClauses.superuser = true;
+            ensureClauses.createdb = true;
           }];
         };
       };
