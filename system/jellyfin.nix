@@ -91,34 +91,36 @@ in {
       chmod 0710 ${home-directory}
     '';
 
-  backups.jellyfin = {
-    pre = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
+  backups = {
+    jellyfin-data = {
+      pre = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
+        set -euxo pipefail
 
-      set -euxo pipefail
+        ${delete-jellyfin-backups}
 
-      ${delete-jellyfin-backups}
+        echo "Creating Jellyfin backup..."
+        mkdir -p $RUNTIME_DIRECTORY/jellyroller
+        cp ${jellyroller-config} $RUNTIME_DIRECTORY/jellyroller/${jellyroller-config-filename}
 
-      echo "Creating Jellyfin backup..."
-      mkdir -p $RUNTIME_DIRECTORY/jellyroller
-      cp ${jellyroller-config} $RUNTIME_DIRECTORY/jellyroller/${jellyroller-config-filename}
+        set +x
+        echo "api_key = \"$(cat ${secrets.api_key.path})\"" >> $RUNTIME_DIRECTORY/jellyroller/${jellyroller-config-filename}
+        set -x
 
-      set +x
-      echo "api_key = \"$(cat ${secrets.api_key.path})\"" >> $RUNTIME_DIRECTORY/jellyroller/${jellyroller-config-filename}
-      set -x
+        export XDG_CONFIG_HOME=$RUNTIME_DIRECTORY
+        ${jellyroller} create-backup
+        echo "Done creating Jellyfin backup"
 
-      export XDG_CONFIG_HOME=$RUNTIME_DIRECTORY
-      ${jellyroller} create-backup
-      echo "Done creating Jellyfin backup"
+        ZIP_PATH="${backups-directory}/$(ls -1 "${backups-directory}" | head -n 1)"
 
-      ZIP_PATH="${backups-directory}/$(ls -1 "${backups-directory}" | head -n 1)"
+        echo "Unzipping $ZIP_PATH"
 
-      echo "Unzipping $ZIP_PATH"
-
-      ${lib.getExe pkgs.unzip} -q "$ZIP_PATH" -d ${backups-directory}
-      rm $ZIP_PATH
-    '');
-    paths = [ data-directory libraries-directory ];
-    post = delete-jellyfin-backups;
-    dependencies = [ "jellyfin" ];
+        ${lib.getExe pkgs.unzip} -q "$ZIP_PATH" -d ${backups-directory}
+        rm $ZIP_PATH
+      '');
+      paths = [ data-directory ];
+      post = delete-jellyfin-backups;
+      dependencies = [ "jellyfin" ];
+    };
+    jellyfin-libraries.paths = [ libraries-directory ];
   };
 }
