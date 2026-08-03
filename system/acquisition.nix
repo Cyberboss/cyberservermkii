@@ -52,6 +52,8 @@ let
               let db-username = config.services.${service-name}.user;
               in ''
                 # this is for ${service-name} to connect
+                host public ${db-username} 127.0.0.1/32 trust
+                host public ${db-username} ::1/128 trust
                 host ${db-username}-log ${db-username} 127.0.0.1/32 trust
                 host ${db-username}-log ${db-username} ::1/128 trust
                 host ${db-username}-main ${db-username} 127.0.0.1/32 trust
