@@ -3,6 +3,9 @@ let
   makeServarrConfig = service-name:
     let db-username = config.services.${service-name}.user;
     in {
+      networking.firewall.allowedTCPPorts =
+        [ services.${service-name}.settings.port ];
+
       services = {
         "${service-name}" = {
           enable = true;
