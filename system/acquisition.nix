@@ -3,6 +3,7 @@ let
   makeServarrConfig = service-name:
     let db-username = config.services.${service-name}.user;
     in {
+      users.users.${service-name}.extraGroups = [ "jellyfin" ];
       services = {
         "${service-name}" = {
           enable = true;
