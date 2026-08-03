@@ -155,7 +155,7 @@ in {
   imports = [ ./secrets ];
 
   config = {
-    backups.system-configuration.paths = [ globals.flake-backup-path ];
+    backups.system-configuration.paths = [ globals.flake-lock-backup-path ];
 
     services.restic.backups.primary = {
       initialize = true;
