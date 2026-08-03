@@ -34,8 +34,10 @@ let
       };
     };
 
-  makeServarrConfigs = service-names: {
-    config = (lib.attrsets.mergeAttrsList
+  makeServarrConfigs = service-names:
+    {
+      imports = [ ./modules/backups.nix ./modules/postgres.nix ];
+    } // (lib.attrsets.mergeAttrsList
       (builtins.map makeServarrConfig service-names)) // {
         services.postgresql = {
           authentication = ''
@@ -54,8 +56,4 @@ let
           '';
         };
       };
-  };
-in {
-  imports = [ ./modules/backups.nix ./modules/postgres.nix ];
-  config = (makeServarrConfigs [ "radarr" ]);
-}
+in makeServarrConfigs [ "radarr" ]
