@@ -23,12 +23,14 @@ let
       backups.${service-name} = {
         pre = lib.getExe (pkgs.writeShellScriptBin "stop-${service-name}.sh" ''
           set -euxo pipefail
+          echo "Stopping ${service-name}..."
           systemctl stop ${service-name}
         '');
         paths = [ config.services.${service-name}.dataDir ];
         post = lib.getExe
           (pkgs.writeShellScriptBin "start-${service-name}.sh" ''
             set -euxo pipefail
+            echo "Starting ${service-name}..."
             systemctl start ${service-name}
           '');
       };
@@ -36,8 +38,8 @@ let
 
   makeServarrConfigs = service-names: {
     imports = [ ./modules/backups.nix ./modules/postgres.nix ];
-    config = (lib.attrsets.mergeAttrsList
-      (builtins.map makeServarrConfig service-names)) // {
+    config = builtins.foldl' lib.recursiveUpdate { }
+      ((builtins.map makeServarrConfig service-names) ++ [{
         services.postgresql = {
           authentication = ''
             #type database DBuser origin-address auth-method
@@ -54,6 +56,6 @@ let
               '') service-names)}
           '';
         };
-      };
+      }]);
   };
 in makeServarrConfigs [ "radarr" ]
