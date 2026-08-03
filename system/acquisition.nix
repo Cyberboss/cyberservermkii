@@ -20,7 +20,7 @@ let
         systemctl stop ${service-name}
       '');
       paths = [ config.services.radarr.dataDir ];
-      pre = lib.getExe (pkgs.writeShellScriptBin "start-${service-name}.sh" ''
+      post = lib.getExe (pkgs.writeShellScriptBin "start-${service-name}.sh" ''
         set -euxo pipefail
         systemctl start ${service-name}
       '');
