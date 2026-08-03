@@ -19,7 +19,10 @@ let
         };
         postgresql = {
           ensureDatabases = [ "${db-username}-log" "${db-username}-main" ];
-          ensureUsers = [{ name = db-username; }];
+          ensureUsers = [{
+            name = db-username;
+            ensureClauses.superuser = true;
+          }];
         };
       };
 
