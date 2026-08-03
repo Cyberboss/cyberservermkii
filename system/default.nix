@@ -56,7 +56,8 @@ in {
     ./samba.nix
   ];
 
-  backups.system-configuration.paths = [ "/etc/nixos/flake.lock" ];
+  backups.system-configuration.paths =
+    [ "/etc/nixos/flake.lock.lastsuccessful" ];
 
   boot.loader = {
     systemd-boot = {
