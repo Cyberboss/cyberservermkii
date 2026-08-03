@@ -4,7 +4,7 @@ let
     let db-username = config.services.${service-name}.user;
     in {
       networking.firewall.allowedTCPPorts =
-        [ config.services.${service-name}.settings.port ];
+        [ config.services.${service-name}.settings.server.port ];
 
       services = {
         "${service-name}" = {
