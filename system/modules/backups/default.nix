@@ -148,7 +148,7 @@ in {
     };
   };
 
-  imports = [ ./secrets ];
+  imports = [ ../secrets ];
 
   config = {
     backups.system-configuration.paths = [ globals.flake-lock-backup-path ];
