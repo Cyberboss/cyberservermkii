@@ -80,7 +80,7 @@ let
   test-backups-service-name = "backups-test";
   backups-test-state-directory = "/var/lib/${test-backups-service-name}";
   backups-test-state-file =
-    "${backups-test-state-directory}/${import ./tested-hash-path.nix}";
+    "${backups-test-state-directory}/${import ./tested-hash-file.nix}";
   backups-test-script = lib.getExe
     (pkgs.writeShellScriptBin "backups-test.sh" ''
       set -euxo pipefail
