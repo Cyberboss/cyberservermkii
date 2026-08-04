@@ -195,6 +195,7 @@ in {
       wantedBy = [ "multi-user.target" ];
       after = all-dependencies;
       requires = all-dependencies;
+      before = [ "restic-backups-primary.service" ];
     };
   };
 }
