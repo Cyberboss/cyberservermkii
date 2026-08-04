@@ -78,7 +78,6 @@ let
   secrets = config.secrets.restic;
 
   test-backups-service-name = "backups-test";
-  backups-test-state-directory = "/var/lib/${test-backups-service-name}";
   backups-test-state-file = import ./tested-hash-path.nix;
   backups-test-script = lib.getExe
     (pkgs.writeShellScriptBin "backups-test.sh" ''
