@@ -1,2 +1,5 @@
 { config, ... }:
-"${builtins.toJSON config.services.restic.backups.primary}.flag}"
+"${
+  builtins.hashString "sha256"
+  (builtins.toJSON config.services.restic.backups.primary)
+}.flag"
