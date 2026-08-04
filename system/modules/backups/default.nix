@@ -194,6 +194,7 @@ in {
       };
       wantedBy = [ "multi-user.target" ];
       after = all-dependencies;
+      requires = all-dependencies;
     };
   };
 }
