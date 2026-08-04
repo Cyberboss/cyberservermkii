@@ -7,6 +7,7 @@ let
     builtins.filter (x: x != null)
     (builtins.attrValues (lib.mapAttrs (name: value: (selector value)) cfg));
   all-pre-scripts = script-aggregator (x: x.pre);
+  all-pre-serialized-scripts = script-aggregator (x: x.pre-serialized);
   all-dependencies = lib.lists.uniqueStrings (lib.lists.flatten
     (builtins.attrValues (lib.mapAttrs
       (name: value: (builtins.map (dep: "${dep}.service") value.dependencies))
@@ -68,6 +69,11 @@ let
             echo "One or more scripts failed."
             exit 1
         fi
+
+        ${if pre then
+          builtins.concatStringsSep "\n" all-pre-serialized-scripts
+        else
+          ""}
       '')
     else
       null;
@@ -107,7 +113,15 @@ in {
           default = null;
           example = "/path/to/script.sh";
           description = ''
-            The script to run that must complete before the backup begins
+            The script to run that must complete before the backup begins. These scripts run in parallel
+          '';
+        };
+        pre-serialized = lib.mkOption {
+          type = with lib.types; nullOr nonEmptyStr;
+          default = null;
+          example = "/path/to/script.sh";
+          description = ''
+            The script to run after that must complete before the backup begins. These scripts run serially after all the "pre" steps finish
           '';
         };
         paths = lib.mkOption {
@@ -127,7 +141,7 @@ in {
           default = null;
           example = "/path/to/script.sh";
           description = ''
-            The script to run that must complete before the backup begins
+            The script to run that must complete before the backup begins. These scripts run in parallel
           '';
         };
         dependencies = lib.mkOption {
