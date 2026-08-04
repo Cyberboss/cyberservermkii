@@ -5,7 +5,7 @@ let
   private-share = "${shares-root}/private";
   usergroup = "samba";
 in {
-  imports = [ ./modules/backups.nix ];
+  imports = [ ./modules/backups ];
 
   users = {
     groups.samba = { };

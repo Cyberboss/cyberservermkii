@@ -20,7 +20,7 @@ let
     '');
 in {
   imports = [
-    ./modules/backups.nix
+    ./modules/backups
     ./modules/cloudflared.nix
     ./modules/docker.nix
     ./modules/postgres.nix

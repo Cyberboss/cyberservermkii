@@ -10,7 +10,7 @@ let
       rm -rf ${config.services.postgresqlBackup.location}/*
     '');
 in {
-  imports = [ ./backups.nix ];
+  imports = [ ./backups ];
 
   services = {
     postgresql = {

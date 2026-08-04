@@ -5,7 +5,7 @@ let
   pds-domain = "bsky-pds.${globals.tld}";
   secrets = config.secrets.bluesky;
 in {
-  imports = [ ./modules/cloudflared.nix ./modules/backups.nix ];
+  imports = [ ./modules/cloudflared.nix ./modules/backups ];
 
   services = {
     bluesky-pds = {

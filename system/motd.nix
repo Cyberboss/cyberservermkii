@@ -10,8 +10,10 @@
     ${lib.getExe pkgs.fortune} | ${lib.getExe pkgs.cowsay} -r
     ${
       if builtins.hasAttr "backups" config then ''
-        echo ""
-        echo -e "\e[1;31m!!!BACKUP PREPARATION TEST FAILED!!!\e[0m"
+        if [ ! -f ${import ./modules/backups/tested-hash-path.nix} ]; then
+          echo ""
+          echo -e "\e[1;31m!!!BACKUP PREPARATION TEST FAILED!!!\e[0m"
+        fi
       '' else
         ""
     }

@@ -79,8 +79,7 @@ let
 
   test-backups-service-name = "backups-test";
   backups-test-state-directory = "/var/lib/${test-backups-service-name}";
-  backups-test-state-file =
-    "${backups-test-state-directory}/${config-hash}.flag";
+  backups-test-state-file = ./tested-hash-path.nix;
   backups-test-script = lib.getExe
     (pkgs.writeShellScriptBin "backups-test.sh" ''
       set -euxo pipefail
@@ -94,9 +93,6 @@ let
       mkdir -p ${backups-test-state-directory}
       touch ${backups-test-state-file}
     '');
-
-  config-hash = builtins.hashString "sha256"
-    (builtins.toJSON config.services.restic.backups.primary);
 in {
   options.backups = lib.mkOption {
     description = ''

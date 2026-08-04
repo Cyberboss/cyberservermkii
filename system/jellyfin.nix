@@ -47,7 +47,7 @@ let
       echo "Done removing Jellyfin backups"
     '');
 in {
-  imports = [ ./modules/cloudflared.nix ./modules/backups.nix ];
+  imports = [ ./modules/cloudflared.nix ./modules/backups ];
 
   services = {
     cloudflared.tunnels.primary-tunnel.ingress = {
