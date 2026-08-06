@@ -93,7 +93,7 @@ in {
 
   backups = {
     jellyfin-data = {
-      pre = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
+      pre-serialized = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
         set -euxo pipefail
 
         ${delete-jellyfin-backups}

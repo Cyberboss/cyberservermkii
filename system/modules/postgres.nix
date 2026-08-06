@@ -26,7 +26,7 @@ in {
   systemd.services.postgresqlBackup.startAt = lib.mkForce [ ];
 
   backups.postgresql = {
-    pre-serialized = lib.getExe (pkgs.writeShellScriptBin "backup-postgres.sh" ''
+    pre = lib.getExe (pkgs.writeShellScriptBin "backup-postgres.sh" ''
       set -euxo pipefail
 
       ${delete-postgres-backups}
