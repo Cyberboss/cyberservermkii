@@ -19,7 +19,8 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "LSchallot";
       repo = "JellyRoller";
-      rev = "v${version}";
+      rev =
+        "63bd89b4d885b72bc2af58516e60e848795c2e7f"; # v1.1.5 with fixed Cargo.lock
       hash = "sha256-BNq825zFfA9st7d1tU1f3wvpZbXD0OVhrFz++smNVr4=";
     };
 
