@@ -48,7 +48,7 @@ in {
     ./bluesky.nix
     ./croc.nix
     ./forgejo.nix
-    ./jellyfin.nix
+    ./jellyfin
     ./motd.nix
     ./resonite.nix
     ./samba.nix
