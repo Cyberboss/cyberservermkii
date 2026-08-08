@@ -107,6 +107,7 @@ in {
         set -x
 
         export XDG_CONFIG_HOME=$RUNTIME_DIRECTORY
+        systemctl start jellyfin
         ${jellyroller} create-backup
         echo "Done creating Jellyfin backup"
 
