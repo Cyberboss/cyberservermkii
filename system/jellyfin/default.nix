@@ -24,7 +24,7 @@ let
       hash = "sha256-iCkEWeAx3VvgvoXlia0tjl6k3zz8bO7SwNPdGxep6ig=";
     };
 
-    cargoHash = "sha256-Y1ZSLdorAhbrBHr/3GPhHObi2DBjf0FWiuPIznKVGyo=";
+    cargoHash = "";
   });
 
   jellyroller-config-attrs = {
