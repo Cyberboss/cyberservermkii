@@ -20,7 +20,7 @@ let
       owner = "LSchallot";
       repo = "JellyRoller";
       rev = "v${version}";
-      hash = "sha256-5M8dMMZrpo6Q7RQQJn8h6zXsL6tSdqywRG0+AKV5ITc=";
+      hash = "sha256-BNq825zFfA9st7d1tU1f3wvpZbXD0OVhrFz++smNVr4=";
     };
 
     cargoHash = "sha256-TdUPh0Zf7ZBl8hvf8A8rVEa2leOz+p4tPLZXVYWiEPw=";
@@ -40,11 +40,12 @@ let
 
   delete-jellyfin-backups = lib.getExe
     (pkgs.writeShellScriptBin "delete-jellyfin-backup.sh" ''
-      set -euxo pipefail
-      echo "Removing Jellyfin backups..."
-      shopt -s dotglob
-      rm -rf ${backups-directory}/*
-      echo "Done removing Jellyfin backups"
+      
+            set -euxo pipefail
+            echo "Removing Jellyfin backups..."
+            shopt -s dotglob
+            rm -rf ${backups-directory}/*
+            echo "Done removing Jellyfin backups"
     '');
 in {
   imports = [ ../modules/cloudflared.nix ../modules/backups ];
@@ -78,44 +79,46 @@ in {
 
   system.activationScripts.makeJellyfinLibrariesDir =
     lib.stringAfter [ "users" ] ''
-      mkdir -p ${libraries-directory}/Movies
-      mkdir -p ${libraries-directory}/Music
-      mkdir -p ${libraries-directory}/Shows
-      mkdir -p ${libraries-directory}/Books
-      mkdir -p ${libraries-directory}/Personal
-      mkdir -p ${libraries-directory}/MusicVideos
-      chown -R ${service-name}:${service-name} ${libraries-directory}
-      chmod -R 0770 ${libraries-directory}
-      chmod 0750 ${libraries-directory}
-      chmod 0710 ${home-directory}
+      
+            mkdir -p ${libraries-directory}/Movies
+            mkdir -p ${libraries-directory}/Music
+            mkdir -p ${libraries-directory}/Shows
+            mkdir -p ${libraries-directory}/Books
+            mkdir -p ${libraries-directory}/Personal
+            mkdir -p ${libraries-directory}/MusicVideos
+            chown -R ${service-name}:${service-name} ${libraries-directory}
+            chmod -R 0770 ${libraries-directory}
+            chmod 0750 ${libraries-directory}
+            chmod 0710 ${home-directory}
     '';
 
   backups = {
     jellyfin-data = {
       pre = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
-        set -euxo pipefail
-
-        ${delete-jellyfin-backups}
-
-        echo "Creating Jellyfin backup..."
-        mkdir -p $RUNTIME_DIRECTORY/jellyroller
-        cp ${jellyroller-config} $RUNTIME_DIRECTORY/jellyroller/${jellyroller-config-filename}
-
-        set +x
-        echo "api_key = \"$(cat ${secrets.api_key.path})\"" >> $RUNTIME_DIRECTORY/jellyroller/${jellyroller-config-filename}
-        set -x
-
-        export XDG_CONFIG_HOME=$RUNTIME_DIRECTORY
-        systemctl start jellyfin
-        ${jellyroller} create-backup
-        echo "Done creating Jellyfin backup"
-
-        ZIP_PATH="${backups-directory}/$(ls -1 "${backups-directory}" | head -n 1)"
-
-        echo "Unzipping $ZIP_PATH"
-
-        ${lib.getExe pkgs.unzip} -q "$ZIP_PATH" -d ${backups-directory}
-        rm $ZIP_PATH
+        
+                set -euxo pipefail
+        
+                ${delete-jellyfin-backups}
+        
+                echo "Creating Jellyfin backup..."
+                mkdir -p $RUNTIME_DIRECTORY/jellyroller
+                cp ${jellyroller-config} $RUNTIME_DIRECTORY/jellyroller/${jellyroller-config-filename}
+        
+                set +x
+                echo "api_key = \"$(cat ${secrets.api_key.path})\"" >> $RUNTIME_DIRECTORY/jellyroller/${jellyroller-config-filename}
+                set -x
+        
+                export XDG_CONFIG_HOME=$RUNTIME_DIRECTORY
+                systemctl start jellyfin
+                ${jellyroller} create-backup
+                echo "Done creating Jellyfin backup"
+        
+                ZIP_PATH="${backups-directory}/$(ls -1 "${backups-directory}" | head -n 1)"
+        
+                echo "Unzipping $ZIP_PATH"
+        
+                ${lib.getExe pkgs.unzip} -q "$ZIP_PATH" -d ${backups-directory}
+                rm $ZIP_PATH
       '');
       paths = [ data-directory ];
       post = delete-jellyfin-backups;
