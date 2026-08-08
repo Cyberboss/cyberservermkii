@@ -93,7 +93,7 @@ in {
 
   backups = {
     jellyfin-data = {
-      pre-serialized = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
+      pre = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
         set -euxo pipefail
 
         ${delete-jellyfin-backups}
@@ -120,7 +120,6 @@ in {
       '');
       paths = [ data-directory ];
       post = delete-jellyfin-backups;
-      dependencies = [ "jellyfin" ];
     };
     jellyfin-libraries.paths = [ libraries-directory ];
   };

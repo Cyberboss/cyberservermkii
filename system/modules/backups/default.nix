@@ -7,11 +7,6 @@ let
     builtins.filter (x: x != null)
     (builtins.attrValues (lib.mapAttrs (name: value: (selector value)) cfg));
   all-pre-scripts = script-aggregator (x: x.pre);
-  all-pre-serialized-scripts = script-aggregator (x: x.pre-serialized);
-  all-dependencies = lib.lists.uniqueStrings (lib.lists.flatten
-    (builtins.attrValues (lib.mapAttrs
-      (name: value: (builtins.map (dep: "${dep}.service") value.dependencies))
-      cfg)));
   all-post-scripts = script-aggregator (x: x.post);
   to-env-file = (file-name: attrset:
     pkgs.writeText file-name (lib.concatStringsSep "\n"
@@ -21,14 +16,6 @@ let
       lib.getExe (pkgs.writeShellScriptBin name ''
         set -euxo pipefail
 
-        ${if pre then
-          (builtins.concatStringsSep "\n"
-            (builtins.map (service: "systemctl start ${service}")
-              all-dependencies))
-        else
-          ""}
-
-        # 1. Define your array of scripts
         scripts=(
             "${
               (builtins.concatStringsSep ''
@@ -37,10 +24,8 @@ let
             }"
         )
 
-        # Initialize an array to keep track of background PIDs
         pids=()
 
-        # 2. Spawn each script asynchronously
         for script in "''${scripts[@]}"; do
             echo "Launching $script..."
 
@@ -53,7 +38,6 @@ let
 
         echo "All jobs launched. Waiting for completion..."
 
-        # 3. Wait for all tracking PIDs to finish and check exit codes
         exit_code=0
         for pid in "''${pids[@]}"; do
             if ! wait "$pid"; then
@@ -62,18 +46,12 @@ let
             fi
         done
 
-        # 4. Final verification
         if [ $exit_code -eq 0 ]; then
             echo "All scripts finished successfully!"
         else
             echo "One or more scripts failed."
             exit 1
         fi
-
-        ${if pre then
-          builtins.concatStringsSep "\n" all-pre-serialized-scripts
-        else
-          ""}
       '')
     else
       null;
@@ -94,9 +72,9 @@ let
 
       rm -rf ${backups-test-state-directory}
 
-      ${pre-script}
+      trap '${post-script}' EXIT
 
-      ${post-script}
+      ${pre-script}
 
       mkdir -p ${backups-test-state-directory}
       touch ${backups-test-state-file}
@@ -114,14 +92,6 @@ in {
           example = "/path/to/script.sh";
           description = ''
             The script to run that must complete before the backup begins. These scripts run in parallel
-          '';
-        };
-        pre-serialized = lib.mkOption {
-          type = with lib.types; nullOr nonEmptyStr;
-          default = null;
-          example = "/path/to/script.sh";
-          description = ''
-            The script to run after that must complete before the backup begins. These scripts run serially after all the "pre" steps finish
           '';
         };
         paths = lib.mkOption {
@@ -142,14 +112,6 @@ in {
           example = "/path/to/script.sh";
           description = ''
             The script to run that must complete before the backup begins. These scripts run in parallel
-          '';
-        };
-        dependencies = lib.mkOption {
-          type = lib.types.listOf lib.types.nonEmptyStr;
-          default = [ ];
-          example = [ "service1" "service2" ];
-          description = ''
-            An array of systemd service names (Excluding ".service") that should be running prior to the backup starting.
           '';
         };
       };
@@ -207,8 +169,6 @@ in {
         ExecStart = backups-test-script;
       };
       wantedBy = [ "multi-user.target" ];
-      after = all-dependencies;
-      requires = all-dependencies;
       before = [ "restic-backups-primary.service" ];
     };
   };
