@@ -76,6 +76,10 @@ let
 
       ${pre-script}
 
+      trap - EXIT
+
+      ${post-script}
+
       mkdir -p ${backups-test-state-directory}
       touch ${backups-test-state-file}
     '');
