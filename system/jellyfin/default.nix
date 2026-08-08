@@ -21,7 +21,7 @@ let
       repo = "JellyRoller";
       rev =
         "63bd89b4d885b72bc2af58516e60e848795c2e7f"; # v1.1.5 with fixed Cargo.lock
-      hash = "sha256-Bqqq5zFfA9st7d1tU1f3wvpZbXD0OVhrFz++smNVr4=";
+      hash = "sha256-Y1ZSLdorAhbrBHr/3GPhHObi2DBjf0FWiuPIznKVGyo=";
     };
 
     cargoHash = "sha256-Y1ZSLdorAhbrBHr/3GPhHObi2DBjf0FWiuPIznKVGyo=";
