@@ -7,7 +7,7 @@ let
       owner = "Raidriar";
       repo = "StresslessHeadless";
       rev = "2.2.1";
-      hash = "";
+      hash = "sha256-CWArSJLbkKEkmmZHVggqJtIxqsFeB0rd7V1SF8RGuoY=";
     };
   };
   rml-headless-tweaks = {
