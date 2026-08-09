@@ -24,6 +24,8 @@ let
       hash = "sha256-iCkEWeAx3VvgvoXlia0tjl6k3zz8bO7SwNPdGxep6ig=";
     };
 
+    patches = [ ./detailed_post_errors.patch ];
+
     cargoHash = "sha256-Ezcbx5NPYQ8At4jHD//2MzsmKhnomQEAmm8u4rgh4QY=";
   });
 
