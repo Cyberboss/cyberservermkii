@@ -25,8 +25,8 @@ let
     };
 
     cargoPatches = [
-      ./patches/jellyroller/detailed_post_errors.patch
       ./patches/jellyroller/ten_minute_post_timeout.patch
+      ./patches/jellyroller/detailed_post_errors.patch
     ];
 
     cargoHash = "sha256-Ezcbx5NPYQ8At4jHD//2MzsmKhnomQEAmm8u4rgh4QY=";
