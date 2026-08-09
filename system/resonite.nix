@@ -1,42 +1,33 @@
 { pkgs, inputs, config, ... }:
 let
   secrets = config.secrets.resonite;
-  rml-stressless-headless-source = pkgs.fetchurl {
-    url =
-      "https://codeberg.org/Raidriar/StresslessHeadless/releases/download/2.2.1/StresslessHeadless.dll";
-    sha256 = "sha256-DipeSX1F604p/zMAyjggab6O2kOfnjibfdURAhSz4cU=";
+  rml-stressless-headless = {
+    name = "StresslessHeadless";
+    src = pkgs.fetchFromCodeberg {
+      owner = "Raidriar";
+      repo = "StresslessHeadless";
+      rev = "2.2.1";
+      hash = "";
+    };
   };
-  rml-headless-tweaks-source = pkgs.fetchurl {
-    url =
-      "https://github.com/Cyberboss/HeadlessTweaks/releases/download/2.3.0-preview13/HeadlessTweaks.dll";
-    sha256 = "sha256-wO5fbFGFQBAbD0JPQaGPaJG2Zbdu58Lpy58ZfU8OXR0=";
+  rml-headless-tweaks = {
+    name = "HeadlessTweaks";
+    src = pkgs.fetchFromGitHub {
+      owner = "Cyberboss";
+      repo = "HeadlessTweaks";
+      rev = "2.3.0-preview13";
+      hash = "";
+    };
   };
-  rml-resonance-source = pkgs.fetchurl {
-    url =
-      "https://github.com/SeyfertGames/Resonance/releases/download/v2.0.0/Resonance.dll";
-    sha256 = "sha256-RMe0XEoUu4wsjRmq6CV/WREU/kqs72qWbO/mvyXqjNo=";
+  rml-resonance = {
+    name = "Resonance";
+    src = pkgs.fetchFromGitHub {
+      owner = "SeyfertGames";
+      repo = "Resonance";
+      rev = "v2.0.0";
+      hash = "";
+    };
   };
-
-  rml-stressless-headless = "${
-      pkgs.runCommand "StresslessHeadless.dll" { } ''
-        mkdir -p $out/bin
-        cp ${rml-stressless-headless-source} $out/bin/StresslessHeadless.dll
-      ''
-    }/bin/StresslessHeadless.dll";
-
-  rml-headless-tweaks = "${
-      pkgs.runCommand "HeadlessTweaks.dll" { } ''
-        mkdir -p $out/bin
-        cp ${rml-headless-tweaks-source} $out/bin/HeadlessTweaks.dll
-      ''
-    }/bin/HeadlessTweaks.dll";
-
-  rml-resonance = "${
-      pkgs.runCommand "Resonance.dll" { } ''
-        mkdir -p $out/bin
-        cp ${rml-resonance-source} $out/bin/Resonance.dll
-      ''
-    }/bin/Resonance.dll";
 
   jsonFormat = pkgs.formats.json { };
 
@@ -95,7 +86,8 @@ in {
       enable-rml = true;
       disable-ready-notify = true;
       auto-update-interval = "5m";
-      rml-mods = [ rml-stressless-headless rml-headless-tweaks rml-resonance ];
+      rml-mod-sources =
+        [ rml-stressless-headless rml-headless-tweaks rml-resonance ];
       additional-restart-triggers = secrets.credentials.restartTriggers;
       rml-configs = [
         "${tweaks-config-json}/etc/HeadlessTweaks.json"
