@@ -16,7 +16,7 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "Cyberboss";
       repo = "HeadlessTweaks";
-      rev = "2.3.0-preview13";
+      rev = "781df5ce9ee550a3d29c6c8dda8cba32d4638f70";
       hash = "sha256-kHZW9HzHfI1uOr48ryI4IxDDIafqX+zfzmIqup41N3I=";
     };
     environment-statement = headless-path: "HeadlessPath=${headless-path}/../";
