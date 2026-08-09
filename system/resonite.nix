@@ -17,7 +17,7 @@ let
       owner = "Cyberboss";
       repo = "HeadlessTweaks";
       rev = "781df5ce9ee550a3d29c6c8dda8cba32d4638f70";
-      hash = "sha256-kHZW9HzHfI1uOr48ryI4IxDDIafqX+zfzmIqup41N3I=";
+      hash = "";
     };
     environment-statement = headless-path: "HeadlessPath=${headless-path}/../";
   };
