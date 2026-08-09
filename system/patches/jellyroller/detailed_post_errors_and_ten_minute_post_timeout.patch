@@ -1,8 +1,25 @@
 diff --git a/src/responder.rs b/src/responder.rs
-index becffc6..1e3cc36 100644
+index becffc6..fef067f 100644
 --- a/src/responder.rs
 +++ b/src/responder.rs
-@@ -42,14 +42,42 @@ pub fn simple_post(server_url: String, api_key: &str, body: String, content_type
+@@ -1,5 +1,10 @@
+-use reqwest::{blocking::{Client, Response}, header::{CONTENT_TYPE, HeaderMap}};
++use std::time::Duration;
++
+ use crate::utils::debug::{log_request, log_response};
++use reqwest::{
++    blocking::{Client, Response},
++    header::{CONTENT_TYPE, HeaderMap},
++};
+
+ pub fn simple_get(server_url: String, api_key: &str, query: Vec<(&str, &str)>) -> Response {
+     log_request("GET", &server_url, None);
+@@ -38,18 +43,47 @@ pub fn simple_post(server_url: String, api_key: &str, body: String, content_type
+     let client = Client::new();
+     let response = client
+         .post(&server_url)
++        .timeout(Duration::from_mins(10))
+         .headers(headers)
          .body(body)
          .query(&query)
          .send();
