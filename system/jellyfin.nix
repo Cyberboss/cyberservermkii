@@ -24,7 +24,10 @@ let
       hash = "sha256-iCkEWeAx3VvgvoXlia0tjl6k3zz8bO7SwNPdGxep6ig=";
     };
 
-    cargoPatches = [ ./detailed_post_errors.patch ];
+    cargoPatches = [
+      ./patches/jellyroller/detailed_post_errors.patch
+      ./patches/jellyroller/ten_minute_post_timeout.patch
+    ];
 
     cargoHash = "sha256-Ezcbx5NPYQ8At4jHD//2MzsmKhnomQEAmm8u4rgh4QY=";
   });
