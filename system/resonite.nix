@@ -9,6 +9,7 @@ let
       rev = "2.2.1";
       hash = "sha256-CWArSJLbkKEkmmZHVggqJtIxqsFeB0rd7V1SF8RGuoY=";
     };
+    environment-statement = headless-path: "ResonitePath=${headless-path}/../";
   };
   rml-headless-tweaks = {
     name = "HeadlessTweaks";
@@ -18,6 +19,7 @@ let
       rev = "2.3.0-preview13";
       hash = "sha256-kHZW9HzHfI1uOr48ryI4IxDDIafqX+zfzmIqup41N3I=";
     };
+    environment-statement = headless-path: "HeadlessPath=${headless-path}/../";
   };
   rml-resonance = {
     name = "Resonance";
