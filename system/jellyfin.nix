@@ -24,7 +24,7 @@ let
       hash = "sha256-iCkEWeAx3VvgvoXlia0tjl6k3zz8bO7SwNPdGxep6ig=";
     };
 
-    patches = [ ./detailed_post_errors.patch ];
+    cargoPatches = [ ./detailed_post_errors.patch ];
 
     cargoHash = "sha256-Ezcbx5NPYQ8At4jHD//2MzsmKhnomQEAmm8u4rgh4QY=";
   });
@@ -43,7 +43,6 @@ let
 
   delete-jellyfin-backups = lib.getExe
     (pkgs.writeShellScriptBin "delete-jellyfin-backup.sh" ''
-
       set -euxo pipefail
       echo "Removing Jellyfin backups..."
       shopt -s dotglob
@@ -82,7 +81,6 @@ in {
 
   system.activationScripts.makeJellyfinLibrariesDir =
     lib.stringAfter [ "users" ] ''
-
       mkdir -p ${libraries-directory}/Movies
       mkdir -p ${libraries-directory}/Music
       mkdir -p ${libraries-directory}/Shows
@@ -98,7 +96,6 @@ in {
   backups = {
     jellyfin-data = {
       pre = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
-
         set -euxo pipefail
 
         ${delete-jellyfin-backups}
