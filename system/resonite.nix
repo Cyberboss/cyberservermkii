@@ -25,7 +25,7 @@ let
       owner = "SeyfertGames";
       repo = "Resonance";
       rev = "v2.0.0";
-      hash = "";
+      hash = "sha256-/3YoIzmIUOl8aI//uZT8w3I6QhL7Vj1VudLbhCOwDSQ=";
     };
   };
 
