@@ -89,6 +89,8 @@ in {
       shutdown-seconds = 600;
     };
     resonite-headless = {
+      use-steam = false;
+
       depotdownloader-env-file = secrets.depotdownloader.path;
       enable-rml = true;
       disable-ready-notify = true;
