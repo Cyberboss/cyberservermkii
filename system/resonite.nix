@@ -25,7 +25,7 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "SeyfertGames";
       repo = "Resonance";
-      rev = "8b6ef0e92757fb921a4718f3815bb429f0c25291";
+      rev = "0bafb250fab71306eef2a23357d6249025f645ba";
       hash = "";
     };
     environment-statement = headless-path:
