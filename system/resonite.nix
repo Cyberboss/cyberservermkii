@@ -19,7 +19,7 @@ let
       rev = "781df5ce9ee550a3d29c6c8dda8cba32d4638f70";
       hash = "sha256-Ir9soj3ZolaxNlI0Pa1nsg69E6LEwSzqUV4D4NmQcwI=";
     };
-    environment-statement = headless-path: "HeadlessPath=${headless-path}/";
+    environment-statement = headless-path: "AppPath=${headless-path}/../";
   };
   rml-resonance = {
     name = "Resonance";
