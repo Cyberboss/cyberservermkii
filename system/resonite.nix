@@ -26,7 +26,7 @@ let
       owner = "SeyfertGames";
       repo = "Resonance";
       rev = "0bafb250fab71306eef2a23357d6249025f645ba";
-      hash = "";
+      hash = "sha256-tdmY/uPnPGSPY39UKqAaIzf8WLgb/DLNMo8257XDnTo=";
     };
     environment-statement = headless-path:
       "ResonitePath=${headless-path}/ NoMinVer=true";
