@@ -16,10 +16,9 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "Cyberboss";
       repo = "HeadlessTweaks";
-      rev = "601792631a9f8f321e1c5444e164642dc008a38a";
-      hash = "sha256-md+cwcZbxhYhQstXkrxqCj74E3H1SYxzKes032Y30Cw=";
+      rev = "e4fac09bebc343fcf4f66dbb1b577fb70493edb4";
+      hash = "";
     };
-    environment-statement = headless-path: "HeadlessData=${headless-path}/";
   };
   rml-resonance = {
     name = "Resonance";
