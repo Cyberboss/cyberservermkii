@@ -25,9 +25,11 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "SeyfertGames";
       repo = "Resonance";
-      rev = "v2.0.0";
-      hash = "sha256-/3YoIzmIUOl8aI//uZT8w3I6QhL7Vj1VudLbhCOwDSQ=";
+      rev = "8b6ef0e92757fb921a4718f3815bb429f0c25291";
+      hash = "";
     };
+    environment-statement = headless-path:
+      "ResonitePath=${headless-path}/ NoMinVer=true";
   };
 
   jsonFormat = pkgs.formats.json { };
