@@ -17,7 +17,7 @@ let
       owner = "Cyberboss";
       repo = "HeadlessTweaks";
       rev = "e4fac09bebc343fcf4f66dbb1b577fb70493edb4";
-      hash = "";
+      hash = "sha256-QjdhcBGMusskWNM2KFBoc+PoYl7/E18ZRS/925wNhPA=";
     };
   };
   rml-resonance = {
