@@ -103,9 +103,9 @@ in {
               "https://raw.githubusercontent.com/Yellow-Dog-Man/JSONSchemas/main/schemas/HeadlessConfig.schema.json";
             sessionName = DominionsFlat;
             customSessionId = "U-1nPiX9NfQQ4:DominionsFlat";
-            accessLevel = "ContactsPlus";
+            accessLevel = "RegisteredUsers";
             description = "Dominion's personal hideaway. Come say hello!";
-            hideFromPublicListing = false;
+            hideFromPublicListing = true;
             tags = [
               "after"
               "glow"
