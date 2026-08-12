@@ -32,6 +32,9 @@ let
       "ResonitePath=${headless-path}/ NoMinVer=true";
   };
 
+  quic-port-dominions-flat = 23845;
+  quic-port-outcast = 23846;
+
   jsonFormat = pkgs.formats.json { };
 
   DominionsFlat = "<color=#0900BDFF>Dominion</color>'s Flat";
@@ -77,6 +80,8 @@ in {
 
   secrets.resonite.owner = config.services.resonite-headless.username;
 
+  networking.firewall.allowedUDPPorts =
+    [ quic-port-dominions-flat quic-port-outcast ];
   services = {
     resonite-dominion = {
       enable = true;
@@ -95,6 +100,7 @@ in {
         "${stressless-config-json}/etc/StresslessHeadless.json"
       ];
       credentials-file = secrets.credentials.path;
+      engine-config = secrets.engine-config.path;
       config-json = {
         allowedUrlHosts = [ "ws://localhost:24444" ];
         startWorlds = [
@@ -105,6 +111,7 @@ in {
             customSessionId = "U-1nPiX9NfQQ4:DominionsFlat";
             accessLevel = "RegisteredUsers";
             description = "Dominion's personal hideaway. Come say hello!";
+            forcePorts.quic = quic-port-dominions-flat;
             hideFromPublicListing = true;
             tags = [
               "after"
@@ -120,6 +127,7 @@ in {
               "flat"
               "memes"
               "workshop"
+              "quic"
             ];
             loadWorldUrl =
               "resrec:///G-1nmN4fjhq9g/R-019ea2c0-0b13-704d-8890-b28d22b80757";
@@ -155,8 +163,9 @@ in {
             accessLevel = "RegisteredUsers";
             description =
               "World by WispoWoo, Ported to Resonite by Seyfert & Cloud_Jumper, Headless provided by Dominion.";
+            forcePorts.quic = quic-port-outcast;
             hideFromPublicListing = false;
-            tags = [ ];
+            tags = [ "quic" ];
             loadWorldUrl =
               "resrec:///G-1nmN4fjhq9g/R-019f161a-6d7c-77a1-809a-fe40fcca0da9";
             defaultUserRoles = {
