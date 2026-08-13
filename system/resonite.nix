@@ -63,13 +63,15 @@ let
   };
 
   tweaks-config-json = pkgs.runCommand "copy-tweaks" { } ''
-    mkdir -p $out/etc
-    cp ${tweaks-config} $out/etc/HeadlessTweaks.json
+    
+        mkdir -p $out/etc
+        cp ${tweaks-config} $out/etc/HeadlessTweaks.json
   '';
 
   stressless-config-json = pkgs.runCommand "copy-tweaks" { } ''
-    mkdir -p $out/etc
-    cp ${stressless-config} $out/etc/StresslessHeadless.json
+    
+        mkdir -p $out/etc
+        cp ${stressless-config} $out/etc/StresslessHeadless.json
   '';
 in {
   imports = [
@@ -109,10 +111,10 @@ in {
               "https://raw.githubusercontent.com/Yellow-Dog-Man/JSONSchemas/main/schemas/HeadlessConfig.schema.json";
             sessionName = DominionsFlat;
             customSessionId = "U-1nPiX9NfQQ4:DominionsFlat";
-            accessLevel = "RegisteredUsers";
+            accessLevel = "ContactsPlus";
             description = "Dominion's personal hideaway. Come say hello!";
             forcePorts.quic = quic-port-dominions-flat;
-            hideFromPublicListing = true;
+            hideFromPublicListing = false;
             tags = [
               "after"
               "glow"
