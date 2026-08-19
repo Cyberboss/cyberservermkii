@@ -10,6 +10,7 @@ in {
   services = {
     bluesky-pds = {
       enable = true;
+      package = pkgs.bluesky-pds.override { nodejs_24 = pkgs.nodejs_22; };
       goat.enable = true;
       pdsadmin.enable = true;
       environmentFiles = [ secrets.environment.path ];
