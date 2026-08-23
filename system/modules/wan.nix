@@ -29,7 +29,8 @@ in {
       services = {
         update-wan-ip = {
           description = "Fetch WAN IP and write to ${ip-file}";
-          after = [ "network.target" ];
+          wants = [ "network-online.target" ];
+          after = [ "network-online.target" ];
           wantedBy = [ "multi-user.target" ];
           serviceConfig = {
             Type = "oneshot";
@@ -38,6 +39,8 @@ in {
         };
         check-wan-ip = {
           description = "Check if the WAN IP is up to date";
+          wants = [ "network-online.target" ];
+          after = [ "network-online.target" ];
           serviceConfig = {
             Type = "oneshot";
             ExecStart = lib.getExe check-ip;

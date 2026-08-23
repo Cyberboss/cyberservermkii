@@ -81,6 +81,11 @@ in {
 
   secrets.resonite.owner = config.services.resonite-headless.username;
 
+  systemd.services.resonite-headless.serviceConfig = {
+    after = [ "update-wan-ip.service" ];
+    requires = [ "update-wan-ip.service" ];
+  };
+
   networking.firewall.allowedUDPPorts =
     [ quic-port-dominions-flat quic-port-outcast ];
   services = {
