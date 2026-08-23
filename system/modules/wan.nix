@@ -14,7 +14,7 @@ let
     trap 'rm -f "$TEST_PATH"' EXIT
     ${lib.getExe pkgs.curl} -s https://icanhazip.com > $TEST_PATH
 
-    if ! cmp -s $TEST_PATH ${ip-file}; then
+    if ! ${pkgs.diffutils}/bin/cmp -s $TEST_PATH ${ip-file}; then
       systemctl restart update-wan-ip
     fi
   '';
