@@ -89,7 +89,7 @@ in {
       shutdown-seconds = 600;
     };
     resonite-headless = {
-      quic-wan-ip-file = config.wan_ip_file;
+      quic-wan-ip-file = config.wan-ip-file;
       depotdownloader-env-file = secrets.depotdownloader.path;
       enable-rml = true;
       disable-ready-notify = true;
