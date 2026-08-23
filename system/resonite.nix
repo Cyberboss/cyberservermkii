@@ -63,19 +63,18 @@ let
   };
 
   tweaks-config-json = pkgs.runCommand "copy-tweaks" { } ''
-    
-        mkdir -p $out/etc
-        cp ${tweaks-config} $out/etc/HeadlessTweaks.json
+    mkdir -p $out/etc
+    cp ${tweaks-config} $out/etc/HeadlessTweaks.json
   '';
 
   stressless-config-json = pkgs.runCommand "copy-tweaks" { } ''
-    
-        mkdir -p $out/etc
-        cp ${stressless-config} $out/etc/StresslessHeadless.json
+    mkdir -p $out/etc
+    cp ${stressless-config} $out/etc/StresslessHeadless.json
   '';
 in {
   imports = [
     ./modules/secrets
+    ./modules/wan.nix
     inputs.resonite-headless.nixosModules.default
     inputs.resonite-dominion.nixosModules.default
   ];
@@ -90,6 +89,7 @@ in {
       shutdown-seconds = 600;
     };
     resonite-headless = {
+      quic-wan-ip-file = config.wan_ip_file;
       depotdownloader-env-file = secrets.depotdownloader.path;
       enable-rml = true;
       disable-ready-notify = true;
@@ -102,7 +102,6 @@ in {
         "${stressless-config-json}/etc/StresslessHeadless.json"
       ];
       credentials-file = secrets.credentials.path;
-      engine-config = secrets.engine-config.path;
       config-json = {
         allowedUrlHosts = [ "ws://localhost:24444" ];
         startWorlds = [
