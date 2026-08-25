@@ -23,7 +23,7 @@ let
       hash = "sha256-zUNrT924Sds5sbSuqYlTeAokjpO6XoRwAJW5xaouj94=";
     };
 
-    cargoHash = "sha256-Ezcbx5NPYQ8At4jHD//2MzsmKhnomQEAmm8u4rgh4QY=";
+    cargoHash = "sha256-ok7mxnyNfr0oDe32SeNT3L72KZFRz8Eq56n3AFXzxBY=";
   });
 
   jellyroller-config-attrs = {
