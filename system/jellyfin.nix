@@ -13,20 +13,15 @@ let
   seerr-port = config.services.seerr.port;
   jellyroller = lib.getExe (pkgs.rustPlatform.buildRustPackage rec {
     pname = "jellyroller";
-    version = "1.1.5";
+    version = "1.2.0";
 
     meta.mainProgram = pname;
     src = pkgs.fetchFromGitHub {
       owner = "LSchallot";
       repo = "JellyRoller";
-      rev =
-        "63bd89b4d885b72bc2af58516e60e848795c2e7f"; # v1.1.5 with fixed Cargo.lock
-      hash = "sha256-iCkEWeAx3VvgvoXlia0tjl6k3zz8bO7SwNPdGxep6ig=";
+      rev = "v${version}";
+      hash = "sha256-zUNrT924Sds5sbSuqYlTeAokjpO6XoRwAJW5xaouj94=";
     };
-
-    cargoPatches = [
-      ./patches/jellyroller/detailed_post_errors_and_ten_minute_post_timeout.patch
-    ];
 
     cargoHash = "sha256-Ezcbx5NPYQ8At4jHD//2MzsmKhnomQEAmm8u4rgh4QY=";
   });
@@ -46,6 +41,7 @@ let
   delete-jellyfin-backups = lib.getExe
     (pkgs.writeShellScriptBin "delete-jellyfin-backup.sh" ''
       set -euxo pipefail
+
       echo "Removing Jellyfin backups..."
       shopt -s dotglob
       rm -rf ${backups-directory}/*
