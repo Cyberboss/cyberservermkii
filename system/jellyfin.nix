@@ -60,6 +60,7 @@ in {
       user = service-name;
       group = service-name;
       logDir = "/var/log/${service-name}";
+      openFirewall = true;
     };
     seerr.enable = true;
   };
