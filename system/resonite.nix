@@ -31,6 +31,16 @@ let
     environment-statement = headless-path:
       "ResonitePath=${headless-path}/ NoMinVer=true";
   };
+  rml-fastsync = {
+    name = "FastSync";
+    src = pkgs.fetchFromForgejo {
+      domain = "codeberg.org";
+      owner = "Raidriar";
+      repo = "FastSync";
+      rev = "1.1.0";
+      hash = "sha256-677XO0AfvJqAdzlKuoWvduHVax+wPzprPRWFZ1xZF3Q=";
+    };
+  };
 
   quic-port-dominions-flat = 23845;
   quic-port-outcast = 23846;
@@ -99,8 +109,12 @@ in {
       enable-rml = true;
       disable-ready-notify = true;
       auto-update-interval = "5m";
-      rml-mod-sources =
-        [ rml-stressless-headless rml-headless-tweaks rml-resonance ];
+      rml-mod-sources = [
+        rml-stressless-headless
+        rml-headless-tweaks
+        rml-resonance
+        rml-fastsync
+      ];
       additional-restart-triggers = secrets.credentials.restartTriggers;
       rml-configs = [
         "${tweaks-config-json}/etc/HeadlessTweaks.json"
