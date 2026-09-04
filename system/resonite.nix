@@ -160,6 +160,7 @@ in {
               GrandpaVape = "Builder";
               "ItsAPuddin" = "Builder";
               Jinxtiest = "Builder";
+              ManiaDeluxe = "Builder";
               Seyfert = "Builder";
               Shywizz = "Builder";
               SvenTheRedPanda = "Builder";
