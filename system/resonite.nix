@@ -16,8 +16,8 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "Cyberboss";
       repo = "HeadlessTweaks";
-      rev = "dfc0b299dcf26d4562ebd13f4b3c1e35f4a295d1";
-      hash = "sha256-6dmSX9GXLAouit3FuVkihojoQjsLKYqRowzGJ+kiXlE=";
+      rev = "cc9bb036f8a1f7cbdeea7cf243a4d9855cb14d03";
+      hash = "sha256-HHfMiG3maWjM/HHmTDvhAVa0ohkgABvEwBy2+ctwgvI=";
     };
   };
   rml-resonance = {
