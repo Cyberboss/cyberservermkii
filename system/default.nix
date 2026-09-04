@@ -1,52 +1,85 @@
 { pkgs, lib, stdenv, globals, inputs, config, ... }:
 let
   secrets = config.secrets.nix;
+  update-script-aggregator = selector:
+    builtins.filter (x: x != null) (builtins.attrValues
+      (lib.mapAttrs (name: value: (selector value))
+        config.update-dependencies));
+  all-pre-update-scripts = update-script-aggregator (x: x.pre);
+  all-post-update-scripts = update-script-aggregator (x: x.post);
   update-script = pkgs.writeShellScriptBin "update-system" ''
-    
-        set -euxo pipefail
-    
-        if [ "$EUID" -ne 0 ]; then
-            echo "Please run as root or with sudo."
-            exit 1
-        fi
-    
-        nix flake update --flake ${globals.flake-path}
-        nixos-rebuild switch
-        cp ${globals.flake-path}/flake.lock ${globals.flake-lock-backup-path}
+    set -euxo pipefail
+
+    if [ "$EUID" -ne 0 ]; then
+        echo "Please run as root or with sudo."
+        exit 1
+    fi
+
+    pre_scripts=(
+        "${
+          (builtins.concatStringsSep ''
+            "
+            "'' all-pre-update-scripts)
+        }"
+    )
+
+    post_scripts=(
+        "${
+          (builtins.concatStringsSep ''
+            "
+            "'' all-post-update-scripts)
+        }"
+    )
+
+    echo "Running pre-update scripts..."
+    for script in "''${pre_scripts[@]}"; do
+        echo "Launching $script..."
+        $script
+    done
+
+    nix flake update --flake ${globals.flake-path}
+    nixos-rebuild switch
+    cp ${globals.flake-path}/flake.lock ${globals.flake-lock-backup-path}
+
+    echo "Running post-update scripts..."
+    for script in "''${post_scripts[@]}"; do
+        echo "Launching $script..."
+        $script
+    done
   '';
   build-script = pkgs.writeShellScriptBin "build-system" ''
-    
-        set -euxo pipefail
-    
-        if [ "$EUID" -ne 0 ]; then
-            echo "Please run as root or with sudo."
-            exit 1
-        fi
-    
-        nix flake update --flake ${globals.flake-path}
-        nixos-rebuild build
+    set -euxo pipefail
+
+    if [ "$EUID" -ne 0 ]; then
+        echo "Please run as root or with sudo."
+        exit 1
+    fi
+
+    nix flake update --flake ${globals.flake-path}
+    nixos-rebuild build
   '';
   secrets-leak-script = pkgs.writeShellScriptBin "secrets-leak" ''
-    
-        set -euxo pipefail
-    
-        if [ "$EUID" -ne 0 ]; then
-            echo "Please run as root or with sudo."
-            exit 1
-        fi
-    
-        nix-collect-garbage -d
-    
-        journalctl --rotate
-        journalctl --vacuum-time=1s
-        rm -rf /var/log/journal/*
-        rm -rf /run/log/journal/*
-        systemctl restart systemd-journald
+    set -euxo pipefail
+
+    if [ "$EUID" -ne 0 ]; then
+        echo "Please run as root or with sudo."
+        exit 1
+    fi
+
+    nix-collect-garbage -d
+
+    journalctl --rotate
+    journalctl --vacuum-time=1s
+    rm -rf /var/log/journal/*
+    rm -rf /run/log/journal/*
+    systemctl restart systemd-journald
   '';
 in {
   imports = [
     ./state-version.nix
     ./users
+
+    ./modules/update-dependencies.nix
 
     ./bluesky.nix
     ./croc.nix
@@ -129,8 +162,7 @@ in {
       "ca-derivations"
     ];
     extraOptions = ''
-      
-            !include ${secrets.github_token_include.path}
+      !include ${secrets.github_token_include.path}
     '';
   };
 }
