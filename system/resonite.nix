@@ -1,4 +1,4 @@
-{ pkgs, inputs, config, ... }:
+{ pkgs, lib, inputs, config, ... }:
 let
   secrets = config.secrets.resonite;
   rml-stressless-headless = {
