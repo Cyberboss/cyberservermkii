@@ -18,7 +18,6 @@ let
         }"
     )
 
-    echo "Running post-update scripts..."
     for script in "''${post_scripts[@]}"; do
         echo "Launching $script..."
         $script
@@ -40,7 +39,6 @@ let
         }"
     )
 
-    echo "Running pre-update scripts..."
     for script in "''${pre_scripts[@]}"; do
         echo "Launching $script..."
         $script
