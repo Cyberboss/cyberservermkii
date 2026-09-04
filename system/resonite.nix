@@ -96,6 +96,14 @@ let
 
       rm -f "${update-reason-file-path}"
     '';
+  resonite-ip-update-watch-script =
+    pkgs.writeShellScriptBin "resonite-ip-update-watch-script.sh" ''
+      set -euxo pipefail
+
+      if [ ! -f "${update-reason-file-path}" ]; then
+        echo "IP Address Reassigned" > "${update-reason-file-path}"
+      fi
+    '';
 in {
   imports = [
     ./modules/secrets
@@ -113,9 +121,22 @@ in {
 
   secrets.resonite.owner = config.services.resonite-headless.username;
 
-  systemd.services.resonite-headless.serviceConfig = {
-    after = [ "update-wan-ip.service" ];
-    requires = [ "update-wan-ip.service" ];
+  systemd.services = {
+    resonite-headless.serviceConfig = {
+      after = [ "update-wan-ip.service" ];
+      requires = [ "update-wan-ip.service" ];
+    };
+    resonite-ip-update-watch = {
+      description =
+        "Watches ${config.wan-ip-file}.service to generate a 'IP Address Reassigned' update reason";
+      serviceConfig = {
+        Type = "oneshot";
+        DynamicUser = true;
+        ExecStart = lib.getExe resonite-ip-update-watch-script;
+      };
+      before = [ update-wan-ip.service ];
+      wantedBy = [ update-wan-ip.service ];
+    };
   };
 
   networking.firewall.allowedUDPPorts =
