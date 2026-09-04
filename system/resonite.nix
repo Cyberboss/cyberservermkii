@@ -81,13 +81,34 @@ let
     mkdir -p $out/etc
     cp ${stressless-config} $out/etc/StresslessHeadless.json
   '';
+
+  update-reason-file-path = config.resonite-dominion.update-reason-file-path;
+  pre-system-update-script =
+    pkgs.writeShellScriptBin "resonite-pre-system-update-script.sh" ''
+      set -euxo pipefail
+
+      echo "Operating System Update" > "${update-reason-file-path}"
+    '';
+  post-system-update-script =
+    pkgs.writeShellScriptBin "resonite-post-system-update-script.sh" ''
+      set -euxo pipefail
+
+      rm -f "${update-reason-file-path}"
+    '';
 in {
   imports = [
     ./modules/secrets
+    ./modules/update-dependencies.nix
     ./modules/wan.nix
+
     inputs.resonite-headless.nixosModules.default
     inputs.resonite-dominion.nixosModules.default
   ];
+
+  update-dependencies.resonite = {
+    pre = lib.getExe pre-system-update-script;
+    post = lib.getExe post-system-update-script;
+  };
 
   secrets.resonite.owner = config.services.resonite-headless.username;
 
