@@ -31,7 +31,6 @@ in {
           description = "Fetch WAN IP and write to ${ip-file}";
           wants = [ "network-online.target" ];
           after = [ "network-online.target" ];
-          wantedBy = [ "multi-user.target" ];
           serviceConfig = {
             Type = "oneshot";
             ExecStart = lib.getExe get-ip;
@@ -41,6 +40,7 @@ in {
           description = "Check if the WAN IP is up to date";
           wants = [ "network-online.target" ];
           after = [ "network-online.target" ];
+          wantedBy = [ "multi-user.target" ];
           serviceConfig = {
             Type = "oneshot";
             ExecStart = lib.getExe check-ip;
