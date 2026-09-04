@@ -82,7 +82,8 @@ let
     cp ${stressless-config} $out/etc/StresslessHeadless.json
   '';
 
-  update-reason-file-path = config.resonite-dominion.update-reason-file-path;
+  update-reason-file-path =
+    config.services.resonite-dominion.update-reason-file-path;
   pre-system-update-script =
     pkgs.writeShellScriptBin "resonite-pre-system-update-script.sh" ''
       set -euxo pipefail
