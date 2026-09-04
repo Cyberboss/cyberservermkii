@@ -102,6 +102,7 @@ let
 
       if [ ! -f "${update-reason-file-path}" ]; then
         echo "IP Address Reassigned" > "${update-reason-file-path}"
+        chmod 666 "${update-reason-file-path}"
       fi
     '';
 in {
@@ -131,7 +132,6 @@ in {
         "Watches ${config.wan-ip-file}.service to generate a 'IP Address Reassigned' update reason";
       serviceConfig = {
         Type = "oneshot";
-        DynamicUser = true;
         ExecStart = lib.getExe resonite-ip-update-watch-script;
       };
       before = [ "update-wan-ip.service" ];
