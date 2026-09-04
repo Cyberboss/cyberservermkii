@@ -134,8 +134,8 @@ in {
         DynamicUser = true;
         ExecStart = lib.getExe resonite-ip-update-watch-script;
       };
-      before = [ update-wan-ip.service ];
-      wantedBy = [ update-wan-ip.service ];
+      before = [ "update-wan-ip.service" ];
+      wantedBy = [ "update-wan-ip.service" ];
     };
   };
 

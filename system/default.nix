@@ -7,6 +7,23 @@ let
         config.update-dependencies));
   all-pre-update-scripts = update-script-aggregator (x: x.pre);
   all-post-update-scripts = update-script-aggregator (x: x.post);
+  update-post-script = pkgs.writeShellScriptBin "update-system-post.sh" ''
+    set -euxo pipefail
+
+    post_scripts=(
+        "${
+          (builtins.concatStringsSep ''
+            "
+            "'' all-post-update-scripts)
+        }"
+    )
+
+    echo "Running post-update scripts..."
+    for script in "''${post_scripts[@]}"; do
+        echo "Launching $script..."
+        $script
+    done
+  '';
   update-script = pkgs.writeShellScriptBin "update-system" ''
     set -euxo pipefail
 
@@ -23,29 +40,16 @@ let
         }"
     )
 
-    post_scripts=(
-        "${
-          (builtins.concatStringsSep ''
-            "
-            "'' all-post-update-scripts)
-        }"
-    )
-
     echo "Running pre-update scripts..."
     for script in "''${pre_scripts[@]}"; do
         echo "Launching $script..."
         $script
     done
+    trap '${lib.getExe update-post-script}' EXIT
 
     nix flake update --flake ${globals.flake-path}
     nixos-rebuild switch
     cp ${globals.flake-path}/flake.lock ${globals.flake-lock-backup-path}
-
-    echo "Running post-update scripts..."
-    for script in "''${post_scripts[@]}"; do
-        echo "Launching $script..."
-        $script
-    done
   '';
   build-script = pkgs.writeShellScriptBin "build-system" ''
     set -euxo pipefail
