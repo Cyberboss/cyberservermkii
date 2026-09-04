@@ -86,7 +86,7 @@ let
     config.services.resonite-dominion.update-reason-file-path;
   pre-system-update-script =
     pkgs.writeShellScriptBin "resonite-pre-system-update-script.sh" ''
-      set -euxo pipefail
+      set -uxo pipefail
 
       echo "Operating System Update" > "${update-reason-file-path}"
     '';
@@ -98,7 +98,7 @@ let
     '';
   resonite-ip-update-watch-script =
     pkgs.writeShellScriptBin "resonite-ip-update-watch-script.sh" ''
-      set -euxo pipefail
+      set -uxo pipefail
 
       if [ ! -f "${update-reason-file-path}" ]; then
         echo "IP Address Reassigned" > "${update-reason-file-path}"
