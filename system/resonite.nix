@@ -44,6 +44,7 @@ let
 
   quic-port-dominions-flat = 23845;
   quic-port-outcast = 23846;
+  quic-port-backrooms = 23847;
 
   jsonFormat = pkgs.formats.json { };
 
@@ -140,7 +141,7 @@ in {
   };
 
   networking.firewall.allowedUDPPorts =
-    [ quic-port-dominions-flat quic-port-outcast ];
+    [ quic-port-dominions-flat quic-port-outcast quic-port-backrooms ];
   services = {
     resonite-dominion = {
       enable = true;
@@ -241,6 +242,30 @@ in {
             autoInviteUsernames = [ ];
             inviteRequestHandlerUsernames = [ "Seyfert" ];
             autoInviteMessage = "OutCast Online";
+            idleRestartInterval = 14400;
+            saveOnExit = false;
+            autoSleep = true;
+            enableResoniteLink = false;
+          }
+          {
+            "$schema" =
+              "https://raw.githubusercontent.com/Yellow-Dog-Man/JSONSchemas/main/schemas/HeadlessConfig.schema.json";
+            sessionName = "The Backrooms";
+            customSessionId = "U-1nPiX9NfQQ4:TheBackrooms";
+            accessLevel = "RegisteredUsers";
+            description = "The Backrooms";
+            forcePorts.quic = quic-port-backrooms;
+            hideFromPublicListing = true;
+            tags = [ "quic" ];
+            loadWorldUrl =
+              "resrec:///U-QueenHidi/R-62c122e1-23a0-4012-95d0-9c78fc5efaa7";
+            defaultUserRoles = {
+              Charizmare = "Admin";
+              Dominion = "Admin";
+            };
+            autoInviteUsernames = [ ];
+            inviteRequestHandlerUsernames = [ ];
+            autoInviteMessage = "The Backrooms Online";
             idleRestartInterval = 14400;
             saveOnExit = false;
             autoSleep = true;
