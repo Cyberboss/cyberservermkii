@@ -41,6 +41,15 @@ let
       hash = "sha256-677XO0AfvJqAdzlKuoWvduHVax+wPzprPRWFZ1xZF3Q=";
     };
   };
+  rml-joinverifier-whitelist = {
+    name = "CustomJoinVerifierWhitelist";
+    src = pkgs.fetchFromGitHub {
+      owner = "Cyberboss";
+      repo = "CustomJoinVerifierWhitelist";
+      rev = "01e932f8b7c9614e3d5131ca7e0fb534e57d223d";
+      hash = "sha256-RM3zRwVIbxCoUxG5UzYjoTuwCgzkequuYuo9v77JcWA=";
+    };
+  };
 
   quic-port-dominions-flat = 23845;
   quic-port-outcast = 23846;
@@ -51,11 +60,22 @@ let
   DominionsFlat = "<color=#0900BDFF>Dominion</color>'s Flat";
   DominionsFlatNoRtf = "Dominion's Flat";
 
+  DominionsUserId = "U-1jLFy9ehNjs";
+
+  joinverifier-whitelist-config =
+    jsonFormat.generate "CustomJoinVerifierWhitelist.json" {
+      version = "1.0.0";
+      values = {
+        Enabled = true;
+        "Whitelist User IDs" = [ DominionsUserId ];
+      };
+    };
+
   tweaks-config = jsonFormat.generate "HeadlessTweaks.json" {
     version = "1.0.0";
     values = {
       DiscordLinkToSession = false;
-      PermissionLevels = { U-1jLFy9ehNjs = "Owner"; };
+      PermissionLevels = { "${DominionsUserId}" = "Owner"; };
       WorldScopedPermissions = {
         U-The-Honeybee = { "${DominionsFlatNoRtf}" = "Moderator"; };
         U-Charizmare = { "${DominionsFlatNoRtf}" = "Moderator"; };
@@ -158,11 +178,13 @@ in {
         rml-headless-tweaks
         rml-resonance
         rml-fastsync
+        rml-joinverifier-whitelist
       ];
       additional-restart-triggers = secrets.credentials.restartTriggers;
       rml-configs = [
         "${tweaks-config-json}/etc/HeadlessTweaks.json"
         "${stressless-config-json}/etc/StresslessHeadless.json"
+        "${joinverifier-whitelist-config}/etc/CustomJoinVerifierWhitelist.json"
       ];
       credentials-file = secrets.credentials.path;
       config-json = {
