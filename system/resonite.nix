@@ -232,7 +232,6 @@ in {
             saveOnExit = false;
             autoSleep = true;
             enableResoniteLink = false;
-            useCustomJoinVerifier = true;
           }
           {
             "$schema" =
