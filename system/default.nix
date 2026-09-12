@@ -133,6 +133,15 @@ in {
       bantime-increment.enable = true;
       ignoreIP = [ "192.168.0.0/16" ];
     };
+    logrotate = {
+      enable = true;
+      settings."/var/log/*.log" = {
+        frequency = "monthly";
+        rotate = 1;
+        missingok = true;
+        notifempty = true;
+      };
+    };
   };
 
   security.pam.services.sshd.googleAuthenticator = {
