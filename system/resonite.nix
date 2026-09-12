@@ -62,46 +62,40 @@ let
 
   DominionsUserId = "U-1jLFy9ehNjs";
 
+  generate-rml-config = name: values:
+    "${
+      pkgs.runCommand "copy-${name}-config-json" { } ''
+        mkdir -p $out/etc
+        cp ${
+          jsonFormat.generate "${name}.json" {
+            version = "1.0.0";
+            values = values;
+          }
+        } $out/etc/${name}.json
+      ''
+    }/etc/${name}.json";
+
   joinverifier-whitelist-config =
-    jsonFormat.generate "CustomJoinVerifierWhitelist.json" {
-      version = "1.0.0";
-      values = {
-        Enabled = true;
-        "Whitelist User IDs" = [ DominionsUserId ];
-      };
+    generate-rml-config "CustomJoinVerifierWhitelist" {
+      Enabled = true;
+      "Whitelist User IDs" = [ DominionsUserId ];
     };
 
-  tweaks-config = jsonFormat.generate "HeadlessTweaks.json" {
-    version = "1.0.0";
-    values = {
-      DiscordLinkToSession = false;
-      PermissionLevels = { "${DominionsUserId}" = "Owner"; };
-      WorldScopedPermissions = {
-        U-The-Honeybee = { "${DominionsFlatNoRtf}" = "Moderator"; };
-        U-Charizmare = { "${DominionsFlatNoRtf}" = "Moderator"; };
-        U-hartofstone = { "${DominionsFlatNoRtf}" = "Moderator"; };
-        U-Cloud-Jumper = { OutCast = "Moderator"; };
-        # Seyfert
-        U-1iHTvyAEdSi = { OutCast = "Moderator"; };
-      };
-      DisableInteractivePrompt = true;
+  tweaks-config = generate-rml-config "HeadlessTweaks" {
+    DiscordLinkToSession = false;
+    PermissionLevels = { "${DominionsUserId}" = "Owner"; };
+    WorldScopedPermissions = {
+      U-The-Honeybee = { "${DominionsFlatNoRtf}" = "Moderator"; };
+      U-Charizmare = { "${DominionsFlatNoRtf}" = "Moderator"; };
+      U-hartofstone = { "${DominionsFlatNoRtf}" = "Moderator"; };
+      U-Cloud-Jumper = { OutCast = "Moderator"; };
+      # Seyfert
+      U-1iHTvyAEdSi = { OutCast = "Moderator"; };
     };
+    DisableInteractivePrompt = true;
   };
 
-  stressless-config = jsonFormat.generate "StresslessHeadless.json" {
-    version = "1.0.0";
-    values = { };
-  };
-
-  tweaks-config-json = pkgs.runCommand "copy-tweaks" { } ''
-    mkdir -p $out/etc
-    cp ${tweaks-config} $out/etc/HeadlessTweaks.json
-  '';
-
-  stressless-config-json = pkgs.runCommand "copy-tweaks" { } ''
-    mkdir -p $out/etc
-    cp ${stressless-config} $out/etc/StresslessHeadless.json
-  '';
+  stressless-config = generate-rml-config "StresslessHeadless" { };
 
   update-reason-file-path =
     config.services.resonite-dominion.update-reason-file-path;
@@ -181,11 +175,8 @@ in {
         rml-joinverifier-whitelist
       ];
       additional-restart-triggers = secrets.credentials.restartTriggers;
-      rml-configs = [
-        "${tweaks-config-json}/etc/HeadlessTweaks.json"
-        "${stressless-config-json}/etc/StresslessHeadless.json"
-        "${joinverifier-whitelist-config}/etc/CustomJoinVerifierWhitelist.json"
-      ];
+      rml-configs =
+        [ tweaks-config stressless-config joinverifier-whitelist-config ];
       credentials-file = secrets.credentials.path;
       config-json = {
         allowedUrlHosts = [ "ws://localhost:24444" ];
