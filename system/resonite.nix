@@ -46,8 +46,8 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "Cyberboss";
       repo = "CustomJoinVerifierWhitelist";
-      rev = "01e932f8b7c9614e3d5131ca7e0fb534e57d223d";
-      hash = "sha256-RM3zRwVIbxCoUxG5UzYjoTuwCgzkequuYuo9v77JcWA=";
+      rev = "a1629d002d5ededed617369912f0a5f53eae6a1b";
+      hash = "sha256-2whhS/4/QQOS46D5ElB03X0gX0F/bydrGpVVQB0Rk+c=";
     };
   };
 
