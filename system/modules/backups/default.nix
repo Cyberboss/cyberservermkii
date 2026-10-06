@@ -70,6 +70,8 @@ let
     (pkgs.writeShellScriptBin "backups-test.sh" ''
       set -euxo pipefail
 
+      sleep 30
+
       rm -rf ${backups-test-state-directory}
 
       trap '${post-script}' EXIT
