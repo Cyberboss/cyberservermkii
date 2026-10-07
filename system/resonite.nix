@@ -223,6 +223,7 @@ in {
               GrandpaVape = "Builder";
               "ItsAPuddin" = "Builder";
               Jinxtiest = "Builder";
+              Lamp = "Builder";
               ManiaDeluxe = "Builder";
               Seyfert = "Builder";
               Shywizz = "Builder";
