@@ -213,7 +213,7 @@ in {
               "quic"
             ];
             loadWorldUrl =
-              "resrec:///G-1nmN4fjhq9g/R-019ea2c0-0b13-704d-8890-b28d22b80757";
+              "resrec:///G-1nmN4fjhq9g/R-01a11870-bb8f-74f6-ac13-42de846e83d6";
             defaultUserRoles = {
               Charizmare = "Admin";
               Dominion = "Admin";
