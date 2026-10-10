@@ -17,6 +17,7 @@ in {
       enable = true;
       mediaLocation = globals.immich-root;
       openFirewall = true;
+      host = "";
       accelerationDevices = null;
     };
     cloudflared.tunnels.primary-tunnel.ingress = {
