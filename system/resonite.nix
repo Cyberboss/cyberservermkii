@@ -239,8 +239,7 @@ in {
             awayKickMinutes = away-kick-minutes;
             saveOnExit = false;
             autoSleep = true;
-            enableResoniteLink = true;
-            forceResoniteLinkPort = 4441;
+            enableResoniteLink = false;
           }
           {
             "$schema" =
