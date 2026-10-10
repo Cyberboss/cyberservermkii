@@ -87,6 +87,7 @@ in {
     ./croc.nix
     ./forgejo.nix
     ./jellyfin.nix
+    ./key.nix
     ./motd.nix
     ./resonite.nix
     ./samba.nix
