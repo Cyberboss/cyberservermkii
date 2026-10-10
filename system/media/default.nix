@@ -3,7 +3,7 @@ let
   root = globals.media-root;
   group = globals.media-group;
 in {
-  imports = [ ../modules/backups ./jellyfin.nix ];
+  imports = [ ../modules/backups ./immich.nix ./jellyfin.nix ];
 
   backups.media.paths = [ root ];
 
