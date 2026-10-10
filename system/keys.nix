@@ -10,7 +10,7 @@ in {
       "http://localhost:${toString service-port}";
     caddy = {
       enable = true;
-      virtualHosts."http://127.0.0.1:${toString service-port}".extraConfig = ''
+      virtualHosts.":${toString service-port}".extraConfig = ''
         respond "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJNL86w85bS/+5aDj8fe4gZ2obLiiRn+1lXhWA2tX7Jt
 
         -----BEGIN PGP PUBLIC KEY BLOCK-----
