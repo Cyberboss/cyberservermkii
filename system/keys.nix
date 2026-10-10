@@ -1,16 +1,16 @@
 { globals, ... }:
 let
   service-port = 4440;
-  service-address = "http://127.0.0.1:${toString service-port}";
   domain = "keys.dominion.universal-defense-matrix.${globals.tld}";
 in {
   imports = [ ./modules/cloudflared.nix ];
 
   services = {
-    cloudflared.tunnels.primary-tunnel.ingress.${domain} = service-address;
+    cloudflared.tunnels.primary-tunnel.ingress.${domain} =
+      "http://localhost:${toString service-port}";
     caddy = {
       enable = true;
-      virtualHosts."${service-address}".extraConfig = ''
+      virtualHosts."http://127.0.0.1:${toString service-port}".extraConfig = ''
         respond "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJNL86w85bS/+5aDj8fe4gZ2obLiiRn+1lXhWA2tX7Jt
 
         -----BEGIN PGP PUBLIC KEY BLOCK-----
