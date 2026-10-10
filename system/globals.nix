@@ -1,4 +1,5 @@
-{
+let media-root = "/media";
+in {
   hostName = "cyberservermkii";
 
   tld = "dextraspace.net";
@@ -8,7 +9,7 @@
   flake-path = "/etc/nixos";
   flake-lock-backup-path = "/var/lib/flake.lock.lastsuccessful";
 
-  media-root = "/media";
+  media-root = media-root;
   immich-root = "${media-root}/PersonalPhotos";
 
   subnet-16 = "192.168";
