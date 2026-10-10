@@ -7,7 +7,7 @@ in {
 
   backups.media.paths = [ root ];
 
-  users.groups.${media-group} = { };
+  users.groups.${group} = { };
   systemd.tmpfiles.rules = [
     "d ${root} 0750 root ${group} - -"
     "d ${root}/Books 0770 root ${group} - -"
