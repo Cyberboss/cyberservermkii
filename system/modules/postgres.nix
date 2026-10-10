@@ -33,6 +33,9 @@ in {
     };
   };
 
+  networking.firewall.allowedTCPPorts =
+    [ config.services.postgresql.settings.port ];
+
   systemd.services.postgresqlBackup.startAt = lib.mkForce [ ];
 
   backups.postgresql = {
