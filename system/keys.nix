@@ -1,7 +1,7 @@
 { globals, ... }:
 let
   service-port = 4440;
-  service-address = "http://127.0.0.1:${service-port}";
+  service-address = "http://127.0.0.1:${toString service-port}";
   domain = "keys.dominion.universal-defense-matrix.${globals.tld}";
 in {
   imports = [ ./modules/cloudflared.nix ];
