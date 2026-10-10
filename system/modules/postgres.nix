@@ -22,7 +22,7 @@ in {
         host    all             all             127.0.0.1/32            trust
         host    all             all             ::1/128                 trust
 
-        host    all             all             ${globals.subnet-16}.0.0/16          scram-sha-256
+        host    all             dominion             ${globals.subnet-16}.0.0/16          scram-sha-256
       '';
 
       settings.listen_addresses = "*";
