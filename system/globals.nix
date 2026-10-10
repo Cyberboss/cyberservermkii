@@ -11,7 +11,7 @@ in {
 
   media-group = "media";
   media-root = media-root;
-  immich-root = "${media-root}/PersonalPhotos";
+  immich-root = "${media-root}/Immich";
 
   subnet-16 = "192.168";
 }
