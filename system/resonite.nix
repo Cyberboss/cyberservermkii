@@ -239,7 +239,7 @@ in {
             awayKickMinutes = away-kick-minutes;
             saveOnExit = false;
             autoSleep = true;
-            enableResoniteLink = false;
+            enableResoniteLink = true;
           }
           {
             "$schema" =
