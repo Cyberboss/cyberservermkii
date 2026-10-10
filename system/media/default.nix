@@ -10,6 +10,7 @@ in {
   users.groups.${group} = { };
   systemd.tmpfiles.rules = [
     "d ${root} 0750 root ${group} - -"
+    "d ${root}/Adult 0770 root ${group} - -"
     "d ${root}/Books 0770 root ${group} - -"
     "d ${root}/Movies 0770 root ${group} - -"
     "d ${root}/Music 0770 root ${group} - -"
