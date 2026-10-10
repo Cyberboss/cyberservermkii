@@ -1,4 +1,4 @@
-{ lib, pkgs, config, ... }:
+{ lib, pkgs, config, globals, ... }:
 let
   backup-location = config.services.postgresqlBackup.location;
   delete-postgres-backups = lib.getExe
