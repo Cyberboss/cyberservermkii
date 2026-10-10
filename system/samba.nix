@@ -27,10 +27,10 @@ in {
           "server string" = config.networking.hostName;
           "netbios name" = config.networking.hostName;
           security = "user";
-          "hosts allow" = "${globals.subnet-16}.0.0/16 127.0.0.1 localhost";
+          "hosts allow" = "192.168.2. 127.0.0.1 localhost";
           "hosts deny" = "0.0.0.0/0";
           "guest account" = "nobody";
-          "map to guest" = "not a user";
+          "map to guest" = "bad user";
         };
         private = {
           path = private-share;
@@ -61,6 +61,7 @@ in {
       openFirewall = true;
     };
   };
+
   systemd.tmpfiles.rules = [
     "d ${samba-root} 0770 ${usergroup} ${usergroup} - -"
     "d ${private-share} 0770 ${usergroup} ${usergroup} - -"
