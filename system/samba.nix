@@ -8,12 +8,12 @@ in {
   imports = [ ./modules/backups ];
 
   users = {
-    groups.samba = { };
-    users.samba = {
+    groups.${usergroup} = { };
+    users.${usergroup} = {
       isSystemUser = true;
       createHome = true;
       group = usergroup;
-      extraGroups = [ "jellyfin" ];
+      extraGroups = [ globals.media-group ];
     };
   };
 
@@ -27,10 +27,10 @@ in {
           "server string" = config.networking.hostName;
           "netbios name" = config.networking.hostName;
           security = "user";
-          "hosts allow" = "192.168.2. 127.0.0.1 localhost";
+          "hosts allow" = "${globals.subnet-16}. 127.0.0.1 localhost";
           "hosts deny" = "0.0.0.0/0";
           "guest account" = "nobody";
-          "map to guest" = "bad user";
+          "map to guest" = "not a user";
         };
         private = {
           path = private-share;
@@ -42,15 +42,17 @@ in {
           "force user" = usergroup;
           "force group" = usergroup;
         };
-        jellyfin = {
-          path = "/home/jellyfin/libraries";
+        media = {
+          path = globals.media-root;
           browseable = "yes";
           "read only" = "no";
           "guest ok" = "no";
           "create mask" = "0660";
+          "force create mode" = "0660";
           "directory mask" = "0770";
+          "force directory mode" = "0770";
           "force user" = usergroup;
-          "force group" = "jellyfin";
+          "force group" = globals.media-group;
         };
       };
     };
@@ -59,10 +61,13 @@ in {
       openFirewall = true;
     };
   };
-  systemd.tmpfiles.rules =
-    [ "d ${private-share} 0775 ${usergroup} ${usergroup} - -" ];
+  systemd.tmpfiles.rules = [
+    "d ${samba-root} 0770 ${usergroup} ${usergroup} - -"
+    "d ${private-share} 0775 ${usergroup} ${usergroup} - -"
+  ];
 
   system.activationScripts.makeSambaShares = lib.stringAfter [ "users" ] ''
+
     mkdir -p ${private-share}
     chown -R ${usergroup}:${usergroup} ${samba-root}
     chmod 0770 ${samba-root}

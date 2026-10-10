@@ -79,14 +79,15 @@ let
 in {
   imports = [
     ./state-version.nix
+
     ./users
+    ./media
 
     ./modules/update-dependencies.nix
 
     ./bluesky.nix
     ./croc.nix
     ./forgejo.nix
-    ./jellyfin.nix
     ./keys.nix
     ./motd.nix
     ./resonite.nix
@@ -132,7 +133,7 @@ in {
       enable = true;
       maxretry = 5;
       bantime-increment.enable = true;
-      ignoreIP = [ "192.168.0.0/16" ];
+      ignoreIP = [ "${globals.subnet-16}.0.0/16" ];
     };
     logrotate = {
       enable = true;
