@@ -16,6 +16,7 @@ in {
     "${service-name}" = {
       enable = true;
       mediaLocation = globals.immich-root;
+      openFirewall = true;
       accelerationDevices = null;
     };
     cloudflared.tunnels.primary-tunnel.ingress = {
