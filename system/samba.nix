@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, globals, ... }:
 let
   samba-root = "/home/${usergroup}/data";
   shares-root = "${samba-root}/shares";
