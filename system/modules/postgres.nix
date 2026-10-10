@@ -24,8 +24,6 @@ in {
 
         host    all             dominion             ${globals.subnet-16}.0.0/16          scram-sha-256
       '';
-
-      settings.listen_addresses = "*";
     };
     postgresqlBackup = {
       enable = true;
