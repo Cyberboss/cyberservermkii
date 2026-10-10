@@ -240,6 +240,7 @@ in {
             saveOnExit = false;
             autoSleep = true;
             enableResoniteLink = true;
+            forceResoniteLinkPort = 4441;
           }
           {
             "$schema" =
