@@ -216,6 +216,7 @@ in {
               "resrec:///G-1nmN4fjhq9g/R-01a11870-bb8f-74f6-ac13-42de846e83d6";
             defaultUserRoles = {
               Charizmare = "Admin";
+              Chromata = "Builder";
               Dominion = "Admin";
               HamoCorp = "Builder";
               "The Honeybee" = "Admin";
