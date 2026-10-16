@@ -71,12 +71,14 @@ in {
 
     forgejo-runner.instances.local = {
       enable = true;
-      secrets.server.connections.default = {
-        uuid = "54adcce0-98c4-44e0-b419-a8356415b48c";
-        url = local-service-url;
-        token_url = secrets.runnerToken.path;
+      settings = {
+        server.connections.default = {
+          uuid = "54adcce0-98c4-44e0-b419-a8356415b48c";
+          url = local-service-url;
+          token_url = secrets.runnerToken.path;
+        };
+        runner.labels = [ "ubuntu-latest:docker://node:18-bullseye" ];
       };
-      settings.runner.labels = [ "ubuntu-latest:docker://node:18-bullseye" ];
     };
 
     gitea-mirror = {
