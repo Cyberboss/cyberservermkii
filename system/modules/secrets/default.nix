@@ -2,7 +2,7 @@
 let
   cfg = config.secrets;
   yaml-to-attrset = file:
-    builtins.fromJSON (builtins.readFile (pkgs.runCommand "config-json" ""
+    builtins.fromJSON (builtins.readFile (pkgs.runCommand "config-json" { }
       "${lib.getExe pkgs.yj} -yj < ${file} > $out"));
   secrets-file = ./secrets.yml;
   secrets-manifest =
