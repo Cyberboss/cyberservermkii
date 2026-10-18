@@ -72,7 +72,7 @@ in {
     forgejo-runner.instances.local = {
       enable = true;
       settings = {
-        server.connections.default = {
+        server.connections.local = {
           uuid = "54adcce0-98c4-44e0-b419-a8356415b48c";
           url = local-service-url;
           token_url = secrets.runnerToken.path;
