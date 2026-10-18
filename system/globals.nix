@@ -7,7 +7,7 @@ in {
   use-lix = true;
 
   flake-path = "/etc/nixos";
-  flake-lock-backup-path = "/var/lib/flake.lock.lastsuccessful";
+  flake-lock-backup-path = "/var/lib/flake-lock-backups";
 
   media-group = "media";
   media-root = media-root;

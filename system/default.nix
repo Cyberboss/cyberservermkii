@@ -47,7 +47,11 @@ let
 
     nix flake update --flake ${globals.flake-path}
     nixos-rebuild switch
-    cp ${globals.flake-path}/flake.lock ${globals.flake-lock-backup-path}
+
+    # Legacy, remove next time you see this
+    rm -f /var/lib/flake.lock.lastsuccessful
+
+    cp ${globals.flake-path}/flake.lock "${globals.flake-lock-backup-path}/flake.$(${pkgs.coreutils}/bin/date --iso-8601=seconds).lock"
   '';
   build-script = pkgs.writeShellScriptBin "build-system" ''
     set -euxo pipefail
@@ -118,6 +122,9 @@ in {
     pkgs.google-authenticator
   ];
 
+  systemd.tmpfiles.settings."flake.lock-backups".${globals.flake-lock-backup-path}.d.mode =
+    "0700";
+
   systemd.services."getty@tty1".enable = true;
 
   services = {
@@ -142,6 +149,12 @@ in {
         rotate = 1;
         missingok = true;
         notifempty = true;
+      };
+      settings."${globals.flake-lock-backup-path}/*.lock" = {
+        frequency = "monthly";
+        rotate = 1;
+        missingok = true;
+        notifempty = false;
       };
     };
   };
