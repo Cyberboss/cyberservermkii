@@ -17,6 +17,8 @@ let
       shopt -s dotglob
       rm -rf ${backup-location}/*
     '');
+
+  group-name = "forgejo-runner-local-group";
 in {
   imports = [
     ./modules/backups
@@ -30,7 +32,8 @@ in {
 
   networking.firewall.allowedTCPPorts = [ local-service-port ];
 
-  secrets.forgejo-runner.owner = "forgejo-runner-local";
+  users.groups.${group-name} = { };
+  secrets.forgejo-runner.group = group-name;
 
   services = {
     cloudflared.tunnels.primary-tunnel.ingress = {
@@ -95,7 +98,10 @@ in {
   };
 
   systemd = {
-    services.forgejo.serviceConfig.LogDirectory = "forgejo";
+    services = {
+      forgejo.serviceConfig.LogDirectory = "forgejo";
+      forgejo-runner-local.serviceConfig.SupplementaryGroups = group-name;
+    };
     timers.forgejo-dump.wantedBy = lib.mkForce [ ];
   };
 
