@@ -14,6 +14,7 @@ let
       restartTriggers = [
         config.sops.secrets."${secret-directory}/${secret-entry}".sopsFileHash
         cfg.${secret-directory}.owner
+        cfg.${secret-directory}.group
       ];
     };
   };
@@ -28,6 +29,7 @@ let
               config.sops.secrets."${secret-directory}/${secret-name}".sopsFileHash)
               (lib.attrNames secrets-manifest.${secret-directory})))
             cfg.${secret-directory}.owner
+            cfg.${secret-directory}.group
           ];
         }]);
   };
@@ -36,6 +38,7 @@ let
     lib.attrsets.mergeAttrsList (map (secret-entry: {
       "${secret-directory}/${secret-entry}" = {
         owner = cfg.${secret-directory}.owner;
+        group = cfg.${secret-directory}.group;
       };
     }) (lib.attrNames secrets-manifest.${secret-directory}));
 
@@ -44,17 +47,25 @@ let
       options = {
         owner = lib.mkOption {
           type = lib.types.nonEmptyStr;
-          example = "service-account-name";
+          example = "service-account-user-name";
           default = "root";
           description = ''
             User that will own the secrets file.
+          '';
+        };
+        group = lib.mkOption {
+          type = lib.types.nullOr lib.types.nonEmptyStr;
+          example = "service-account-group-name";
+          default = null;
+          description = ''
+            Optional group of the secrets file.
           '';
         };
         restartTriggers = lib.mkOption {
           type = lib.types.listOf lib.types.anything;
           example = "<some random sha256 hash>";
           description = ''
-            (Read-only) Hash of the secrets and their owner for this directory that may be used to drive systemd restartTriggers.
+            (Read-only) Hash of the secrets and their owner/group for this directory that may be used to drive systemd restartTriggers.
           '';
         };
         "${secret-name}" = lib.mkOption {
@@ -71,7 +82,7 @@ let
                 type = lib.types.listOf lib.types.anything;
                 example = "<some random sha256 hash>";
                 description = ''
-                  (Read-only) Hash of this secret and its owner that may be used to drive systemd restartTriggers.
+                  (Read-only) Hash of this secret and its owner/group that may be used to drive systemd restartTriggers.
                 '';
               };
             };
