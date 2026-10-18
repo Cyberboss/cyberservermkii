@@ -2,7 +2,6 @@
 let
   domain = "git.${globals.tld}";
   mirror-domain = "git-mirror.${globals.tld}";
-  secrets = config.secrets.forgejo;
   backup-location = config.services.forgejo.dump.backupDir;
   local-service-url = "http://localhost:${toString local-service-port}";
 
@@ -30,6 +29,8 @@ in {
   ];
 
   networking.firewall.allowedTCPPorts = [ local-service-port ];
+
+  secrets.forgejo-runner.owner = "forgejo-runner-local";
 
   services = {
     cloudflared.tunnels.primary-tunnel.ingress = {
@@ -75,7 +76,8 @@ in {
         server.connections.local = {
           uuid = "54adcce0-98c4-44e0-b419-a8356415b48c";
           url = local-service-url;
-          token_url = "file://${secrets.runnerToken.path}";
+          token_url =
+            "file://${config.secrets.forgejo-runner.runnerToken.path}";
         };
         runner.labels = [ "ubuntu-latest:docker://node:18-bullseye" ];
       };
@@ -88,7 +90,7 @@ in {
       mirrorIssueConcurrency = 1;
       mirrorPullRequestConcurrency = 1;
 
-      environmentFile = secrets.mirrorEnvironment.path;
+      environmentFile = config.secrets.gitea-mirror.environment.path;
     };
   };
 
