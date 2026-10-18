@@ -2,9 +2,8 @@
 let
   cfg = config.secrets;
   yaml-to-attrset = file:
-    builtins.fromJSON (builtins.readFile
-      (pkgs.runCommand "config-json" { buildInputs = [ pkgs.yj ]; }
-        "yj -yj < ${file} > $out"));
+    builtins.fromJSON (builtins.readFile (pkgs.runCommand "config-json" ""
+      "${lib.getExe pkgs.yj} -yj < ${file} > $out"));
   secrets-file = ./secrets.yml;
   secrets-manifest =
     builtins.removeAttrs (yaml-to-attrset secrets-file) [ "sops" ];
@@ -48,7 +47,6 @@ let
           example = "service-account-name";
           default = "root";
           description = ''
-
             User that will own the secrets file.
           '';
         };
@@ -56,7 +54,6 @@ let
           type = lib.types.listOf lib.types.anything;
           example = "<some random sha256 hash>";
           description = ''
-
             (Read-only) Hash of the secrets and their owner for this directory that may be used to drive systemd restartTriggers.
           '';
         };
@@ -67,7 +64,6 @@ let
                 type = lib.types.nonEmptyStr;
                 example = "/run/secrets/${secret-directory}/${secret-name}";
                 description = ''
-
                   (Read-only) The runtime path that the ${secret-directory}/${secret-name} secret may be accessed at
                 '';
               };
@@ -75,7 +71,6 @@ let
                 type = lib.types.listOf lib.types.anything;
                 example = "<some random sha256 hash>";
                 description = ''
-
                   (Read-only) Hash of this secret and its owner that may be used to drive systemd restartTriggers.
                 '';
               };
@@ -85,7 +80,6 @@ let
             path = "/run/secrets/${secret-directory}/${secret-name}";
           };
           description = ''
-
             Secret file registry for ${secret-directory}/${secret-name} secret may be accessed at
           '';
         };
@@ -95,7 +89,6 @@ let
     options = {
       "${secret-directory}" = lib.mkOption {
         description = ''
-
           Secret directory registry for ${secret-directory}
         '';
         type =
@@ -106,7 +99,6 @@ let
 in {
   options.secrets = lib.mkOption {
     description = ''
-
       Secrets registry
     '';
     type = lib.types.submodule
