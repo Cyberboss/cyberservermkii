@@ -39,6 +39,7 @@ let
       "${secret-directory}/${secret-entry}" = {
         owner = cfg.${secret-directory}.owner;
         group = cfg.${secret-directory}.group;
+        mode = "0440";
       };
     }) (lib.attrNames secrets-manifest.${secret-directory}));
 
