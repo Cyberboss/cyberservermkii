@@ -75,7 +75,7 @@ in {
         server.connections.local = {
           uuid = "54adcce0-98c4-44e0-b419-a8356415b48c";
           url = local-service-url;
-          token_url = secrets.runnerToken.path;
+          token_url = "file://${secrets.runnerToken.path}";
         };
         runner.labels = [ "ubuntu-latest:docker://node:18-bullseye" ];
       };
