@@ -20,17 +20,6 @@ let
       hash = "sha256-sYbLQfU0ieXNeeTwPlWKQDyswuECnfewKHA99XjYLLU=";
     };
   };
-  rml-resonance = {
-    name = "Resonance";
-    src = pkgs.fetchFromGitHub {
-      owner = "SeyfertGames";
-      repo = "Resonance";
-      rev = "0bafb250fab71306eef2a23357d6249025f645ba";
-      hash = "sha256-tdmY/uPnPGSPY39UKqAaIzf8WLgb/DLNMo8257XDnTo=";
-    };
-    environment-statement = headless-path:
-      "ResonitePath=${headless-path}/ NoMinVer=true";
-  };
   rml-fastsync = {
     name = "FastSync";
     src = pkgs.fetchFromForgejo {
@@ -176,7 +165,6 @@ in {
       rml-mod-sources = [
         rml-stressless-headless
         rml-headless-tweaks
-        rml-resonance
         rml-fastsync
         rml-joinverifier-whitelist
       ];
