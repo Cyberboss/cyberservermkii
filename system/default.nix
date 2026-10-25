@@ -179,14 +179,18 @@ in {
       options = "--delete-old";
     };
     package = lib.mkIf globals.use-lix pkgs.lixPackageSets.stable.lix;
-    settings.experimental-features = if globals.use-lix then [
-      "nix-command"
-      "flakes"
-    ] else [
-      "nix-command"
-      "flakes"
-      "ca-derivations"
-    ];
+    settings = {
+      keep-outputs = true;
+      keep-derivations = true;
+      experimental-features = if globals.use-lix then [
+        "nix-command"
+        "flakes"
+      ] else [
+        "nix-command"
+        "flakes"
+        "ca-derivations"
+      ];
+    };
     extraOptions = ''
       !include ${secrets.github_token_include.path}
     '';
