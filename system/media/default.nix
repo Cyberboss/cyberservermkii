@@ -11,6 +11,7 @@ in {
   systemd.tmpfiles.rules = [
     "d ${root} 0750 root ${group} - -"
     "d ${root}/Adult 0770 root ${group} - -"
+    "d ${root}/AdultBooks 0770 root ${group} - -"
     "d ${root}/Books 0770 root ${group} - -"
     "d ${root}/Movies 0770 root ${group} - -"
     "d ${root}/Music 0770 root ${group} - -"
@@ -18,5 +19,6 @@ in {
     "d ${globals.immich-root} 0770 root ${group} - -"
     "d ${root}/Shows 0770 root ${group} - -"
     "d ${root}/YouTube 0770 root ${group} - -"
+    "d ${root}/HomeVideos 0770 root ${group} - -"
   ];
 }
