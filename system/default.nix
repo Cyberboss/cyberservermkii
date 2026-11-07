@@ -8,84 +8,82 @@ let
   all-pre-update-scripts = update-script-aggregator (x: x.pre);
   all-post-update-scripts = update-script-aggregator (x: x.post);
   update-post-script = pkgs.writeShellScriptBin "update-system-post.sh" ''
-    
-        set -euxo pipefail
-    
-        post_scripts=(
-            "${
-              (builtins.concatStringsSep ''
-                
-                            "
-                            "'' all-post-update-scripts)
-            }"
-        )
-    
-        for script in "''${post_scripts[@]}"; do
-            echo "Launching $script..."
-            $script
-        done
+    set -euxo pipefail
+
+    post_scripts=(
+        "${
+          (builtins.concatStringsSep ''
+
+            "
+            "'' all-post-update-scripts)
+        }"
+    )
+
+    for script in "''${post_scripts[@]}"; do
+        echo "Launching $script..."
+        $script
+    done
   '';
   update-script = pkgs.writeShellScriptBin "update-system" ''
-    
-        set -euxo pipefail
-    
-        if [ "$EUID" -ne 0 ]; then
-            echo "Please run as root or with sudo."
-            exit 1
-        fi
-    
-        pre_scripts=(
-            "${
-              (builtins.concatStringsSep ''
-                
-                            "
-                            "'' all-pre-update-scripts)
-            }"
-        )
-    
-        for script in "''${pre_scripts[@]}"; do
-            echo "Launching $script..."
-            $script
-        done
-        trap '${lib.getExe update-post-script}' EXIT
-    
-        nix flake update --flake ${globals.flake-path}
-        nixos-rebuild switch
-    
-        # Legacy, remove next time you see this
-        rm -f /var/lib/flake.lock.lastsuccessful
-    
-        cp ${globals.flake-path}/flake.lock "${globals.flake-lock-backup-path}/flake.$(${pkgs.coreutils}/bin/date --iso-8601=seconds).lock"
+    set -euxo pipefail
+
+    if [ "$EUID" -ne 0 ]; then
+        echo "Please run as root or with sudo."
+        exit 1
+    fi
+
+    pre_scripts=(
+        "${
+          (builtins.concatStringsSep ''
+
+            "
+            "'' all-pre-update-scripts)
+        }"
+    )
+
+    for script in "''${pre_scripts[@]}"; do
+        echo "Launching $script..."
+        $script
+    done
+    trap '${lib.getExe update-post-script}' EXIT
+
+    nix flake update --flake ${globals.flake-path}
+    nixos-rebuild switch
+
+    # Legacy, remove next time you see this
+    rm -f /var/lib/flake.lock.lastsuccessful
+
+    cp ${globals.flake-path}/flake.lock "${globals.flake-lock-backup-path}/flake.$(${pkgs.coreutils}/bin/date --iso-8601=seconds).lock"
   '';
   build-script = pkgs.writeShellScriptBin "build-system" ''
-    
-        set -euxo pipefail
-    
-        if [ "$EUID" -ne 0 ]; then
-            echo "Please run as root or with sudo."
-            exit 1
-        fi
-    
-        nix flake update --flake ${globals.flake-path}
-        nixos-rebuild build
+    set -euxo pipefail
+
+    if [ "$EUID" -ne 0 ]; then
+        echo "Please run as root or with sudo."
+        exit 1
+    fi
+
+    nix flake update --flake ${globals.flake-path}
+    nixos-rebuild build
   '';
   secrets-leak-script = pkgs.writeShellScriptBin "secrets-leak" ''
-    
-        set -euxo pipefail
-    
-        if [ "$EUID" -ne 0 ]; then
-            echo "Please run as root or with sudo."
-            exit 1
-        fi
-    
-        nix-collect-garbage -d
-    
-        journalctl --rotate
-        journalctl --vacuum-time=1s
-        rm -rf /var/log/journal/*
-        rm -rf /run/log/journal/*
-        systemctl restart systemd-journald
+    set -euxo pipefail
+
+    if [ "$EUID" -ne 0 ]; then
+        echo "Please run as root or with sudo."
+        exit 1
+    fi
+
+    nix-collect-garbage -d
+
+    journalctl --rotate
+    journalctl --vacuum-time=1s
+    rm -rf /var/log/journal/*
+    rm -rf /run/log/journal/*
+    systemctl restart systemd-journald
   '';
+
+  base-experimental-features = [ "nix-command" "flakes" ];
 in {
   imports = [
     ./state-version.nix
@@ -191,18 +189,13 @@ in {
     settings = {
       keep-outputs = true;
       keep-derivations = true;
-      experimental-features = if globals.use-lix then [
-        "nix-command"
-        "flakes"
-      ] else [
-        "nix-command"
-        "flakes"
-        "ca-derivations"
-      ];
+      experimental-features = if globals.use-lix then
+        base-experimental-features
+      else
+        base-experimental-features ++ [ "ca-derivations" ];
     };
     extraOptions = ''
-      
-            !include ${secrets.github_token_include.path}
+      !include ${secrets.github_token_include.path}
     '';
   };
 }
