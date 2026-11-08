@@ -12,14 +12,14 @@ let
   seerr-port = config.services.seerr.port;
   jellyroller = lib.getExe (pkgs.rustPlatform.buildRustPackage rec {
     pname = "jellyroller";
-    version = "1.2.0";
+    version = "1.2.1";
 
     meta.mainProgram = pname;
     src = pkgs.fetchFromGitHub {
       owner = "LSchallot";
       repo = "JellyRoller";
       rev = "v${version}";
-      hash = "sha256-zUNrT924Sds5sbSuqYlTeAokjpO6XoRwAJW5xaouj94=";
+      hash = "sha256-nvM7qE7RajUCBmSo05pvVLkZ2RpLhGUuEGG4/Sht38A=";
     };
 
     cargoHash = "sha256-ok7mxnyNfr0oDe32SeNT3L72KZFRz8Eq56n3AFXzxBY=";
