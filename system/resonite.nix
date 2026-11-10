@@ -56,14 +56,13 @@ let
   generate-rml-config = name: values:
     "${
       pkgs.runCommand "copy-${name}-config-json" { } ''
-        
-                mkdir -p $out/etc
-                cp ${
-                  jsonFormat.generate "${name}.json" {
-                    version = "1.0.0";
-                    values = values;
-                  }
-                } $out/etc/${name}.json
+        mkdir -p $out/etc
+        cp ${
+          jsonFormat.generate "${name}.json" {
+            version = "1.0.0";
+            values = values;
+          }
+        } $out/etc/${name}.json
       ''
     }/etc/${name}.json";
 
@@ -93,27 +92,24 @@ let
     config.services.resonite-dominion.update-reason-file-path;
   pre-system-update-script =
     pkgs.writeShellScriptBin "resonite-pre-system-update-script.sh" ''
-      
-            set -uxo pipefail
-      
-            echo "Operating System Update" > "${update-reason-file-path}"
+      set -uxo pipefail
+
+      echo "Operating System Update" > "${update-reason-file-path}" 2>/dev/null || true
     '';
   post-system-update-script =
     pkgs.writeShellScriptBin "resonite-post-system-update-script.sh" ''
-      
-            set -euxo pipefail
-      
-            rm -f "${update-reason-file-path}"
+      set -euxo pipefail
+
+      rm -f "${update-reason-file-path}"
     '';
   resonite-ip-update-watch-script =
     pkgs.writeShellScriptBin "resonite-ip-update-watch-script.sh" ''
-      
-            set -uxo pipefail
-      
-            if [ ! -f "${update-reason-file-path}" ]; then
-              echo "IP Address Reassigned" > "${update-reason-file-path}"
-              chmod 666 "${update-reason-file-path}"
-            fi
+      set -uxo pipefail
+
+      if [ ! -f "${update-reason-file-path}" ]; then
+        echo "IP Address Reassigned" > "${update-reason-file-path}"
+        chmod 666 "${update-reason-file-path}"
+      fi
     '';
 in {
   imports = [
