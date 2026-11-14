@@ -3,7 +3,7 @@ let
   root = globals.media-root;
   group = globals.media-group;
 in {
-  imports = [ ../modules/backups ./immich.nix ./jellyfin.nix ];
+  imports = [ ../modules/backups ./immich.nix ./jellyfin.nix ./kavita.nix ];
 
   backups.media.paths = [ root ];
 
@@ -11,7 +11,6 @@ in {
   systemd.tmpfiles.rules = [
     "d ${root} 0750 root ${group} - -"
     "d ${root}/Adult 0770 root ${group} - -"
-    "d ${root}/AdultBooks 0770 root ${group} - -"
     "d ${root}/Books 0770 root ${group} - -"
     "d ${root}/Movies 0770 root ${group} - -"
     "d ${root}/Music 0770 root ${group} - -"

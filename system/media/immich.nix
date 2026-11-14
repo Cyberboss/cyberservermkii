@@ -1,4 +1,4 @@
-{ config, globals, ... }:
+{ config, globals, lib, pkgs, ... }:
 let
   domain = "immich.${globals.tld}";
   service-name = "immich";
@@ -23,5 +23,20 @@ in {
     cloudflared.tunnels.primary-tunnel.ingress = {
       "${domain}" = "http://localhost:${toString config.services.immich.port}";
     };
+  };
+
+  backups.immich = {
+    pre = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
+      set -euxo pipefail
+
+      systemctl stop immich-machine-learning
+      systemctl stop immich-server
+    '');
+    post = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
+      set -euxo pipefail
+
+      systemctl start immich-machine-learning
+      systemctl start immich-server
+    '');
   };
 }
