@@ -135,7 +135,8 @@ in {
   imports = [ ../secrets ];
 
   config = {
-    backups.system-configuration.paths = [ globals.flake-lock-backup-path ];
+    backups.system-configuration.paths =
+      [ globals.flake-lock-backup-path globals.host-key-path ];
 
     users = {
       users.restic = {
