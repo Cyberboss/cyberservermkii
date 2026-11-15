@@ -174,7 +174,8 @@ in {
         StateDirectory = test-backups-service-name;
         ExecStart = backups-test-script;
       };
-      wantedBy = [ "nixos-activation.target" ];
+      wantedBy = [ "multi-user.target" "sysinit-reactivation.target" ];
+      after = [ "sysinit-reactivation.target" ];
       before = [ "restic-backups-primary.service" ];
     };
   };
