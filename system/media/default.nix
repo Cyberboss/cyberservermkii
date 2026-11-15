@@ -7,7 +7,7 @@ let
     [ "Adult" "HomeVideos" "Movies" "Music" "MusicVideos" "Shows" "YouTube" ];
 
   non-immich-media-paths =
-    map (sudir: "${root}/${subdir}") non-immich-media-locations;
+    map (subdir: "${root}/${subdir}") non-immich-media-locations;
 in {
   imports = [ ../modules/backups ./immich.nix ./jellyfin.nix ./kavita.nix ];
 
