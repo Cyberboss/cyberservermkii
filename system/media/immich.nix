@@ -2,6 +2,8 @@
 let
   domain = "immich.${globals.tld}";
   service-name = "immich";
+  upload-location = subdirectory:
+    "${config.services.${service-name}.mediaLocation}/${subdirectory}";
 in {
   imports = [ ../modules/cloudflared.nix ../modules/backups ];
 
@@ -32,6 +34,12 @@ in {
       systemctl stop immich-machine-learning
       systemctl stop immich-server
     '');
+    paths = [
+      # https://docs.immich.app/administration/backup-and-restore/#filesystem
+      (upload-location "library")
+      (upload-location "upload")
+      (upload-location "profiles")
+    ];
     post = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
       set -euxo pipefail
 

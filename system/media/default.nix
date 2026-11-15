@@ -2,22 +2,20 @@
 let
   root = globals.media-root;
   group = globals.media-group;
+
+  non-immich-media-locations =
+    [ "Adult" "HomeVideos" "Movies" "Music" "MusicVideos" "Shows" "YouTube" ];
+
+  non-immich-media-paths =
+    map (sudir: "${root}/${subdir}") non-immich-media-locations;
 in {
   imports = [ ../modules/backups ./immich.nix ./jellyfin.nix ./kavita.nix ];
 
-  backups.media.paths = [ root ];
+  backups.media.paths = non-immich-media-paths;
 
   users.groups.${group} = { };
   systemd.tmpfiles.rules = [
     "d ${root} 0750 root ${group} - -"
-    "d ${root}/Adult 0770 root ${group} - -"
-    "d ${root}/Books 0770 root ${group} - -"
-    "d ${root}/Movies 0770 root ${group} - -"
-    "d ${root}/Music 0770 root ${group} - -"
-    "d ${root}/MusicVideos 0770 root ${group} - -"
     "d ${globals.immich-root} 0770 root ${group} - -"
-    "d ${root}/Shows 0770 root ${group} - -"
-    "d ${root}/YouTube 0770 root ${group} - -"
-    "d ${root}/HomeVideos 0770 root ${group} - -"
-  ];
+  ] ++ map (path: "d ${path} 0770 root ${group} - -") non-immich-media-paths;
 }
