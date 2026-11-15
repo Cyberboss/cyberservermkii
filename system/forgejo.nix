@@ -107,6 +107,7 @@ in {
 
   backups = {
     forgejo = {
+      restore-services = [ "forgejo" "gitea-mirror" ];
       pre = lib.getExe (pkgs.writeShellScriptBin "backup-forgejo.sh" ''
         set -euxo pipefail
 

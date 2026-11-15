@@ -22,6 +22,7 @@ in {
   };
 
   backups.kavita = {
+    restore-services = [ service-name ];
     pre = lib.getExe (pkgs.writeShellScriptBin "backup-kavita.sh" ''
       set -euxo pipefail
 

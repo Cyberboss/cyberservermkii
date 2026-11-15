@@ -8,13 +8,22 @@ let
     (builtins.attrValues (lib.mapAttrs (name: value: (selector value)) cfg));
   all-pre-scripts = script-aggregator (x: x.pre);
   all-post-scripts = script-aggregator (x: x.post);
+  all-restore-services = lib.lists.uniqueStrings (lib.lists.flatten
+    (builtins.attrValues
+      (lib.mapAttrs (name: value: value.restore-services) cfg)));
+  all-restore-scripts = script-aggregator (x: x.restore-script);
   to-env-file = (file-name: attrset:
     pkgs.writeText file-name (lib.concatStringsSep "\n"
       (lib.mapAttrsToList (name: value: "${name}=${value}") attrset)));
-  script-template = name: array: pre:
+  script-template = name: array:
     if array != [ ] then
       lib.getExe (pkgs.writeShellScriptBin name ''
         set -euxo pipefail
+
+        if [ "$EUID" -ne 0 ]; then
+            echo "Please run as root or with sudo."
+            exit 1
+        fi
 
         scripts=(
             "${
@@ -56,8 +65,10 @@ let
     else
       null;
 
-  pre-script = script-template "backup-prepare.sh" all-pre-scripts true;
-  post-script = script-template "backup-cleanup.sh" all-post-scripts false;
+  pre-script = script-template "backup-prepare.sh" all-pre-scripts;
+  post-script = script-template "backup-cleanup.sh" all-post-scripts;
+  restore-script-core =
+    script-template "backup-restore-core.sh" all-restore-scripts;
 
   secrets = config.secrets.restic;
 
@@ -69,6 +80,11 @@ let
   backups-test-script = lib.getExe
     (pkgs.writeShellScriptBin "backups-test.sh" ''
       set -euxo pipefail
+
+      if [ "$EUID" -ne 0 ]; then
+          echo "Please run as root or with sudo."
+          exit 1
+      fi
 
       sleep 30
 
@@ -85,6 +101,43 @@ let
       mkdir -p ${backups-test-state-directory}
       touch ${backups-test-state-file}
     '');
+  restore-command = dry-run:
+    "${
+      lib.getExe pkgs.restic
+    } restore --target / --verify --password-file ${secrets.password.path} --repository-file ${secrets.repository.path} --ownership-by-name ${
+      if dry-run then "--dry-run" else ""
+    } latest";
+  restore-script = pkgs.writeShellScriptBin
+    "backup-restore-YES-REALLY_FOR_REALZ_NOT_A_DRILL" ''
+      set -euxo pipefail
+
+      if [ "$EUID" -ne 0 ]; then
+          echo "Please run as root or with sudo."
+          exit 1
+      fi
+
+      ping -c 1 -W 2 1.1.1.1 >/dev/null 2>&1 && { echo "Error: Connected to the internet!" >&2; exit 1; }
+
+      systemctl stop ${builtins.concatStringsSep " " all-restore-services}
+
+      read -p "Reconnect internet and press enter to perform dry-run..."
+
+      set -a
+      source ${secrets.environment.path}
+      set +a
+
+      ${restore-command true}
+
+      read -p "Reconnect internet and press enter to DELETE CURRENT DATA and restore..."
+
+      ${lib.concatMapStringsSep "\n" (path: "rm -rf ${path}/*") paths}
+      ${restore-command false}
+      ${restore-script-core}
+
+      read -p "Restoration complete. Disconnect internet prior to continuing if this is a test. Press enter to reboot..."
+
+      reboot
+    '';
 in {
   options.backups = lib.mkOption {
     description = ''
@@ -92,6 +145,20 @@ in {
     '';
     type = lib.types.attrsOf (lib.types.submodule ({ name, ... }: {
       options = {
+        restore-services = lib.mkOption {
+          type = lib.types.listOf lib.types.nonEmptyStr;
+          example = [ "some-service" ];
+          description = ''
+            Service names that must stop before a restore.
+          '';
+        };
+        restore-script = lib.mkOption {
+          type = lib.types.nullOr lib.types.nonEmptyStr;
+          default = null;
+          description = ''
+            Script performing restore actions taking the restore root as input
+          '';
+        };
         pre = lib.mkOption {
           type = with lib.types; nullOr nonEmptyStr;
           default = null;
@@ -125,6 +192,7 @@ in {
 
     example = {
       some-service = {
+        restore-services = [ "some-systemd-service" ];
         pre = "/pre/backup/script.sh";
         paths = [ /backup/path/1 /backup/path/2 ];
         post = "/post/backup/script.sh";
@@ -135,6 +203,8 @@ in {
   imports = [ ../secrets ];
 
   config = {
+    environment.systemPackages = [ restore-script ];
+
     backups.system-configuration.paths =
       [ globals.flake-lock-backup-path globals.host-key-path ];
 
@@ -189,8 +259,7 @@ in {
 
       serviceConfig = {
         Type = "oneshot";
-        User =
-          config.systemd.services.restic-backups-primary.serviceConfig.User;
+        User = "root";
         RuntimeDirectory = test-backups-service-name;
         StateDirectory = test-backups-service-name;
         ExecStart = backups-test-script;

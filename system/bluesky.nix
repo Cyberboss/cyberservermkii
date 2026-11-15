@@ -4,11 +4,12 @@ let
   domain = "bsky.${globals.tld}";
   pds-domain = "bsky-pds.${globals.tld}";
   secrets = config.secrets.bluesky;
+  service-name = "bluesky-pds";
 in {
   imports = [ ./modules/cloudflared.nix ./modules/backups ];
 
   services = {
-    bluesky-pds = {
+    "${service-name}" = {
       enable = true;
       goat.enable = true;
       pdsadmin.enable = true;
@@ -26,6 +27,7 @@ in {
   systemd.services.bluesky-pds.restartTriggers = secrets.restartTriggers;
 
   backups.bluesky = {
+    restore-services = [ service-name ];
     pre = lib.getExe (pkgs.writeShellScriptBin "stop-bluesky-pds.sh" ''
       set -euxo pipefail
 

@@ -72,6 +72,7 @@ in {
   };
 
   backups.jellyfin-data = {
+    restore-services = [ service-name ];
     pre = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
       set -euxo pipefail
 

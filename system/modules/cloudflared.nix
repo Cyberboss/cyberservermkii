@@ -18,7 +18,13 @@ let
   };
   attrsetJSON = builtins.toJSON attrset;
   attrsetHash = builtins.hashString "sha256" attrsetJSON;
+  service-name = "cloudflared-tunnel-primary-tunnel";
 in {
+  imports = [ ./backups ];
+
+  backups.cloudflared.restore-services =
+    [ service-name ]; # Mainly for convienience of testing (dupe tunnels)
+
   services.cloudflared = {
     enable = true;
     certificateFile = cert-path;
@@ -38,7 +44,7 @@ in {
     };
   };
 
-  systemd.services.cloudflared-tunnel-primary-tunnel = {
+  systemd.services.${service-name} = {
     serviceConfig = {
       DynamicUser = lib.mkForce false;
       User = usergroup;

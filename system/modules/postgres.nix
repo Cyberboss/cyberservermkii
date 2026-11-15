@@ -37,6 +37,14 @@ in {
   systemd.services.postgresqlBackup.startAt = lib.mkForce [ ];
 
   backups.postgresql = {
+    restore-services = [ ];
+    restore-script = lib.getExe
+      (pkgs.writeShellScriptBin "restore-postgres.sh" ''
+        set -euxo pipefail
+
+        sudo -u postgres psql -f /var/backup/postgresql/all.sql
+        ${delete-postgres-backups}
+      '');
     pre = lib.getExe (pkgs.writeShellScriptBin "backup-postgres.sh" ''
       set -euxo pipefail
 
