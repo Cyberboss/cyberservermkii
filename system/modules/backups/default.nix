@@ -137,9 +137,29 @@ in {
   config = {
     backups.system-configuration.paths = [ globals.flake-lock-backup-path ];
 
+    users = {
+      users.restic = {
+        group = "restic";
+        isSystemUser = true;
+      };
+      groups.restic = { };
+    };
+
+    security.wrappers.restic = {
+      source = lib.getExe pkgs.restic;
+      owner = "restic";
+      group = "restic";
+      permissions = "u=rx,g=,o=";
+      capabilities = "cap_dac_read_search+ep";
+    };
+
     services.restic.backups.primary = {
       initialize = true;
       paths = paths;
+      user = "restic";
+      package = pkgs.writeShellScriptBin "restic" ''
+        exec /run/wrappers/bin/restic "$@"
+      '';
       timerConfig = {
         OnCalendar = "*-*-* 06:00:00";
         Persistent = true;
