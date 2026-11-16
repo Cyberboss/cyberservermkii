@@ -4,6 +4,9 @@ let
   service-name = "immich";
   upload-location = subdirectory:
     "${config.services.${service-name}.mediaLocation}/${subdirectory}";
+  service-names =
+    [ "${service-name}-server" "${service-name}-machine-learning" ];
+  service-names-str = builtins.concatStringsSep " " service-names;
 in {
   imports = [ ../modules/cloudflared.nix ../modules/backups ];
 
@@ -28,11 +31,11 @@ in {
   };
 
   backups.immich = {
-    restore-services = [ "system-immich.slice" ];
+    restore-services = service-names;
     pre = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
       set -euxo pipefail
 
-      systemctl stop system-immich.slice
+      systemctl stop ${service-names-str}
     '');
     paths = [
       # https://docs.immich.app/administration/backup-and-restore/#filesystem
@@ -43,7 +46,7 @@ in {
     post = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
       set -euxo pipefail
 
-      systemctl start system-immich.slice
+      systemctl start ${service-names-str}
     '');
   };
 }
