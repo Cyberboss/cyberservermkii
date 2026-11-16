@@ -28,12 +28,11 @@ in {
   };
 
   backups.immich = {
-    restore-services = [ service-name ];
+    restore-services = [ "system-immich.slice" ];
     pre = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
       set -euxo pipefail
 
-      systemctl stop immich-machine-learning
-      systemctl stop immich-server
+      systemctl stop system-immich.slice
     '');
     paths = [
       # https://docs.immich.app/administration/backup-and-restore/#filesystem
@@ -44,8 +43,7 @@ in {
     post = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
       set -euxo pipefail
 
-      systemctl start immich-machine-learning
-      systemctl start immich-server
+      systemctl start system-immich.slice
     '');
   };
 }
