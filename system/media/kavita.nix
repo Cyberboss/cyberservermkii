@@ -4,7 +4,7 @@ let
   cfg = config.services.kavita;
   domain = "kavita.${globals.tld}";
 in {
-  imports = [ ../modules/cloudflared.nix ../modules/backups ];
+  imports = [ ../modules/cloudflared ../modules/backups ];
 
   secrets.kavita.owner = service-name;
   users.users.${service-name}.extraGroups = [ globals.media-group ];

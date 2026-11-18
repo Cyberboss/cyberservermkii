@@ -21,7 +21,7 @@ let
 in {
   imports = [
     ./modules/backups
-    ./modules/cloudflared.nix
+    ./modules/cloudflared
     ./modules/docker.nix
     ./modules/postgres.nix
     ./modules/secrets

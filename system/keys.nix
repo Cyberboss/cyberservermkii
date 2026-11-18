@@ -3,7 +3,7 @@ let
   service-port = 4440;
   domain = "keys.dominion.universal-defense-matrix.${globals.tld}";
 in {
-  imports = [ ./modules/cloudflared.nix ];
+  imports = [ ./modules/cloudflared ];
 
   services = {
     cloudflared.tunnels.primary-tunnel.ingress.${domain} =

@@ -45,7 +45,7 @@ let
       rm -rf ${backups-directory}/*
     '');
 in {
-  imports = [ ../modules/cloudflared.nix ../modules/backups ];
+  imports = [ ../modules/cloudflared ../modules/backups ];
 
   services = {
     cloudflared.tunnels.primary-tunnel.ingress = {
