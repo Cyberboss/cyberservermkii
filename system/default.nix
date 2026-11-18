@@ -20,7 +20,6 @@ let
     )
 
     for script in "''${post_scripts[@]}"; do
-        echo "Launching $script..."
         $script
     done
   '';
@@ -42,7 +41,6 @@ let
     )
 
     for script in "''${pre_scripts[@]}"; do
-        echo "Launching $script..."
         $script
     done
     trap '${lib.getExe update-post-script}' EXIT

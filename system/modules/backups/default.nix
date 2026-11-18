@@ -36,8 +36,6 @@ let
         pids=()
 
         for script in "''${scripts[@]}"; do
-            echo "Launching $script..."
-
             # Run the script in the background
             $script &
 
@@ -45,19 +43,14 @@ let
             pids+=($!)
         done
 
-        echo "All jobs launched. Waiting for completion..."
-
         exit_code=0
         for pid in "''${pids[@]}"; do
             if ! wait "$pid"; then
-                echo "Process with PID $pid failed!"
                 exit_code=1
             fi
         done
 
-        if [ $exit_code -eq 0 ]; then
-            echo "All scripts finished successfully!"
-        else
+        if [ $exit_code -ne 0 ]; then
             echo "One or more scripts failed."
             exit 1
         fi

@@ -31,14 +31,12 @@ in {
     pre = lib.getExe (pkgs.writeShellScriptBin "stop-bluesky-pds.sh" ''
       set -euxo pipefail
 
-      echo "Stopping Bluesky PDS..."
       systemctl stop bluesky-pds
     '');
     paths = [ config.services.bluesky-pds.settings.PDS_DATA_DIRECTORY ];
     post = lib.getExe (pkgs.writeShellScriptBin "start-bluesky-pds.sh" ''
       set -euxo pipefail
 
-      echo "Starting Bluesky PDS..."
       systemctl start bluesky-pds
     '');
   };

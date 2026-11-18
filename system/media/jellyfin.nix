@@ -41,10 +41,8 @@ let
     (pkgs.writeShellScriptBin "delete-jellyfin-backup.sh" ''
       set -euxo pipefail
 
-      echo "Removing Jellyfin backups..."
       shopt -s dotglob
       rm -rf ${backups-directory}/*
-      echo "Done removing Jellyfin backups"
     '');
 in {
   imports = [ ../modules/cloudflared.nix ../modules/backups ];
@@ -79,7 +77,6 @@ in {
 
         ${delete-jellyfin-backups}
 
-        echo "Creating Jellyfin backup..."
         mkdir -p $RUNTIME_DIRECTORY/jellyroller
         cp ${jellyroller-config} $RUNTIME_DIRECTORY/jellyroller/${jellyroller-config-filename}
 
@@ -90,11 +87,8 @@ in {
         export XDG_CONFIG_HOME=$RUNTIME_DIRECTORY
         systemctl start jellyfin
         ${jellyroller} create-backup
-        echo "Done creating Jellyfin backup"
 
         ZIP_PATH="${backups-directory}/$(ls -1 "${backups-directory}" | head -n 1)"
-
-        echo "Unzipping $ZIP_PATH"
 
         ${lib.getExe pkgs.unzip} -q "$ZIP_PATH" -d ${backups-directory}
         rm $ZIP_PATH

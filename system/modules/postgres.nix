@@ -4,7 +4,6 @@ let
   delete-postgres-backups = lib.getExe
     (pkgs.writeShellScriptBin "delete-postgres-backup.sh" ''
       set -euxo pipefail
-      echo "Removing Postgres backups..."
 
       shopt -s dotglob
       rm -rf ${config.services.postgresqlBackup.location}/*
@@ -50,7 +49,6 @@ in {
 
       ${delete-postgres-backups}
 
-      echo "Creating Postgres backup..."
       systemctl start postgresqlBackup
     '');
     paths = [ backup-location ];

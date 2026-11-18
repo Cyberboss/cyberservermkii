@@ -12,7 +12,6 @@ let
   delete-forgejo-backups = lib.getExe
     (pkgs.writeShellScriptBin "delete-forgejo-backup.sh" ''
       set -euxo pipefail
-      echo "Removing Forgejo backups..."
 
       shopt -s dotglob
       rm -rf ${backup-location}/*
@@ -113,7 +112,6 @@ in {
 
         ${delete-forgejo-backups}
 
-        echo "Creating Forgejo backup..."
         systemctl start forgejo-dump
         ${
           lib.getExe pkgs.gnutar
@@ -128,14 +126,12 @@ in {
       pre = lib.getExe (pkgs.writeShellScriptBin "stop-gitea-mirror.sh" ''
         set -euxo pipefail
 
-        echo "Stopping Gitea Mirror..."
         systemctl stop gitea-mirror
       '');
       paths = [ config.services.gitea-mirror.dataDir ];
       post = lib.getExe (pkgs.writeShellScriptBin "start-gitea-mirror.sh" ''
         set -euxo pipefail
 
-        echo "Starting Gitea Mirror..."
         systemctl start gitea-mirror
       '');
     };
