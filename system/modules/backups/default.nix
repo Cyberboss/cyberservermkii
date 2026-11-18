@@ -252,7 +252,6 @@ in {
 
       serviceConfig = {
         Type = "oneshot";
-        User = "root";
         RuntimeDirectory = test-backups-service-name;
         StateDirectory = test-backups-service-name;
         ExecStart = backups-test-script;
