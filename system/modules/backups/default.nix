@@ -79,8 +79,6 @@ let
           exit 1
       fi
 
-      sleep 30
-
       rm -rf ${backups-test-state-directory}
 
       trap '${post-script}' EXIT
