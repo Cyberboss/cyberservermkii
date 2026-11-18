@@ -48,9 +48,6 @@ let
     nix flake update --flake ${globals.flake-path}
     nixos-rebuild switch
 
-    # Legacy, remove next time you see this
-    rm -f /var/lib/flake.lock.lastsuccessful
-
     cp ${globals.flake-path}/flake.lock "${globals.flake-lock-backup-path}/flake.$(${pkgs.coreutils}/bin/date --iso-8601=seconds).lock"
   '';
   build-script = pkgs.writeShellScriptBin "build-system" ''
