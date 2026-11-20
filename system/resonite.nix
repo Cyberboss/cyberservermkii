@@ -234,9 +234,9 @@ in {
             customSessionId = "U-1nPiX9NfQQ4:OutCast";
             accessLevel = "RegisteredUsers";
             description =
-              "World by WispoWoo, Ported to Resonite by Seyfert & Cloud_Jumper, Headless provided by Dominion.";
+              "World by WispyWoo, Ported to Resonite by Seyfert & Cloud_Jumper, Headless provided by Dominion.";
             forcePorts.quic = quic-port-outcast;
-            hideFromPublicListing = false;
+            hideFromPublicListing = true;
             tags = [ "quic" ];
             loadWorldUrl =
               "resrec:///G-1nmN4fjhq9g/R-019f161a-6d7c-77a1-809a-fe40fcca0da9";
@@ -245,6 +245,7 @@ in {
               Seyfert = "Admin";
               Cloud_Jumper = "Admin";
               kittysquirrel = "Builder";
+              LillyCatbean = "Builder";
             };
             awayKickMinutes = away-kick-minutes;
             autoInviteUsernames = [ ];
