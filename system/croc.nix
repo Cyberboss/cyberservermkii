@@ -1,8 +1,6 @@
 { globals, ... }: {
-  services = {
-    croc = {
-      enable = true;
-      openFirewall = true;
-    };
+  services.croc = {
+    enable = true;
+    openFirewall = true;
   };
 }
