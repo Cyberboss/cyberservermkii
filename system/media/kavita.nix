@@ -15,6 +15,9 @@ in {
     credentials.token_key = config.secrets.kavita.token_key.path;
   };
 
+  systemd.services.kavita.restartTriggers =
+    config.secrets.kavita.restartTriggers;
+
   cloudflared."${domain}".port = cfg.settings.Port;
 
   backups.kavita = {

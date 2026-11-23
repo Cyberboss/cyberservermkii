@@ -98,7 +98,12 @@ in {
   systemd = {
     services = {
       forgejo.serviceConfig.LogDirectory = "forgejo";
-      forgejo-runner-local.serviceConfig.SupplementaryGroups = group-name;
+      forgejo-runner-local = {
+        serviceConfig.SupplementaryGroups = group-name;
+        restartTriggers = config.secrets.forgejo-runner.restartTriggers;
+      };
+      gitea-mirror.restartTriggers =
+        config.secrets.gitea-mirror.restartTriggers;
     };
     timers.forgejo-dump.wantedBy = lib.mkForce [ ];
   };
