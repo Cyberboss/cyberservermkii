@@ -15,7 +15,6 @@ let
     "${state-directory}/${(import ./tested-hash-file.nix) { inherit config; }}";
   run-configure = lib.getExe
     (pkgs.writeShellScriptBin "configure-cloudflared.sh" ''
-
       set -euxo pipefail
 
       if [ "$EUID" -ne 0 ]; then
@@ -45,11 +44,9 @@ in {
   services.cloudflared = {
     enable = true;
     certificateFile = cert-path;
-    tunnels = {
-      primary-tunnel = {
-        credentialsFile = secrets.tunnel.path;
-        default = "http_status:404";
-      };
+    tunnels.primary-tunnel = {
+      credentialsFile = secrets.tunnel.path;
+      default = "http_status:404";
     };
   };
 

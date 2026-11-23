@@ -8,13 +8,15 @@ let
   secrets-manifest =
     builtins.removeAttrs (yaml-to-attrset secrets-file) [ "sops" ];
 
+  orNull = str: if str != null then str else "NULL";
+
   create-secret-entry = secret-directory: secret-entry: {
     "${secret-entry}" = {
       path = config.sops.secrets."${secret-directory}/${secret-entry}".path;
       restartTriggers = [
-        config.sops.secrets."${secret-directory}/${secret-entry}".sopsFileHash
-        cfg.${secret-directory}.owner
-        cfg.${secret-directory}.group
+        "${orNull cfg.${secret-directory}.owner}-${
+          config.sops.secrets."${secret-directory}/${secret-entry}".sopsFileHash
+        }-${orNull cfg.${secret-directory}.group}"
       ];
     };
   };
@@ -25,11 +27,11 @@ let
       ((map (create-secret-directory-entry secret-directory)
         (lib.attrNames secrets-manifest.${secret-directory})) ++ [{
           restartTriggers = [
-            (builtins.concatStringsSep "" (map (secret-name:
-              config.sops.secrets."${secret-directory}/${secret-name}".sopsFileHash)
-              (lib.attrNames secrets-manifest.${secret-directory})))
-            cfg.${secret-directory}.owner
-            cfg.${secret-directory}.group
+            "${orNull cfg.${secret-directory}.owner}-${
+              (builtins.concatStringsSep "" (map (secret-name:
+                config.sops.secrets."${secret-directory}/${secret-name}".sopsFileHash)
+                (lib.attrNames secrets-manifest.${secret-directory})))
+            }-${orNull cfg.${secret-directory}.group}"
           ];
         }]);
   };
@@ -80,10 +82,9 @@ let
                 '';
               };
               restartTriggers = lib.mkOption {
-                type = lib.types.listOf lib.types.anything;
-                example = "<some random sha256 hash>";
+                type = lib.types.listOf lib.types.nonEmptyStr;
                 description = ''
-                  (Read-only) Hash of this secret and its owner/group that may be used to drive systemd restartTriggers.
+                  (Read-only) Single hash of this secret and its owner/group that may be used to drive systemd restartTriggers.
                 '';
               };
             };
