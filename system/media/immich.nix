@@ -17,18 +17,15 @@ in {
     extraGroups = [ globals.media-group ];
   };
 
-  services = {
-    "${service-name}" = {
-      enable = true;
-      mediaLocation = globals.immich-root;
-      openFirewall = true;
-      host = "";
-      accelerationDevices = null;
-    };
-    cloudflared.tunnels.primary-tunnel.ingress = {
-      "${domain}" = "http://localhost:${toString config.services.immich.port}";
-    };
+  services."${service-name}" = {
+    enable = true;
+    mediaLocation = globals.immich-root;
+    openFirewall = true;
+    host = "";
+    accelerationDevices = null;
   };
+
+  cloudflared.${domain}.port = config.services.immich.port;
 
   backups.immich = {
     restore-services = service-names;

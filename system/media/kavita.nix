@@ -9,17 +9,13 @@ in {
   secrets.kavita.owner = service-name;
   users.users.${service-name}.extraGroups = [ globals.media-group ];
 
-  services = {
-    "${service-name}" = {
-      enable = true;
-      settings.Port = 8675;
-      credentials.token_key = config.secrets.kavita.token_key.path;
-    };
-
-    cloudflared.tunnels.primary-tunnel.ingress = {
-      "${domain}" = "http://localhost:${toString cfg.settings.Port}";
-    };
+  services."${service-name}" = {
+    enable = true;
+    settings.Port = 8675;
+    credentials.token_key = config.secrets.kavita.token_key.path;
   };
+
+  cloudflared."${domain}".port = cfg.settings.Port;
 
   backups.kavita = {
     restore-services = [ service-name ];

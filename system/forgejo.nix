@@ -6,8 +6,7 @@ let
   local-service-url = "http://localhost:${toString local-service-port}";
 
   local-service-port = config.services.forgejo.settings.server.HTTP_PORT;
-  local-mirror-url =
-    "http://localhost:${toString config.services.gitea-mirror.port}";
+  local-mirror-port = config.services.gitea-mirror.port;
   mirror-enabled = config.services.gitea-mirror.enable;
   delete-forgejo-backups = lib.getExe
     (pkgs.writeShellScriptBin "delete-forgejo-backup.sh" ''
@@ -34,12 +33,12 @@ in {
   users.groups.${group-name} = { };
   secrets.forgejo-runner.group = group-name;
 
-  services = {
-    cloudflared.tunnels.primary-tunnel.ingress = {
-      "${domain}" = local-service-url;
-      "${mirror-domain}" = lib.mkIf mirror-enabled local-mirror-url;
-    };
+  cloudflared = {
+    "${domain}".port = local-service-port;
+    "${mirror-domain}".port = lib.mkIf mirror-enabled local-mirror-port;
+  };
 
+  services = {
     forgejo = {
       enable = true;
 

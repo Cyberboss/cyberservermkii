@@ -7,8 +7,7 @@ let
   libraries-directory = globals.media-root;
   domain = "${service-name}.${globals.tld}";
   seerr-domain = "seerr.${globals.tld}";
-  service-port = "8096";
-  local-url = "http://localhost:${service-port}";
+  service-port = 8096;
   seerr-port = config.services.seerr.port;
   jellyroller = lib.getExe (pkgs.rustPlatform.buildRustPackage rec {
     pname = "jellyroller";
@@ -28,7 +27,7 @@ let
   jellyroller-config-attrs = {
     status = "configured";
     comfy = true;
-    server_url = local-url;
+    server_url = "http://localhost:${toString service-port}";
     os = "linux";
     token = "apiKey";
   };
@@ -47,11 +46,12 @@ let
 in {
   imports = [ ../modules/cloudflared ../modules/backups ];
 
+  cloudflared = {
+    "${domain}".port = service-port;
+    "${seerr-domain}".port = seerr-port;
+  };
+
   services = {
-    cloudflared.tunnels.primary-tunnel.ingress = {
-      "${domain}" = local-url;
-      "${seerr-domain}" = "http://localhost:${toString seerr-port}";
-    };
     "${service-name}" = {
       enable = true;
       user = service-name;

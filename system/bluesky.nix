@@ -19,10 +19,9 @@ in {
         PORT = service-port;
       };
     };
-
-    cloudflared.tunnels.primary-tunnel.ingress.${pds-domain} =
-      "http://localhost:${toString service-port}";
   };
+
+  cloudflared.${pds-domain}.port = service-port;
 
   systemd.services.bluesky-pds.restartTriggers = secrets.restartTriggers;
 
