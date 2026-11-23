@@ -1,8 +1,7 @@
 { config, pkgs, globals, lib, ... }:
 let
   service-port = 3000;
-  domain = "bsky.${globals.tld}";
-  pds-domain = "bsky-pds.${globals.tld}";
+  pds-subdomain = "bsky-pds";
   secrets = config.secrets.bluesky;
   service-name = "bluesky-pds";
 in {
@@ -15,13 +14,13 @@ in {
       pdsadmin.enable = true;
       environmentFiles = [ secrets.environment.path ];
       settings = {
-        PDS_HOSTNAME = pds-domain;
+        PDS_HOSTNAME = "${pds-subdomain}.${globals.tld}";
         PORT = service-port;
       };
     };
   };
 
-  cloudflared.${pds-domain}.port = service-port;
+  cloudflared.${pds-subdomain}.port = service-port;
 
   systemd.services.bluesky-pds.restartTriggers = secrets.restartTriggers;
 

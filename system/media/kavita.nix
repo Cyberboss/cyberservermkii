@@ -2,7 +2,6 @@
 let
   service-name = "kavita";
   cfg = config.services.kavita;
-  domain = "kavita.${globals.tld}";
 in {
   imports = [ ../modules/cloudflared ../modules/backups ];
 
@@ -18,9 +17,9 @@ in {
   systemd.services.kavita.restartTriggers =
     config.secrets.kavita.restartTriggers;
 
-  cloudflared."${domain}".port = cfg.settings.Port;
+  cloudflared."${service-name}".port = cfg.settings.Port;
 
-  backups.kavita = {
+  backups."${service-name}" = {
     restore-services = [ service-name ];
     pre = lib.getExe (pkgs.writeShellScriptBin "backup-kavita.sh" ''
       set -euxo pipefail

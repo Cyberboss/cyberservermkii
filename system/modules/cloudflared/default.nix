@@ -79,8 +79,11 @@ in {
       tunnels.primary-tunnel = {
         credentialsFile = secrets.tunnel.path;
         default = "http_status:404";
-        ingress = lib.genAttrs all-subdomains (subdomain:
-          "http://localhost:${toString config.cloudflared.${subdomain}.port}");
+        ingress = builtins.listToAttrs (map (subdomain: {
+          name = "${subdomain}.${globals.tld}";
+          value =
+            "http://localhost:${toString config.cloudflared.${subdomain}.port}";
+        }) all-subdomains);
       };
     };
 

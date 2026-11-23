@@ -5,8 +5,7 @@ let
   data-directory = config.services.${service-name}.dataDir;
   backups-directory = "${data-directory}/data/backups";
   libraries-directory = globals.media-root;
-  domain = "${service-name}.${globals.tld}";
-  seerr-domain = "seerr.${globals.tld}";
+  seerr-service-name = "seerr";
   service-port = 8096;
   seerr-port = config.services.seerr.port;
   jellyroller = lib.getExe (pkgs.rustPlatform.buildRustPackage rec {
@@ -47,8 +46,8 @@ in {
   imports = [ ../modules/cloudflared ../modules/backups ];
 
   cloudflared = {
-    "${domain}".port = service-port;
-    "${seerr-domain}".port = seerr-port;
+    "${service-name}".port = service-port;
+    "${seerr-service-name}".port = seerr-port;
   };
 
   services = {
@@ -59,7 +58,7 @@ in {
       logDir = "/var/log/${service-name}";
       openFirewall = true;
     };
-    seerr.enable = true;
+    "${seerr-service-name}".enable = true;
   };
 
   users.users.${service-name} = {

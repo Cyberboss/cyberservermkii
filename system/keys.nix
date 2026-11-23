@@ -1,11 +1,11 @@
-{ globals, ... }:
+{ ... }:
 let
   service-port = 4440;
-  domain = "keys.dominion.universal-defense-matrix.${globals.tld}";
+  subdomain = "keys.dominion.universal-defense-matrix";
 in {
   imports = [ ./modules/cloudflared ];
 
-  cloudflared.${domain}.port = service-port;
+  cloudflared.${subdomain}.port = service-port;
 
   services.caddy = {
     enable = true;

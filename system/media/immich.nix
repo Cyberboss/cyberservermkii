@@ -1,6 +1,5 @@
 { config, globals, lib, pkgs, ... }:
 let
-  domain = "immich.${globals.tld}";
   service-name = "immich";
   upload-location = subdirectory:
     "${config.services.${service-name}.mediaLocation}/${subdirectory}";
@@ -25,7 +24,7 @@ in {
     accelerationDevices = null;
   };
 
-  cloudflared.${domain}.port = config.services.immich.port;
+  cloudflared.${service-name}.port = config.services.immich.port;
 
   backups.immich = {
     restore-services = service-names;

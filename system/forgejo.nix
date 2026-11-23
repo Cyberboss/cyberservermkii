@@ -1,7 +1,7 @@
 { config, pkgs, globals, lib, inputs, ... }:
 let
-  domain = "git.${globals.tld}";
-  mirror-domain = "git-mirror.${globals.tld}";
+  subdomain = "git";
+  mirror-subdomain = "git-mirror";
   backup-location = config.services.forgejo.dump.backupDir;
   local-service-url = "http://localhost:${toString local-service-port}";
 
@@ -34,8 +34,8 @@ in {
   secrets.forgejo-runner.group = group-name;
 
   cloudflared = {
-    "${domain}".port = local-service-port;
-    "${mirror-domain}".port = lib.mkIf mirror-enabled local-mirror-port;
+    "${subdomain}".port = local-service-port;
+    "${mirror-subdomain}".port = lib.mkIf mirror-enabled local-mirror-port;
   };
 
   services = {
@@ -64,7 +64,7 @@ in {
         service.DISABLE_REGISTRATION = true;
         session.COOKIE_SECURE = true;
         server = {
-          ROOT_URL = "https://${domain}";
+          ROOT_URL = "https://${subdomain}.${globals.tld}";
           HTTP_PORT = 3002;
           SSH_PORT = lib.head config.services.openssh.ports;
         };
