@@ -108,6 +108,7 @@ in {
   networking = {
     hostName = globals.hostName;
     networkmanager.enable = true;
+    nftables.enable = true;
   };
 
   time.timeZone = "America/Toronto";
