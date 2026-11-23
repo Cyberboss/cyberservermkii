@@ -3,7 +3,7 @@ let
   service-name = "kavita";
   cfg = config.services.kavita;
 in {
-  imports = [ ../modules/cloudflared ../modules/backups ];
+  imports = [ ../modules/cloudflared ../modules/backups ../modules/secrets ];
 
   secrets.kavita.owner = service-name;
   users.users.${service-name}.extraGroups = [ globals.media-group ];
