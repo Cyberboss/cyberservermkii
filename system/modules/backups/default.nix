@@ -95,8 +95,8 @@ let
   restore-command = dry-run:
     "${
       lib.getExe pkgs.restic
-    } restore --target / --verify --password-file ${secrets.password.path} --repository-file ${secrets.repository.path} --ownership-by-name ${
-      if dry-run then "--dry-run" else ""
+    } restore --target / --password-file ${secrets.password.path} --repository-file ${secrets.repository.path} --ownership-by-name ${
+      if dry-run then "--dry-run" else "--verify"
     } latest";
   restore-script = pkgs.writeShellScriptBin
     "backup-restore-YES-REALLY_FOR_REALZ_NOT_A_DRILL" ''
@@ -107,12 +107,16 @@ let
           exit 1
       fi
 
-      systemctl stop ${builtins.concatStringsSep " " all-restore-services}
+      systemctl stop ${
+        builtins.concatStringsSep " " all-restore-services
+      }
 
       read -p "Press enter to perform dry-run..."
 
       set -a
+      set +x
       source ${secrets.environment.path}
+      set -x
       set +a
 
       ${restore-command true}

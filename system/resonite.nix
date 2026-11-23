@@ -126,7 +126,8 @@ in {
     post = lib.getExe post-system-update-script;
   };
 
-  secrets.resonite.owner = config.services.resonite-headless.username;
+  secrets.resonite.owner = lib.mkIf (!globals.backup-restore-safety-key)
+    config.services.resonite-headless.username;
 
   systemd.services = {
     resonite-headless.serviceConfig = {

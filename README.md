@@ -28,6 +28,7 @@ Setup via free cloudflare.
 1. Run `nixos-rebuild --flake /etc/nixos build`, confirm everything looks good.
 1. Disconnect from the internet.
 1. Run `nixos-rebuild --flake /etc/nixos switch`.
-1. Run `passwd dominion`. Configure google authenticator for account.
+1. Run `passwd dominion`. Configure google authenticator for account (Can skip totp for testing).
+1. Run `passwd -l root`
 1. Ensure no key services (like bluesky or cloudflared) are started.
 1. Run `backup-restore-YES-REALLY_FOR_REALZ_NOT_A_DRILL` and follow prompts.
