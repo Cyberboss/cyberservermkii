@@ -12,8 +12,12 @@ let
   service-name = "cloudflared-tunnel-primary-tunnel";
   configure-service-name = "configure-cloudflared";
   state-directory = "/var/lib/${configure-service-name}/current";
-  state-file =
-    "${state-directory}/${(import ./tested-hash-file.nix) { inherit config; }}";
+  state-file = "${state-directory}/${
+      builtins.hashString "sha256" (builtins.toJSON {
+        cloudflared-conf = config.services.cloudflared.tunnels;
+        cloudflared-secrets = config.secrets.cloudflared;
+      })
+    }.flag";
 
   cloudflared-uid = 989;
   run-configure = lib.getExe
@@ -71,10 +75,11 @@ in {
     }];
 
     backups.cloudflared.restore-services =
+      lib.mkIf (!globals.backup-restore-safety-key)
       [ service-name ]; # Mainly for convienience of testing (dupe tunnels)
 
     services.cloudflared = {
-      enable = true;
+      enable = !globals.backup-restore-safety-key;
       certificateFile = cert-path;
       tunnels.primary-tunnel = {
         credentialsFile = secrets.tunnel.path;

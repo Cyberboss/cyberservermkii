@@ -1,4 +1,4 @@
-{ lib, pkgs, config, ... }: {
+{ lib, pkgs, config, globals, ... }: {
   environment.loginShellInit = ''
     echo "== System Login Info =="
     echo "Host:      $HOSTNAME"
@@ -8,14 +8,21 @@
     echo "=== === === === === ==="
     echo ""
     ${lib.getExe pkgs.fortune} | ${lib.getExe pkgs.cowsay} -r
-    ${
-      if builtins.hasAttr "backups" config then ''
-        if [ ! -f /var/lib/backups-test/${(import ./modules/backups/tested-hash-file.nix) { inherit config; }} ]; then
-          echo ""
-          echo -e "\e[1;31m!!!BACKUP PREPARATION TEST FAILED!!!\e[0m"
-        fi
-      '' else
-        ""
-    }
+    ${if builtins.hasAttr "backups" config then ''
+      if [ ! -f /var/lib/backups-test/${
+        (import ./modules/backups/tested-hash-file.nix) {
+          inherit config globals;
+        }
+      } ]; then
+        echo ""
+        echo -e "\e[1;31m!!!BACKUP PREPARATION TEST FAILED!!!\e[0m"
+      fi
+    '' else
+      ""}
+    ${if globals.backup-restore-safety-key then ''
+      echo ""
+      echo -e "\e[1;31m!!!BACKUP RESTORE SAFETY KEY IS TURNED!!!\e[0m"
+    '' else
+      ""}
   '';
 }

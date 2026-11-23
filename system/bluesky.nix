@@ -9,7 +9,7 @@ in {
 
   services = {
     "${service-name}" = {
-      enable = true;
+      enable = !globals.backup-restore-safety-key;
       goat.enable = true;
       pdsadmin.enable = true;
       environmentFiles = [ secrets.environment.path ];
@@ -25,7 +25,8 @@ in {
   systemd.services.bluesky-pds.restartTriggers = secrets.restartTriggers;
 
   backups.bluesky = {
-    restore-services = [ service-name ];
+    restore-services =
+      lib.mkIf (!globals.backup-restore-safety-key) [ service-name ];
     pre = lib.getExe (pkgs.writeShellScriptBin "stop-bluesky-pds.sh" ''
       set -euxo pipefail
 

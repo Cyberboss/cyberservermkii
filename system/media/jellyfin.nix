@@ -96,7 +96,7 @@ in {
       post = delete-jellyfin-backups;
     };
     seerr = {
-      restore-services = [ "seerr" ];
+      restore-services = [ seerr-service-name ];
       pre = lib.getExe (pkgs.writeShellScriptBin "backup-seerr-pre.sh" ''
         set -euxo pipefail
 

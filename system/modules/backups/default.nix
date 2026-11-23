@@ -68,7 +68,7 @@ let
   test-backups-service-name = "backups-test";
   backups-test-state-directory = "/var/lib/${test-backups-service-name}";
   backups-test-state-file = "${backups-test-state-directory}/${
-      (import ./tested-hash-file.nix) { inherit config; }
+      (import ./tested-hash-file.nix) { inherit config globals; }
     }";
   backups-test-script = lib.getExe
     (pkgs.writeShellScriptBin "backups-test.sh" ''
@@ -107,11 +107,9 @@ let
           exit 1
       fi
 
-      ping -c 1 -W 2 1.1.1.1 >/dev/null 2>&1 && { echo "Error: Connected to the internet!" >&2; exit 1; }
-
       systemctl stop ${builtins.concatStringsSep " " all-restore-services}
 
-      read -p "Reconnect internet and press enter to perform dry-run..."
+      read -p "Press enter to perform dry-run..."
 
       set -a
       source ${secrets.environment.path}
@@ -119,13 +117,15 @@ let
 
       ${restore-command true}
 
-      read -p "Reconnect internet and press enter to DELETE CURRENT DATA and restore..."
+      read -p "Press enter to !!!!DELETE CURRENT DATA!!!! and restore..."
+
+      read -p "!!!!!!!ARE YOU SURE?????!!!!!!!"
 
       ${lib.concatMapStringsSep "\n" (path: "rm -rf ${path}/*") paths}
       ${restore-command false}
       ${restore-script-core}
 
-      read -p "Restoration complete. Disconnect internet prior to continuing if this is a test. Press enter to reboot..."
+      read -p "Restoration complete. If this is a real restore, remove the safety key afterwards and rebuild the system. Press enter to reboot..."
 
       reboot
     '';
@@ -215,48 +215,50 @@ in {
       capabilities = "cap_dac_read_search+ep";
     };
 
-    services.restic.backups.primary = {
-      initialize = true;
-      paths = paths;
-      user = "restic";
-      package = pkgs.writeShellScriptBin "restic" ''
-        exec /run/wrappers/bin/restic "$@"
-      '';
-      timerConfig = {
-        OnCalendar = "*-*-* 06:00:00";
-        Persistent = true;
+    services.restic.backups.primary =
+      lib.mkIf (!globals.backup-restore-safety-key) {
+        initialize = true;
+        paths = paths;
+        user = "restic";
+        package = pkgs.writeShellScriptBin "restic" ''
+          exec /run/wrappers/bin/restic "$@"
+        '';
+        timerConfig = {
+          OnCalendar = "*-*-* 06:00:00";
+          Persistent = true;
+        };
+
+        pruneOpts = [
+          "--keep-daily 7"
+          "--keep-weekly 4"
+          "--keep-monthly 6"
+          "--keep-yearly 1"
+        ];
+
+        repositoryFile = secrets.repository.path;
+        passwordFile = secrets.password.path;
+        environmentFile = secrets.environment.path;
+        backupPrepareCommand = pre-script;
+        backupCleanupCommand = post-script;
+
+        extraOptions = [ "--compression=max" ];
       };
 
-      pruneOpts = [
-        "--keep-daily 7"
-        "--keep-weekly 4"
-        "--keep-monthly 6"
-        "--keep-yearly 1"
-      ];
+    systemd.services.${test-backups-service-name} =
+      lib.mkIf (!globals.backup-restore-safety-key) {
+        description =
+          "Backups test service. Runs backup pre and post actions without performing the restic operations.";
+        unitConfig.ConditionPathExists = "!${backups-test-state-file}";
 
-      repositoryFile = secrets.repository.path;
-      passwordFile = secrets.password.path;
-      environmentFile = secrets.environment.path;
-      backupPrepareCommand = pre-script;
-      backupCleanupCommand = post-script;
-
-      extraOptions = [ "--compression=max" ];
-    };
-
-    systemd.services.${test-backups-service-name} = {
-      description =
-        "Backups test service. Runs backup pre and post actions without performing the restic sync.";
-      unitConfig.ConditionPathExists = "!${backups-test-state-file}";
-
-      serviceConfig = {
-        Type = "oneshot";
-        RuntimeDirectory = test-backups-service-name;
-        StateDirectory = test-backups-service-name;
-        ExecStart = backups-test-script;
+        serviceConfig = {
+          Type = "oneshot";
+          RuntimeDirectory = test-backups-service-name;
+          StateDirectory = test-backups-service-name;
+          ExecStart = backups-test-script;
+        };
+        wantedBy = [ "multi-user.target" "sysinit-reactivation.target" ];
+        after = [ "sysinit-reactivation.target" ];
+        before = [ "restic-backups-primary.service" ];
       };
-      wantedBy = [ "multi-user.target" "sysinit-reactivation.target" ];
-      after = [ "sysinit-reactivation.target" ];
-      before = [ "restic-backups-primary.service" ];
-    };
   };
 }

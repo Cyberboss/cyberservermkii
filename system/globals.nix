@@ -1,10 +1,18 @@
-let media-root = "/media";
-in {
+{ backup-restore-configuration }:
+let
+  media-root = "/media";
+  backup-restore-safety-key =
+    (import backup-restore-configuration).backup-restore-safety-key;
   ## CONTEXT DEPENDENT
   hostName = "cyberservermkii";
+in {
+  hostName =
+    if backup-restore-safety-key then "${hostName}-BACKUPRESTORE" else hostName;
   tld = "dextraspace.net";
   subnet-16 = "192.168";
   ## END CONTEXT DEPENDENT
+
+  backup-restore-safety-key = backup-restore-safety-key;
 
   use-lix = true;
 

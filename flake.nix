@@ -13,10 +13,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = inputs@{ self, nixpkgs, ... }:
-    let globals = import ./system/globals.nix;
-    in {
-      build-system = hardware-configuration: {
+  outputs = inputs@{ self, nixpkgs, ... }: {
+    build-system = hardware-configuration: backup-restore-configuration:
+      let
+        globals = (import ./system/globals.nix {
+          inherit backup-restore-configuration;
+        });
+      in {
         "${globals.hostName}" = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
 
@@ -25,5 +28,5 @@
           modules = [ hardware-configuration ./system ];
         };
       };
-    };
+  };
 }
