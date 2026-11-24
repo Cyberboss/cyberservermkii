@@ -7,7 +7,8 @@ let
     [ "${service-name}-server" "${service-name}-machine-learning" ];
   service-names-str = builtins.concatStringsSep " " service-names;
 in {
-  imports = [ ../modules/cloudflared.nix ../modules/backups ];
+  imports =
+    [ ../modules/cloudflared.nix ../modules/backups ../modules/postgres.nix ];
 
   users.users.${service-name} = {
     isSystemUser = true;
