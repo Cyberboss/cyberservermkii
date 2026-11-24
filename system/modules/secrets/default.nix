@@ -42,6 +42,7 @@ let
         owner = cfg.${secret-directory}.owner;
         group = cfg.${secret-directory}.group;
         mode = "0440";
+        neededForUsers = cfg.${secret-directory}.${secret-entry}.neededForUsers;
       };
     }) (lib.attrNames secrets-manifest.${secret-directory}));
 
@@ -79,6 +80,13 @@ let
                 example = "/run/secrets/${secret-directory}/${secret-name}";
                 description = ''
                   (Read-only) The runtime path that the ${secret-directory}/${secret-name} secret may be accessed at
+                '';
+              };
+              neededForUsers = lib.mkOption {
+                type = lib.types.bool;
+                default = false;
+                description = ''
+                  Maps to neededForUsers in sops-nix.
                 '';
               };
               restartTriggers = lib.mkOption {

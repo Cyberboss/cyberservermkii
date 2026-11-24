@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, config, ... }: {
   users.users.dominion = {
     isNormalUser = true;
     extraGroups = [ "wheel" "docker" "media" ];
@@ -7,7 +7,12 @@
     ];
 
     packages = [ pkgs.nix-prefetch-github ];
+    hashedPasswordFile = config.secrets.account.passwordHash.path;
   };
+
+  secrets.account.passwordHash.neededForUsers = true;
+
+  imports = [ ../modules/postgres.nix ];
 
   services.postgresql.ensureUsers = [{
     name = "dominion";
