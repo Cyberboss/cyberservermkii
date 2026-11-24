@@ -228,7 +228,7 @@ in {
           export RESTIC_CACHE_DIR=/var/cache/restic-backups-primary-wrapped
           mkdir -p /var/cache/restic-backups-primary-wrapped
           chown -R restic:restic /var/cache/restic-backups-primary-wrapped
-          exec ${pkgs.util-linux}/bin/runuser -m -u restic -- /run/wrappers/bin/restic "$@"
+          exec ${pkgs.util-linux}/bin/runuser -m -u restic -- ${config.security.wrapperDir}/restic "$@"
         '';
         timerConfig = {
           OnCalendar = "*-*-* 06:00:00";
