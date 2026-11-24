@@ -143,6 +143,7 @@ in {
       };
       before = [ "update-wan-ip.service" ];
       wantedBy = [ "update-wan-ip.service" ];
+      after = [ "resonite-dominion.service" ];
     };
   };
 
