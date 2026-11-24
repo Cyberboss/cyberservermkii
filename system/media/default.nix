@@ -11,7 +11,10 @@ let
 in {
   imports = [ ../modules/backups ./immich.nix ./jellyfin.nix ./kavita.nix ];
 
-  backups.media.paths = non-immich-media-paths;
+  backups.media = {
+    restore-services = [ ];
+    paths = non-immich-media-paths;
+  };
 
   users.groups.${group} = { };
   systemd.tmpfiles.rules = [

@@ -67,5 +67,8 @@ in {
     "d ${private-share} 0770 ${usergroup} ${usergroup} - -"
   ];
 
-  backups.samba.paths = [ samba-root ];
+  backups.samba = {
+    restore-services = [ ];
+    paths = [ samba-root ];
+  };
 }

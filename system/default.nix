@@ -87,6 +87,7 @@ in {
     ./media
 
     ./modules/update-dependencies.nix
+    ./modules/backups
 
     ./bluesky.nix
     ./croc.nix
@@ -96,6 +97,11 @@ in {
     ./resonite.nix
     ./samba.nix
   ];
+
+  backups.system-configuration = {
+    restore-services = [ ];
+    paths = [ globals.flake-lock-backup-path globals.host-key-path ];
+  };
 
   boot.loader = {
     systemd-boot = {

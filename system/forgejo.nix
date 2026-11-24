@@ -110,7 +110,7 @@ in {
 
   backups = {
     forgejo = {
-      restore-services = [ "forgejo" "gitea-mirror" ];
+      restore-services = [ "forgejo" ];
       pre = lib.getExe (pkgs.writeShellScriptBin "backup-forgejo.sh" ''
         set -euxo pipefail
 
@@ -127,6 +127,7 @@ in {
       post = delete-forgejo-backups;
     };
     gitea-mirror = lib.mkIf mirror-enabled {
+      restore-services = [ "gitea-mirror" ];
       pre = lib.getExe (pkgs.writeShellScriptBin "stop-gitea-mirror.sh" ''
         set -euxo pipefail
 

@@ -58,6 +58,11 @@ let
     else
       null;
 
+  requiredListOf = elemType:
+    (lib.types.listOf elemType) // {
+      emptyValue = { };
+    };
+
   pre-script = script-template "backup-prepare.sh" all-pre-scripts;
   post-script = script-template "backup-cleanup.sh" all-post-scripts;
   restore-script-core =
@@ -107,9 +112,7 @@ let
           exit 1
       fi
 
-      systemctl stop ${
-        builtins.concatStringsSep " " all-restore-services
-      }
+      systemctl stop ${builtins.concatStringsSep " " all-restore-services}
 
       read -p "Press enter to perform dry-run..."
 
@@ -141,7 +144,7 @@ in {
     type = lib.types.attrsOf (lib.types.submodule ({ name, ... }: {
       options = {
         restore-services = lib.mkOption {
-          type = lib.types.listOf lib.types.nonEmptyStr;
+          type = requiredListOf lib.types.nonEmptyStr;
           example = [ "some-service" ];
           description = ''
             Service names that must stop before a restore.
@@ -199,10 +202,6 @@ in {
 
   config = {
     environment.systemPackages = [ restore-script ];
-
-    backups.system-configuration.paths =
-      [ globals.flake-lock-backup-path globals.host-key-path ];
-
     users = {
       users.restic = {
         group = "restic";
@@ -224,6 +223,11 @@ in {
         initialize = true;
         paths = paths;
         package = pkgs.writeShellScriptBin "restic" ''
+          set -euxo pipefail
+
+          export RESTIC_CACHE_DIR=/var/cache/restic-backups-primary-wrapped
+          mkdir -p /var/cache/restic-backups-primary-wrapped
+          chown -R restic:restic /var/cache/restic-backups-primary-wrapped
           exec ${pkgs.util-linux}/bin/runuser -m -u restic -- /run/wrappers/bin/restic "$@"
         '';
         timerConfig = {
