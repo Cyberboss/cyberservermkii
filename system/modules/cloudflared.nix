@@ -122,6 +122,8 @@ in {
         };
         wantedBy = [ "${service-name}.service" ];
         before = [ "${service-name}.service" ];
+        wants = [ "network-online.target" ];
+        after = [ "network-online.target" ];
         restartTriggers = secrets.restartTriggers;
       };
     };
