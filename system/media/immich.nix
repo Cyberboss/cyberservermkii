@@ -38,7 +38,7 @@ in {
       # https://docs.immich.app/administration/backup-and-restore/#filesystem
       (upload-location "library")
       (upload-location "upload")
-      (upload-location "profiles")
+      (upload-location "profile")
     ];
     post = lib.getExe (pkgs.writeShellScriptBin "backup-jellyfin.sh" ''
       set -euxo pipefail
