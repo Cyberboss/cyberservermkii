@@ -224,7 +224,7 @@ in {
         initialize = true;
         paths = paths;
         package = pkgs.writeShellScriptBin "restic" ''
-          exec runuser -m -u restic -- /run/wrappers/bin/restic "$@"
+          exec ${pkgs.util-linux}/bin/runuser -m -u restic -- /run/wrappers/bin/restic "$@"
         '';
         timerConfig = {
           OnCalendar = "*-*-* 06:00:00";
