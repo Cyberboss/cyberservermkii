@@ -17,6 +17,10 @@
         echo ""
         echo -e "\e[1;31m!!!BACKUP PREPARATION TEST FAILED!!!\e[0m"
       fi
+      if systemctl is-failed --quiet '*'; then
+        echo ""
+        echo -e "\e[1;31m!!!THERE ARE FAILED SYSTEMD UNITS!!!\e[0m"
+      fi
     '' else
       ""}
     ${if globals.backup-restore-safety-key then ''
