@@ -5,7 +5,7 @@ let
   secrets = config.secrets.bluesky;
   service-name = "bluesky-pds";
 in {
-  imports = [ ./modules/cloudflared ./modules/backups ];
+  imports = [ ./modules/cloudflared.nix ./modules/backups ];
 
   services = {
     "${service-name}" = {

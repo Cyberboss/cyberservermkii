@@ -43,7 +43,7 @@ let
       rm -rf ${backups-directory}/*
     '');
 in {
-  imports = [ ../modules/cloudflared ../modules/backups ];
+  imports = [ ../modules/cloudflared.nix ../modules/backups ];
 
   cloudflared = {
     "${service-name}".port = service-port;

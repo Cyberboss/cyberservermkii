@@ -63,7 +63,7 @@ in {
     example.some-service.port = 1234;
   };
 
-  imports = [ ../secrets ../backups ];
+  imports = [ ./secrets ./backups ];
 
   config = {
     assertions = [{

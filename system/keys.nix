@@ -3,7 +3,7 @@ let
   service-port = 4440;
   subdomain = "keys.dominion.universal-defense-matrix";
 in {
-  imports = [ ./modules/cloudflared ];
+  imports = [ ./modules/cloudflared.nix ];
 
   cloudflared.${subdomain}.port = service-port;
 
