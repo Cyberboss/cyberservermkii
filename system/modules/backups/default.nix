@@ -223,9 +223,8 @@ in {
       lib.mkIf (!globals.backup-restore-safety-key) {
         initialize = true;
         paths = paths;
-        user = "restic";
         package = pkgs.writeShellScriptBin "restic" ''
-          exec /run/wrappers/bin/restic "$@"
+          exec runuser -m -u restic -- /run/wrappers/bin/restic "$@"
         '';
         timerConfig = {
           OnCalendar = "*-*-* 06:00:00";
