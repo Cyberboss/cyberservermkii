@@ -22,6 +22,7 @@ in {
         host    all             all             ::1/128                 trust
 
         host    all             dominion             ${globals.subnet-16}.0.0/16          scram-sha-256
+        host    all             dominion             ${globals.backup-restore-subnet-16}.0.0/16          scram-sha-256
       '';
     };
     postgresqlBackup = {

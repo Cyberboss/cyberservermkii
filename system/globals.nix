@@ -10,6 +10,7 @@ in {
     if backup-restore-safety-key then "${hostName}-BACKUPRESTORE" else hostName;
   tld = "dextraspace.net";
   subnet-16 = "192.168";
+  backup-restore-subnet-16 = "172.27";
   ## END CONTEXT DEPENDENT
 
   backup-restore-safety-key = backup-restore-safety-key;

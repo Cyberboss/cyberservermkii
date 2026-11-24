@@ -140,7 +140,10 @@ in {
       enable = true;
       maxretry = 5;
       bantime-increment.enable = true;
-      ignoreIP = [ "${globals.subnet-16}.0.0/16" ];
+      ignoreIP = [
+        "${globals.subnet-16}.0.0/16"
+        "${globals.backup-restore-subnet-16}.0.0/16"
+      ];
     };
     logrotate = {
       enable = true;
