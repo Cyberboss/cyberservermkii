@@ -1,6 +1,7 @@
 { pkgs, lib, inputs, config, globals, ... }:
 let
   secrets = config.secrets.resonite;
+  dotnet_10 = pkgs.dotnetCorePackages.dotnet_10;
   rml-stressless-headless = {
     name = "StresslessHeadless";
     src = pkgs.fetchFromCodeberg {
@@ -10,14 +11,15 @@ let
       hash = "sha256-CWArSJLbkKEkmmZHVggqJtIxqsFeB0rd7V1SF8RGuoY=";
     };
     environment-statement = headless-path: "ResonitePath=${headless-path}/../";
+    dotnet = dotnet_10;
   };
   rml-headless-tweaks = {
     name = "HeadlessTweaks";
     src = pkgs.fetchFromGitHub {
       owner = "Cyberboss";
       repo = "HeadlessTweaks";
-      rev = "4436b635936055ff0e3f18aa8b08171d8467c43e";
-      hash = "sha256-sYbLQfU0ieXNeeTwPlWKQDyswuECnfewKHA99XjYLLU=";
+      rev = "8393bd97d2a026f33d2198ebef36f9e10f642c92";
+      hash = "sha256-M8VB+9C6eec5K2gLyxKAlzycHhKtBBXpD9cBS86yBaU=";
     };
   };
   rml-fastsync = {
@@ -29,14 +31,15 @@ let
       rev = "1.1.0";
       hash = "sha256-677XO0AfvJqAdzlKuoWvduHVax+wPzprPRWFZ1xZF3Q=";
     };
+    dotnet = dotnet_10;
   };
   rml-joinverifier-whitelist = {
     name = "CustomJoinVerifierWhitelist";
     src = pkgs.fetchFromGitHub {
       owner = "Cyberboss";
       repo = "CustomJoinVerifierWhitelist";
-      rev = "v1.1.1";
-      hash = "sha256-5FZa4/DYa6wIXmtBdeynCMHofLLUDbAdEQaSwSAiWec=";
+      rev = "v1.1.2";
+      hash = "sha256-+i1nZuHlK0yNzfXp/Q+HF26nBNwpb72X62DCnF67IPo=";
     };
   };
 
