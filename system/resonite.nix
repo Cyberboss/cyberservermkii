@@ -158,6 +158,11 @@ in {
       shutdown-seconds = 600;
     };
     resonite-headless = {
+      harmony-override = pkgs.fetchurl {
+        url =
+          "https://github.com/resonite-modding-group/ResoniteModLoader/releases/download/5.0.4/0Harmony.dll";
+        hash = "sha256-AwFJASOBjweE382XeH+2K3/VsZkAVZRLmIJpWXN5Kmg=";
+      };
       enable = !globals.backup-restore-safety-key;
       quic-wan-ip-file = config.wan-ip-file;
       depotdownloader-env-file = secrets.depotdownloader.path;
