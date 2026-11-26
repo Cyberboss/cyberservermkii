@@ -153,17 +153,20 @@ in {
     };
     logrotate = {
       enable = true;
-      settings."/var/log/*.log" = {
-        frequency = "monthly";
-        rotate = 1;
-        missingok = true;
-        notifempty = true;
-      };
-      settings."${globals.flake-lock-backup-path}/*.lock" = {
-        frequency = "monthly";
-        rotate = 1;
-        missingok = true;
-        notifempty = false;
+      settings = {
+        var-log-recursive = {
+          files = [ "/var/log/*.log" "/var/log/*/*.log" "/var/log/*/*/*.log" ];
+          frequency = "monthly";
+          rotate = 1;
+          missingok = true;
+          notifempty = true;
+        };
+        "${globals.flake-lock-backup-path}/*.lock" = {
+          frequency = "monthly";
+          rotate = 1;
+          missingok = true;
+          notifempty = false;
+        };
       };
     };
   };
