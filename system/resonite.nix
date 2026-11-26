@@ -166,8 +166,8 @@ in {
       enable = !globals.backup-restore-safety-key;
       quic-wan-ip-file = config.wan-ip-file;
       depotdownloader-env-file = secrets.depotdownloader.path;
-      enable-rml = true;
-      disable-ready-notify = true;
+      enable-rml = false;
+      disable-ready-notify = false;
       use-cloudflare-proxy = true;
       auto-update-interval = "5m";
       rml-mod-sources = [
